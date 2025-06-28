@@ -207,11 +207,7 @@ export default function Navbar() {
       `}</style>
 
       <nav 
-        className={`fixed w-full z-50 transition-all duration-300 ease-out ${
-          scrolled || isOpen 
-            ? 'bg-white shadow-lg shadow-cyan-100/20' 
-            : 'bg-white/90 md:bg-white/80 backdrop-blur-sm md:shadow-none hover:bg-white/90'
-        }`}
+        className="fixed w-full z-50 bg-white shadow-lg shadow-cyan-100/20 transition-all duration-300 ease-out"
       >
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
           <div className="flex justify-between items-center h-16 sm:h-18 md:h-20">

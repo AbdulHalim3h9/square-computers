@@ -13,7 +13,8 @@ export default function Locations() {
       phone: '01979-234342',
       email: 'sales.bogura@squarecomputers.com',
       status: 'Open till 8:00 PM',
-      closed: 'Closed Friday'
+      closed: 'Closed Friday',
+      mapLink: 'https://www.google.com/maps/search/?api=1&query=24.86596617429913,89.35931179896441&query=Square+Computers'
     },
     {
       id: 'thanamore',
@@ -22,7 +23,8 @@ export default function Locations() {
       phone: '01979-234343',
       email: 'sales.thanamore@squarecomputers.com',
       status: 'Open till 8:00 PM',
-      closed: 'Closed Tuesday'
+      closed: 'Closed Tuesday',
+      mapLink: 'https://www.google.com/maps/search/?api=1&query=23.8103,90.4125&query=Square+Computers'
     }
   ];
 
@@ -60,9 +62,23 @@ export default function Locations() {
                 <p className="text-gray-700">
                   <span className="font-medium text-gray-800">Email:</span> {location.email}
                 </p>
-                <div className="flex justify-between items-center pt-3 mt-3 border-t border-gray-100">
-                  <span className="text-green-600 text-sm font-medium">{location.status}</span>
-                  <span className="text-red-500 text-sm">{location.closed}</span>
+                <div className="pt-3 mt-3 border-t border-gray-100 space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-green-600 text-sm font-medium">{location.status}</span>
+                    <span className="text-red-500 text-sm">{location.closed}</span>
+                  </div>
+                  <a 
+                    href={location.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center text-cyan-600 hover:text-cyan-700 text-sm font-medium transition-colors"
+                  >
+                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    View on Map
+                  </a>
                 </div>
               </div>
             </div>

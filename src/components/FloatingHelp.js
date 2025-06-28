@@ -1,10 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function FloatingHelp() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  // Check if device supports touch
+  useEffect(() => {
+    const checkTouchDevice = () => {
+      setIsTouchDevice('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkTouchDevice();
+    window.addEventListener('resize', checkTouchDevice);
+    return () => window.removeEventListener('resize', checkTouchDevice);
+  }, []);
+
+  const toggleMenu = (e) => {
+    if (isTouchDevice) {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsExpanded(prev => !prev);
+    }
+  };
+
+  const handleMouseEnter = () => {
+    if (!isTouchDevice) {
+      setIsExpanded(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isTouchDevice && isExpanded) {
+      setIsExpanded(false);
+    }
+  };
 
   const items = [
     {
@@ -49,7 +80,11 @@ export default function FloatingHelp() {
 
   return (
     <div className="fixed bottom-8 right-8 z-50">
-      <div className="flex flex-col items-end space-y-3">
+      <div 
+        className="flex flex-col items-end space-y-3"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
         {/* Contact options */}
         {isExpanded && (
           <div className="flex flex-col items-end space-y-4 animate-in slide-in-from-bottom-5 duration-300">
@@ -118,8 +153,7 @@ export default function FloatingHelp() {
           </div>
           
           <button
-            onMouseEnter={() => setIsExpanded(true)}
-            onClick={() => setIsExpanded(false)}
+            onClick={toggleMenu}
             className={`
               w-14 h-14 rounded-full shadow-2xl
               flex items-center justify-center

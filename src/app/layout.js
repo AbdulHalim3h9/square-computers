@@ -2,7 +2,6 @@ import './globals.css';
 import { Inter } from 'next/font/google';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import Locations from '@/components/Locations';
 import FloatingHelp from '@/components/FloatingHelp';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -20,7 +19,6 @@ export default function RootLayout({ children }) {
         <main className="min-h-screen pt-20">
           {children}
         </main>
-        <Locations />
         <Footer />
         <FloatingHelp />
       </body>

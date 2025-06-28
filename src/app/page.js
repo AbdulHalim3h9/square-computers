@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Locations from '@/components/Locations';
 
 const brands = [
   {
@@ -268,6 +269,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      <Locations />
 
       {/* Brands Section */}
       <section className="py-20 bg-gradient-to-b from-white to-gray-50">

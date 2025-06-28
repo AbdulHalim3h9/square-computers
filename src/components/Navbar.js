@@ -12,9 +12,12 @@ const menuItems = [
       { name: 'MD Speech', href: '/about/md-speech' },
       { name: 'Mission & Vision', href: '/about/mission-vision' },
       { name: 'Why Us', href: '/about/why-us' },
-      { name: 'Life at Square Computer\'s', href: '/about/life' },
-      { name: 'Our Team', href: '/about/team' }
+      { name: 'Life at Square Computer\'s', href: '/about/life' }
     ]
+  },
+  {
+    title: 'Our Team',
+    href: '/team'
   },
   {
     title: 'Product',
@@ -209,7 +212,7 @@ export default function Navbar() {
       <nav 
         className="fixed w-full z-50 bg-white shadow-lg shadow-cyan-100/20 transition-all duration-300 ease-out"
       >
-        <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
+        <div className="lg:container mx-auto px-4">
           <div className="flex justify-between items-center h-16 sm:h-18 md:h-20">
             {/* Logo */}
             <div className="flex items-center">
@@ -230,17 +233,17 @@ export default function Navbar() {
                   className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 transform hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <div className="navbar-brand">
-                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold leading-tight">
+              <div className="navbar-brand md:hidden lg:block">
+                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold leading-tight whitespace-nowrap">
                   <span className="square-text">Square</span>{' '}
                   <span className="computers-text">Computers</span>
                 </h1>
               </div>
-              </div>
+              </div>  
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1 lg:space-x-2 xl:space-x-4" ref={navRef}>
+            <div className="hidden md:flex items-center space-x-1 font-bold whitespace-nowrap" ref={navRef}>
               {menuItems.map((item, index) => (
                 <div 
                   key={item.title} 
@@ -249,19 +252,28 @@ export default function Navbar() {
                   onMouseEnter={() => item.submenu && openDropdownOnHover(index)}
                   onMouseLeave={closeAllDropdowns}
                 >
-                  <button
-                    onClick={() => toggleDropdown(index)}
-                    className={`px-3 py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium ${
-                      openDropdown === index ? 'text-cyan-600' : ''
-                    }`}
-                  >
-                    {item.title}
-                    {item.submenu && (
-                      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    )}
-                  </button>
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      className="px-3 py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium"
+                    >
+                      {item.title}
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={() => toggleDropdown(index)}
+                      className={`px-3 py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium ${
+                        openDropdown === index ? 'text-cyan-600' : ''
+                      }`}
+                    >
+                      {item.title}
+                      {item.submenu && (
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      )}
+                    </button>
+                  )}
                   
                   {item.submenu && (
                     <div 

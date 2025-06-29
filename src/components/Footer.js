@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   const services = [
@@ -72,11 +73,15 @@ export default function Footer() {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                 <div className="lg:col-span-2 text-left">
                   <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
-                    <img 
-                      src="/images/logo.png" 
-                      alt="Square Computers Logo" 
-                      className="h-12 w-12 sm:h-16 sm:w-16 object-contain flex-shrink-0"
-                    />
+                    <div className="relative h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0">
+                      <Image 
+                        src="/images/logo.png" 
+                        alt="Square Computers Logo" 
+                        fill
+                        className="object-contain"
+                        priority
+                      />
+                    </div>
                     <div className="text-left col-span-1">
                       <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold font-['Poppins'] leading-tight">
                         <span className="text-cyan-400">Square</span>{' '}
@@ -90,39 +95,6 @@ export default function Footer() {
                   <p className="text-gray-200 text-sm sm:text-base lg:text-lg leading-relaxed max-w-2xl mx-auto lg:mx-0">
                   ১৯৯৬ সাল থেকে আমরা গর্বের সঙ্গে কাজ করে যাচ্ছি—উন্নত কম্পিউটার হার্ডওয়্যার, সফটওয়্যার এবং আইটি সেবা দিয়ে। ব্যক্তিগত ব্যবহারকারী হোক বা বড় কোনো প্রতিষ্ঠান, সবার জন্যই আমরা নির্ভরযোগ্য ও মানসম্পন্ন প্রযুক্তি সমাধান পৌঁছে দিচ্ছি।
                   </p>
-                </div>
-
-                <div className="lg:col-span-1">
-                  <div className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 p-6 rounded-2xl border border-cyan-500/20 h-full">
-                    <h3 className="text-xl font-semibold text-cyan-300 mb-4">Bogura Branch</h3>
-                    <div className="space-y-3">
-                      <p className="flex items-center space-x-2 text-gray-200">
-                        <svg className="w-5 h-5 text-cyan-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                        </svg>
-                        <span>R.C Tower, Uposhor Bazar, Bogura</span>
-                      </p>
-                      <p className="flex items-center space-x-2 text-gray-200">
-                        <svg className="w-5 h-5 text-cyan-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                        </svg>
-                        <span>09678800078</span>
-                      </p>
-                      <p className="flex items-center space-x-2 text-gray-200">
-                        <svg className="w-5 h-5 text-cyan-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                          <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                        </svg>
-                        <span>info@squarecomputers.com</span>
-                      </p>
-                      <p className="flex items-center space-x-2 text-green-400">
-                        <svg className="w-5 h-5 text-cyan-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
-                        </svg>
-                        <span>Open till 7:30 PM</span>
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>

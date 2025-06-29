@@ -23,7 +23,7 @@ export default function BrandsPage() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Trusted Brands</h1>
           <p className="text-xl max-w-3xl mx-auto">
-            We partner with the world's leading technology brands to bring you the best products and solutions.
+            We partner with the world&apos;s leading technology brands to bring you the best products and solutions.
           </p>
         </div>
       </section>

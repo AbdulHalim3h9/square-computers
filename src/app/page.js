@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Locations from '@/components/Locations';
+import Brands from '@/components/Brands';
 
 const brands = [
   {
@@ -185,7 +186,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Networking & IT Support</h3>
-              <p className="text-gray-600">Expert IT support for businesses, including networking and cybersecurity.</p>
+              <p className="text-gray-600">বিজনেসের জন্য এক্সপার্ট IT support, networking এবং cybersecurity solution</p>
             </div>
             
             <div className="service-card bg-white p-6 rounded-xl hover:shadow-lg transition-all duration-300">
@@ -195,7 +196,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Domain & Hosting</h3>
-              <p className="text-gray-600">Reliable domain registration and hosting services for your online presence.</p>
+              <p className="text-gray-600">আপনার অনলাইন উপস্থিতির জন্য নির্ভরযোগ্য domain registration এবং hosting সার্ভিস।</p>
             </div>
             
             <div className="service-card bg-white p-6 rounded-xl hover:shadow-lg transition-all duration-300">
@@ -205,7 +206,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Web Development</h3>
-              <p className="text-gray-600">Custom web design and development services for businesses and individuals.</p>
+              <p className="text-gray-600">বিজনেস এবং ব্যক্তিগত ব্যবহারের জন্য কাস্টম ওয়েবসাইট ডিজাইন এবং ডেভেলপমেন্ট সার্ভিস।</p>
             </div>
             
             <div className="service-card bg-white p-6 rounded-xl hover:shadow-lg transition-all duration-300">
@@ -215,7 +216,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Software & SMS</h3>
-              <p className="text-gray-600">Software development services and bulk SMS solutions for businesses.</p>
+              <p className="text-gray-600">বিজনেসের জন্য কাস্টম সফটওয়্যার ডেভেলপমেন্ট এবং bulk SMS সলিউশন।</p>
             </div>
             
             <div className="service-card bg-white p-6 rounded-xl hover:shadow-lg transition-all duration-300">
@@ -225,7 +226,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Social Media</h3>
-              <p className="text-gray-600">Social media marketing services to boost your online presence.</p>
+              <p className="text-gray-600">আপনার অনলাইন উপস্থিতি বাড়াতে সোশ্যাল মিডিয়া মার্কেটিং সার্ভিস।</p>
             </div>
             
             <div className="service-card bg-white p-6 rounded-xl hover:shadow-lg transition-all duration-300">
@@ -235,7 +236,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Printing & Design</h3>
-              <p className="text-gray-600">Professional printing and graphic design services for all your needs.</p>
+              <p className="text-gray-600">সব ধরনের প্রিন্টিং এবং গ্রাফিক ডিজাইনের প্রফেশনাল সার্ভিস।</p>
             </div>
             
             <div className="service-card bg-white p-6 rounded-xl hover:shadow-lg transition-all duration-300">
@@ -245,7 +246,7 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Visa Service</h3>
-              <p className="text-gray-600">Visa application and processing services for individuals and businesses.</p>
+              <p className="text-gray-600">ব্যক্তিগত এবং ব্যবসায়িক ভিসা আবেদন প্রক্রিয়াকরণ সার্ভিস।</p>
             </div>
             
             <div className="service-card bg-white p-6 rounded-xl hover:shadow-lg transition-all duration-300">
@@ -255,58 +256,24 @@ export default function Home() {
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2 text-gray-800">Travel Tickets</h3>
-              <p className="text-gray-600">Air and bus ticket booking services for your travel needs.</p>
+              <p className="text-gray-600">বিমান এবং বাসের টিকেট বুকিং সার্ভিস, আপনার ভ্রমণের সব চাহিদা পূরণে।</p>
             </div>
           </div>
         </div>
       </section>
 
       <section id="about" className="section">
-        <div className="container mx-auto">
+        <div className="container mx-auto px-6">
           <h2 className="text-3xl font-bold text-center mb-8">About Us</h2>
           <p className="text-lg text-center max-w-2xl mx-auto">
-            Square Computers is dedicated to providing top-notch technology solutions. With years of experience, we offer reliable computer sales, expert repair services, and customized IT solutions to meet the needs of individuals and businesses alike.
+            স্কয়ার কম্পিউটার্স টেকনোলজি সলিউশনে একটি বিশ্বস্ত নাম। বছরের পর বছর ধরে আমরা নির্ভরযোগ্য কম্পিউটার সেল, এক্সপার্ট রিপেয়ার সার্ভিস এবং কাস্টমাইজড IT সমাধান দিয়ে আসছি। আমরা ব্যক্তিগত এবং ব্যবসায়িক সব ধরনের চাহিদা পূরণে সচেষ্ট।
           </p>
         </div>
       </section>
 
-      <Locations />
+      <Brands />
 
-      {/* Brands Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Our Trusted Brands</h2>
-            <div className="w-24 h-1 bg-cyan-500 mx-auto"></div>
-          </div>
-          
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-8 items-center">
-            {brands.map((brand, index) => (
-              <div key={index} className="flex justify-center">
-                <a 
-                  href={brand.url}
-                  className="flex items-center justify-center p-6 bg-white rounded-xl hover:bg-gray-50 transition-all duration-300 w-full h-full"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name} 
-                    className="h-14 w-full object-contain"
-                    title={brand.name}
-                    style={{
-                      maxWidth: '120px',
-                      height: 'auto',
-                      objectFit: 'contain',
-                      padding: '8px'
-                    }}
-                  />
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <Locations />
     </main>
   );
 }

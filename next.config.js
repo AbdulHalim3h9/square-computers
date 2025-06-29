@@ -8,6 +8,26 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.seeklogo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'brandlogos.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'upload.wikimedia.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.lg.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.digimarkbd.com',
+      },
     ],
   },
 }

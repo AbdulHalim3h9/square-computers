@@ -49,7 +49,9 @@ const menuItems = [
   },
   {
     title: 'Brands',
+    href: '/brands',
     submenu: [
+      { name: 'All Brands', href: '/brands' },
       { name: 'Zkteco', href: '/brands/zkteco' },
       { name: 'HIKVISION', href: '/brands/hikvision' },
       { name: 'Ezviz', href: '/brands/ezviz' },
@@ -212,7 +214,7 @@ export default function Navbar() {
       <nav 
         className="fixed w-full z-50 bg-white shadow-lg shadow-cyan-100/20 transition-all duration-300 ease-out"
       >
-        <div className="lg:container mx-auto px-4">
+        <div className="xl:container mx-auto">
           <div className="flex justify-between items-center h-16 sm:h-18 md:h-20">
             {/* Logo */}
             <div className="flex items-center">
@@ -233,8 +235,8 @@ export default function Navbar() {
                   className="h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 transform hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <div className="navbar-brand md:hidden lg:block">
-                <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold leading-tight whitespace-nowrap">
+              <div className="navbar-brand md:hidden xl:block">
+                <h1 className="text-lg sm:text-xl lg:text-3xl font-semibold leading-tight whitespace-nowrap">
                   <span className="square-text">Square</span>{' '}
                   <span className="computers-text">Computers</span>
                 </h1>

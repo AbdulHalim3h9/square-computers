@@ -9,7 +9,7 @@ const brands = [
   },
   {
     name: 'HIKVISION',
-    description: 'World\'s leading provider of innovative video surveillance products',
+    description: 'World&apos;s leading provider of innovative video surveillance products',
     logo: 'https://brandlogos.net/wp-content/uploads/2022/01/hikvision-brandlogo.net_-512x512.png',
     website: 'https://www.hikvision.com',
     category: 'Security',

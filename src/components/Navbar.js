@@ -72,7 +72,7 @@ const menuItems = [
   {
     title: 'Support',
     submenu: [
-      { name: 'Technical Support', href: '/support/technical' },
+      { name: 'Technical Support', href: '/support/technical-support' },
       { name: 'ZKTecho Product Verification', href: '/support/zkteco-verification' },
       { name: 'Software Download Center', href: '#' },
       { name: 'PR', href: '#' }
@@ -128,10 +128,19 @@ export default function Navbar() {
     };
   }, [isSearchExpanded, searchQuery, searchFormRef, navRef]);
 
-  const toggleDropdown = (index) => {
-    if (window.innerWidth < 768 || openDropdown === index) {
-      setOpenDropdown(openDropdown === index ? null : index);
+  const toggleDropdown = (index, e) => {
+    console.log(e);
+    if (e) {
+      e.stopPropagation();
+      // Only prevent default on mobile to allow proper touch handling
+      if (window.innerWidth < 768) {
+        e.preventDefault();
+      }
     }
+    
+    // Toggle the dropdown
+    console.log(openDropdown);
+    setOpenDropdown(openDropdown === index ? null : index);
   };
 
   const openDropdownOnHover = (index) => {
@@ -337,7 +346,7 @@ export default function Navbar() {
                       </Link>
                     ) : (
                       <button
-                        onClick={() => toggleDropdown(index)}
+                        onClick={(e) => toggleDropdown(index, e)}
                         className={`px-3 py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium ${
                           openDropdown === index ? 'text-cyan-600' : ''
                         }`}
@@ -433,7 +442,7 @@ export default function Navbar() {
                   ) : (
                     <div>
                       <button
-                        onClick={() => toggleDropdown(openDropdown === index ? null : index)}
+                        onClick={(e) => toggleDropdown(index, e)}
                         className={`w-full flex justify-between items-center px-4 py-3 text-left text-gray-700 hover:text-cyan-500 rounded-xl text-base sm:text-lg font-medium transition-all duration-300`}
                       >
                         {item.title}

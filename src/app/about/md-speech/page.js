@@ -12,7 +12,7 @@ export default function MDSpeech() {
       <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Managing Director's Message</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Managing Director&apos;s Message</h1>
             <nav className="text-sm text-cyan-100" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3 justify-center">
                 <li className="inline-flex items-center">
@@ -33,7 +33,7 @@ export default function MDSpeech() {
                     <svg className="w-3 h-3 mx-2 text-cyan-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                       <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                     </svg>
-                    <span className="text-white font-medium">MD's Message</span>
+                    <span className="text-white font-medium">MD&apos;s Message</span>
                   </div>
                 </li>
               </ol>
@@ -77,14 +77,20 @@ export default function MDSpeech() {
               
               <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Our Journey So Far</h3>
               
+              <p className="text-lg text-gray-700 mb-6">
+                On behalf of the management and staff of Square Computers, I&apos;m delighted to welcome you to our website. Since our establishment, we&apos;ve been committed to delivering cutting-edge technology solutions that drive business growth and innovation.
+              </p>
               <p className="mb-4">
-                Over the years, Square Computers has transformed from a modest technology provider to a market leader, consistently delivering cutting-edge solutions to our clients. Our growth has been fueled by our dedicated team, whose expertise and commitment to quality have set us apart in this competitive industry.
+                Our growth has been fueled by our dedicated team, whose expertise and commitment to quality have set us apart in this competitive industry.
               </p>
               
               <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Innovation at Our Core</h3>
               
+              <p className="text-lg text-gray-700">
+                Thank you for your trust in Square Computers. We&apos;re excited about the future and look forward to continuing to serve you with the same passion and dedication that has defined our journey so far.
+              </p>
               <p className="mb-4">
-                At Square Computers, we believe in pushing the boundaries of what's possible. Our investment in research and development has enabled us to introduce innovative products and services that address the unique challenges faced by our clients. We are committed to staying ahead of technological trends and continuously improving our offerings.
+                At Square Computers, we believe in pushing the boundaries of what&apos;s possible. Our investment in research and development has enabled us to introduce innovative products and services that address the unique challenges faced by our clients. We are committed to staying ahead of technological trends and continuously improving our offerings.
               </p>
               
               <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Our Commitment to You</h3>

@@ -15,7 +15,7 @@ export default function LifeAtSquareComputers() {
     },
     {
       title: 'Continuous Learning',
-      description: 'We invest in our team\'s growth through training programs, workshops, and professional development opportunities.',
+      description: 'We invest in our team&apos;s growth through training programs, workshops, and professional development opportunities.',
       icon: '📚'
     },
     {
@@ -70,7 +70,7 @@ export default function LifeAtSquareComputers() {
             <h2 className="text-3xl font-bold text-gray-800 mb-2">Our Culture</h2>
             <div className="w-20 h-1 bg-cyan-500 mx-auto mb-6"></div>
             <p className="text-gray-600 max-w-3xl mx-auto">
-              At Square Computers, we've built a culture that fosters creativity, encourages professional growth, and celebrates success together. Our team is our greatest asset, and we're committed to creating an environment where everyone can thrive.
+              At Square Computers, we&apos;ve built a culture that fosters creativity, encourages professional growth, and celebrates success together. Our team is our greatest asset, and we&apos;re committed to creating an environment where everyone can thrive.
             </p>
           </div>
 
@@ -118,9 +118,9 @@ export default function LifeAtSquareComputers() {
         {/* Testimonial */}
         <section className="bg-gradient-to-r from-cyan-600 to-cyan-700 text-white rounded-2xl p-8 md:p-12 mb-16">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="text-5xl mb-6">"</div>
+            <div className="text-5xl mb-6">{"\""}</div>
             <p className="text-xl md:text-2xl leading-relaxed mb-8">
-              Working at Square Computers has been an incredible journey. The supportive environment, challenging projects, and amazing colleagues make every day rewarding. It's more than just a workplace; it's a family that grows together.
+              Working at Square Computers has been an incredible journey. The supportive environment, challenging projects, and amazing colleagues make every day rewarding. It&apos;s more than just a workplace; it&apos;s a family that grows together.
             </p>
             <div className="font-medium">
               <p>Michael Chen</p>

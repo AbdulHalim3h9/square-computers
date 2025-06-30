@@ -37,7 +37,7 @@ export default function MissionVision() {
                 <ul className="space-y-3">
                   <li className="flex items-start">
                     <span className="text-cyan-600 mr-2">✓</span>
-                    <span>Delivering cutting-edge technology solutions tailored to our clients' unique needs</span>
+                    <span>Delivering cutting-edge technology solutions tailored to our clients&apos; unique needs</span>
                   </li>
                   <li className="flex items-start">
                     <span className="text-cyan-600 mr-2">✓</span>

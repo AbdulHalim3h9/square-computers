@@ -13,7 +13,7 @@ export default function ChairmanSpeech() {
       <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 text-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Chairman's Speech</h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Chairman&apos;s Speech</h1>
             <nav className="text-sm text-cyan-100" aria-label="Breadcrumb">
               <ol className="inline-flex items-center space-x-1 md:space-x-3 justify-center">
                 <li className="inline-flex items-center">
@@ -26,7 +26,7 @@ export default function ChairmanSpeech() {
                     <svg className="w-3 h-3 mx-2 text-cyan-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                       <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
                     </svg>
-                    <span className="text-white font-medium">Chairman's Speech</span>
+                    <span className="text-white font-medium">Chairman&apos;s Speech</span>
                   </div>
                 </li>
               </ol>
@@ -64,18 +64,26 @@ export default function ChairmanSpeech() {
                 Dear Valued Stakeholders,
               </p>
               
-              <p className="mb-4">
-                It is with great pleasure and pride that I welcome you to Square Computers. Since our inception, we have been driven by a singular vision: to be at the forefront of technological innovation while maintaining the highest standards of integrity and customer service.
-              </p>
+              <p className="text-lg text-gray-700 mb-6">
+        Our vision has always been to be at the forefront of technological advancement. We&apos;ve built our reputation on trust, quality, and exceptional service, and we&apos;re proud to have served thousands of satisfied customers over the years.
+      </p>
+              
+              <p className="text-lg text-gray-700 mb-6">
+        On behalf of the entire team at Square Computers, I&apos;d like to welcome you to our website. Since our founding, we&apos;ve been committed to delivering innovative technology solutions that empower businesses and individuals alike.
+      </p>
               
               <p className="mb-4">
-                Our journey began with a simple yet powerful idea - to make cutting-edge technology accessible to businesses and individuals alike. Over the years, we have grown from a small startup to a trusted name in the industry, thanks to the unwavering support of our customers, partners, and dedicated team members.
+                It is with great pleasure and pride that I welcome you to Square Computers. Since our inception, we have grown from a small startup to a trusted name in the industry, thanks to the unwavering support of our customers, partners, and dedicated team members.
               </p>
               
               <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Our Commitment to Excellence</h3>
               
+              <p className="text-lg text-gray-700">
+        Thank you for considering Square Computers as your technology partner. We look forward to serving you and helping you achieve your goals in this digital age.
+      </p>
+              
               <p className="mb-4">
-                At Square Computers, we believe that technology should be an enabler, not a barrier. That's why we are committed to providing solutions that are not only innovative but also intuitive and reliable. Our team of experts works tirelessly to stay ahead of industry trends and deliver products and services that meet the evolving needs of our clients.
+                At Square Computers, we believe that technology should be an enabler, not a barrier. That&apos;s why we are committed to providing solutions that are not only innovative but also intuitive and reliable. Our team of experts works tirelessly to stay ahead of industry trends and deliver products and services that meet the evolving needs of our clients.
               </p>
               
               <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Looking Ahead</h3>

@@ -91,7 +91,7 @@ export default function WhyUs() {
         <div className="bg-gradient-to-r from-cyan-50 to-white rounded-xl shadow-md overflow-hidden mb-16">
           <div className="p-8 md:p-12">
             <div className="max-w-3xl mx-auto text-center">
-              <div className="text-5xl mb-4">"</div>
+              <div className="text-5xl mb-4">&quot;</div>
               <p className="text-xl text-gray-700 italic mb-6">
                 Square Computers has been an invaluable partner in our digital transformation journey. Their expertise and commitment to excellence have helped us streamline our operations and achieve remarkable results.
               </p>

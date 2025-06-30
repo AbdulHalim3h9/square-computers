@@ -229,7 +229,7 @@ const TechnicalSupport = () => {
             <Headphones className="w-8 h-8 text-cyan-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-800 mb-2">Contact Support</h3>
             <p className="text-gray-600 text-sm mb-4">
-              Can't find what you're looking for? Our support team is here to help.
+              Can&apos;t find what you&apos;re looking for? Our support team is here to help.
             </p>
             <Link
               href="/contact"
@@ -261,11 +261,11 @@ const TechnicalSupport = () => {
           </div>
           <div className="bg-white p-5 rounded-lg shadow-lg cyan-glow border border-cyan-100/20">
             <h3 className="text-base font-semibold text-gray-800 mb-2">
-              What should I do if my device won't turn on?
+              What should I do if my device won&#39;t turn on?
             </h3>
             <p className="text-gray-600 text-sm">
               Check the power connection, try a different power outlet, and ensure the battery is
-              properly inserted if applicable. If the issue persists, please{' '}
+              properly inserted if applicable. If the issue persists, please {' '}
               <Link href="/contact" className="text-cyan-400 hover:text-cyan-300 transition-colors">
                 contact our support team
               </Link>
@@ -277,7 +277,7 @@ const TechnicalSupport = () => {
               How can I check my warranty status?
             </h3>
             <p className="text-gray-600 text-sm">
-              You can check your warranty status by entering your product's serial number on our{' '}
+              You can check your warranty status by entering your product&#39;s serial number on our {' '}
               <Link href="/warranty" className="text-cyan-400 hover:text-cyan-300 transition-colors">
                 Warranty Check
               </Link>{' '}

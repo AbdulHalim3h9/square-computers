@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 const AnimatedBackground = dynamic(
   () => import('@/components/AnimatedBackground'),
@@ -49,13 +50,18 @@ export default function EmployeeLogin() {
     }
   };
 
-  // Logo component using the SVG file
-  const Logo = () => (
-    <img
-      src="/images/logo.svg"
-      alt="Square Computers Logo"
-      className="w-full h-auto max-w-[200px] mx-auto"
-    />
+  // Logo component using Next.js Image component
+  const Logo = ({ className = '' }) => (
+    <div className={`${className} w-[120px] h-auto md:w-[180px] lg:w-[220px] font-light`}>
+      <Image
+        src="/images/logo.svg"
+        alt="Square Computers Logo"
+        width={220}
+        height={55}
+        className="w-full h-auto object-contain"
+        priority
+      />
+    </div>
   );
 
   // Shared form component for both mobile and desktop layouts
@@ -70,7 +76,7 @@ export default function EmployeeLogin() {
       <div>
         <label
           htmlFor="email"
-          className="block text-sm font-semibold text-gray-700 mb-2"
+          className="block text-sm font-medium text-gray-700 mb-2"
         >
           Email Address
         </label>
@@ -91,7 +97,7 @@ export default function EmployeeLogin() {
         <div className="flex items-center justify-between mb-2">
           <label
             htmlFor="password"
-            className="block text-sm font-semibold text-gray-700"
+            className="block text-sm font-light text-gray-700"
           >
             Password
           </label>
@@ -118,7 +124,7 @@ export default function EmployeeLogin() {
       <button
         type="submit"
         disabled={loading}
-        className={`w-full flex justify-center py-3 px-4 rounded-xl shadow-lg text-base font-semibold text-white bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-200 ${
+        className={`w-full flex justify-center py-3 px-4 rounded-xl shadow-lg text-base font-light text-white bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-200 ${
           loading ? 'opacity-70 cursor-not-allowed' : ''
         }`}
       >
@@ -159,16 +165,18 @@ export default function EmployeeLogin() {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
         <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Left Side - Branding with Logo */}
-          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 p-8 relative overflow-hidden h-64">
+          <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 p-8 relative overflow-hidden h-72">
             <AnimatedBackground />
             <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
-              <div className="mb-2 sm:mb-4 transform scale-90 sm:scale-100">
-                <Logo className="w-12 h-12 sm:w-16 sm:h-16" />
+              <div className="mb-4 sm:mb-6">
+                <Logo />
               </div>
-              <h1 className="text-2xl sm:text-3xl font-bold leading-tight whitespace-nowrap">
-                <span className="text-cyan-300">Square</span>{' '}
-                <span className="text-white">Computers</span>
-              </h1>
+              <div className="mt-2">
+                <h1 className="text-2xl sm:text-3xl font-semibold tracking-wide whitespace-nowrap">
+                  <span className="text-cyan-300">Square</span>{' '}
+                  <span className="text-white">Computers</span>
+                </h1>
+              </div>
             </div>
           </div>
 
@@ -201,11 +209,11 @@ export default function EmployeeLogin() {
           <div className="hidden md:flex md:w-1/2 lg:w-3/5 bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 relative overflow-hidden">
             <AnimatedBackground />
             <div className="relative z-10 flex flex-col justify-center items-center text-center px-12 lg:px-16 w-full">
-              <div className="mb-6 transform scale-100 hover:scale-110 transition-transform duration-300">
-                <Logo className="w-20 h-20" />
+              <div className="mb-8 transition-transform duration-300 hover:scale-105">
+                <Logo />
               </div>
-              <div className="mb-6">
-                <h1 className="text-3xl lg:text-4xl font-bold leading-tight whitespace-nowrap">
+              <div className="my-8">
+                <h1 className="text-4xl lg:text-5xl font-semibold tracking-wide whitespace-nowrap">
                   <span className="text-cyan-300">Square</span>{' '}
                   <span className="text-white">Computers</span>
                 </h1>

@@ -4,18 +4,29 @@ import { useEffect, useRef } from 'react';
 
 const AnimatedBackground = () => {
   const canvasRef = useRef(null);
-  const stars = [];
-  const squares = [];
-  const colors = ['rgba(56, 189, 248, 0.4)', 'rgba(34, 211, 238, 0.4)', 'rgba(14, 165, 233, 0.4)'];
+  const animationRef = useRef(null);
+  const animationState = useRef({
+    stars: [],
+    squares: []
+  });
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
-    
+    const state = animationState.current;
+
+    // Colors for the squares
+    const colors = [
+      'rgba(34, 211, 238, 0.15)', // cyan-400 with opacity
+      'rgba(103, 232, 249, 0.15)', // cyan-300 with opacity
+      'rgba(165, 243, 252, 0.15)', // cyan-200 with opacity
+    ];
+
     // Set canvas size
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth;
-      canvas.height = canvas.offsetHeight;
+      canvas.width = canvas.offsetWidth * 2; // For better quality on retina displays
+      canvas.height = canvas.offsetHeight * 2;
+      ctx.scale(2, 2);
     };
     
     resizeCanvas();
@@ -23,9 +34,10 @@ const AnimatedBackground = () => {
 
     // Create stars
     const createStars = () => {
+      state.stars = [];
       const count = 50;
       for (let i = 0; i < count; i++) {
-        stars.push({
+        state.stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           size: Math.random() * 2 + 1,
@@ -37,33 +49,36 @@ const AnimatedBackground = () => {
 
     // Create animated squares
     const createSquares = () => {
-      const count = 6; // Increased number of squares
+      state.squares = [];
+      const count = 4; // Fewer squares but larger
       for (let i = 0; i < count; i++) {
-        squares.push({
+        state.squares.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 40 + 40, // Smaller squares
+          size: Math.random() * 100 + 100, // Larger squares
           rotation: Math.random() * 360,
-          rotationSpeed: (Math.random() - 0.5) * 0.3, // Slower rotation
-          xSpeed: (Math.random() - 0.5) * 0.3, // Slower movement
-          ySpeed: (Math.random() - 0.5) * 0.3,
-          scale: Math.random() * 0.5 + 0.5,
-          scaleSpeed: (Math.random() - 0.5) * 0.01,
+          rotationSpeed: (Math.random() - 0.5) * 0.5, // More rotation
+          xSpeed: (Math.random() - 0.5) * 0.5, // More movement
+          ySpeed: (Math.random() - 0.5) * 0.5,
+          scale: Math.random() * 0.5 + 0.75, // Start larger
+          scaleSpeed: (Math.random() - 0.5) * 0.02, // Faster scaling
           color: colors[Math.floor(Math.random() * colors.length)],
-          cornerRadius: Math.random() * 10 + 5 // Rounded corners
+          cornerRadius: 10 // Consistent rounded corners
         });
       }
     };
 
     // Animation loop
     const animate = () => {
+      if (!canvasRef.current) return;
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
       // Update and draw stars
-      stars.forEach(star => {
-        star.y -= star.speed;
-        if (star.y < 0) {
-          star.y = canvas.height;
+      state.stars.forEach(star => {
+        star.y += star.speed;
+        if (star.y > canvas.height) {
+          star.y = 0;
           star.x = Math.random() * canvas.width;
         }
         
@@ -74,17 +89,20 @@ const AnimatedBackground = () => {
       });
       
       // Update and draw squares
-      squares.forEach(square => {
-        // Update position and rotation
+      state.squares.forEach(square => {
+        // Update position
         square.x += square.xSpeed;
         square.y += square.ySpeed;
+        
+        // Bounce off edges with more space
+        if (square.x < -square.size/2 || square.x > canvas.width + square.size/2) square.xSpeed *= -1;
+        if (square.y < -square.size/2 || square.y > canvas.height + square.size/2) square.ySpeed *= -1;
+        
+        // Update rotation
         square.rotation += square.rotationSpeed;
+        
+        // Update scale with smooth pulsing
         square.scale += square.scaleSpeed;
-        
-        // Bounce off edges
-        if (square.x < -100 || square.x > canvas.width + 100) square.xSpeed *= -1;
-        if (square.y < -100 || square.y > canvas.height + 100) square.ySpeed *= -1;
-        
         // Reverse scale direction at limits
         if (square.scale < 0.5 || square.scale > 1.5) square.scaleSpeed *= -1;
         
@@ -115,7 +133,7 @@ const AnimatedBackground = () => {
         ctx.restore();
       });
       
-      requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animate);
     };
 
     createStars();
@@ -124,8 +142,11 @@ const AnimatedBackground = () => {
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
     };
-  }, []);
+  }, []); // No dependencies needed now
 
   return (
     <div className="absolute inset-0 overflow-hidden">

@@ -36,7 +36,7 @@ export default function Locations() {
           <span className="text-cyan-600">Locations</span>
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {locations.map((location) => (
             <div
               key={location.id}

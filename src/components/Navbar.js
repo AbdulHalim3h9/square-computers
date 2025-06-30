@@ -290,8 +290,8 @@ export default function Navbar() {
                   ref={searchInputRef}
                   type="text"
                   placeholder={isMounted && isSearchExpanded ? "Search products, services..." : "Search..."}
-                  className={`px-4 py-2 pr-10 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm transition-all duration-300 ${
-                    isMounted && isSearchExpanded ? 'w-full' : 'w-32 md:w-full'
+                  className={`px-4 py-2  rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm transition-all duration-300 ${
+                    isMounted && isSearchExpanded ? 'w-full' : 'w-24 md:w-full'
                   }`}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

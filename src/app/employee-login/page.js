@@ -50,17 +50,76 @@ export default function EmployeeLogin() {
     }
   };
 
-  // Logo component using Next.js Image component
+  // Logo component with enhanced glow effect
   const Logo = ({ className = '' }) => (
-    <div className={`${className} w-[120px] h-auto md:w-[180px] lg:w-[220px] font-light`}>
-      <Image
-        src="/images/logo.svg"
-        alt="Square Computers Logo"
-        width={220}
-        height={55}
-        className="w-full h-auto object-contain"
-        priority
-      />
+    <div className={`${className} relative w-[150px] h-auto sm:w-[200px] md:w-[250px] lg:w-[280px] font-light`}>
+      {/* Glow effect */}
+      <div className="absolute inset-0 rounded-full bg-cyan-300/5" 
+           style={{
+             animation: 'pulseSize 5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+             filter: 'blur(20px)',
+             opacity: 0.5,
+             transform: 'scale(10.1)',
+             width: '300%',
+             height: '300%',
+             left: '-30%',
+             top: '-90%'
+           }}>
+      </div>
+      
+      {/* Secondary glow for more depth */}
+      <div className="absolute inset-0 rounded-full bg-lime-500/5" 
+           style={{
+             animation: 'pulseSize 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+             filter: 'blur(150px)',
+             opacity: 0.2,
+             transform: 'scale(8.2)',
+             width: '200%',
+             height: '200%',
+             top: '-30%',
+             left: '-30%'
+           }}>
+      </div>
+      
+      {/* Logo */}
+      <div className="relative z-10 transition-all duration-300 hover:scale-105">
+        <Image
+          src="/images/logo.svg"
+          alt="Square Computers Logo"
+          width={220}
+          height={55}
+          className="w-full h-auto object-contain"
+          style={{
+            filter: 'drop-shadow(0 0 20px rgba(34, 211, 238, 0.9))',
+            transition: 'filter 0.3s ease-in-out',
+            animation: 'pulseShadow 3s ease-in-out infinite'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.filter = 'drop-shadow(0 0 30px rgba(34, 211, 238, 1))'}
+          onMouseLeave={(e) => e.currentTarget.style.filter = 'drop-shadow(0 0 20px rgba(34, 211, 238, 0.9))'}
+          priority
+        />
+      </div>
+      
+      <style jsx>{`
+        @keyframes pulseSize {
+          0%, 100% { 
+            transform: scale(1);
+            opacity: 0.7;
+          }
+          50% { 
+            transform: scale(1.2);
+            opacity: 0.9;
+          }
+        }
+        @keyframes pulseShadow {
+          0%, 100% { 
+            filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.9));
+          }
+          50% { 
+            filter: drop-shadow(0 0 40px rgba(34, 211, 238, 1));
+          }
+        }
+      `}</style>
     </div>
   );
 
@@ -171,8 +230,8 @@ export default function EmployeeLogin() {
               <div className="mb-4 sm:mb-6">
                 <Logo />
               </div>
-              <div className="mt-2">
-                <h1 className="text-2xl sm:text-3xl font-semibold tracking-wide whitespace-nowrap">
+              <div className="mt-1">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-wide whitespace-nowrap">
                   <span className="text-cyan-300">Square</span>{' '}
                   <span className="text-white">Computers</span>
                 </h1>
@@ -209,13 +268,19 @@ export default function EmployeeLogin() {
           <div className="hidden md:flex md:w-1/2 lg:w-3/5 bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 relative overflow-hidden">
             <AnimatedBackground />
             <div className="relative z-10 flex flex-col justify-center items-center text-center px-12 lg:px-16 w-full">
-              <div className="mb-8 transition-transform duration-300 hover:scale-105">
+              <div className="mb-8 pb-[100] transition-transform duration-300 hover:scale-105">
                 <Logo />
               </div>
-              <div className="my-8">
-                <h1 className="text-4xl lg:text-5xl font-semibold tracking-wide whitespace-nowrap">
+              <div className="mt-0">
+                <h1 className="text-4xl lg:text-2xl font-light tracking-tight whitespace-nowrap">
+                  <span className="text-white font-thin text-6xl md:text-8xl tracking-tight whitespace-nowrap pb-10 md:pb-16 mb-16 italic">Welcome</span><br></br>
+                  <span className="font-light text-gray-300">to</span>
+                </h1>
+              </div>
+              <div className="mt-0">
+                <h1 className="text-4xl lg:text-4xl tracking-wide whitespace-nowrap">
                   <span className="text-cyan-300">Square</span>{' '}
-                  <span className="text-white">Computers</span>
+                  <span className="text-gray-300">Computers</span>
                 </h1>
               </div>
               <div className="absolute bottom-8 left-0 right-0">

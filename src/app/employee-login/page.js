@@ -243,7 +243,15 @@ export default function EmployeeLogin() {
 
   // Mobile popup content
   const MobilePopup = () => (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+      {/* Blur the FloatingHelp component for mobile */}
+      <style jsx global>{`
+        .floating-help-container {
+          filter: blur(4px);
+          opacity: 0.7;
+          pointer-events: none;
+        }
+      `}</style>
       <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-md" ref={popupRef}>
         {/* Close Button */}
         <button
@@ -295,7 +303,15 @@ export default function EmployeeLogin() {
 
   // Desktop layout - popup with blurred background
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+      {/* Blur the FloatingHelp component */}
+      <style jsx global>{`
+        .floating-help-container {
+          filter: blur(4px);
+          opacity: 0.7;
+          pointer-events: none;
+        }
+      `}</style>
       <div className="relative w-full max-w-4xl" ref={popupRef}>
         <div className="flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden relative">
           {/* Close Button */}
@@ -316,9 +332,16 @@ export default function EmployeeLogin() {
               <div className="mb-6">
                 <Logo />
               </div>
-              <div className="mt-4">
-                <h1 className="text-2xl font-light text-gray-300">
-                  Welcome to <span className="text-cyan-300 font-semibold">Square Computers</span>
+              <div className="mt-0">
+                <h1 className="text-4xl lg:text-2xl font-light tracking-tight whitespace-nowrap">
+                  <span className="text-white font-thin text-6xl tracking-tight whitespace-nowrap pb-10 md:pb-16 mb-16 italic">Welcome</span><br></br>
+                  <span className="font-light text-gray-300">to</span>
+                </h1>
+              </div>
+              <div className="mt-0">
+                <h1 className="text-4xl lg:text-4xl tracking-wide whitespace-nowrap">
+                  <span className="text-cyan-300">Square</span>{' '}
+                  <span className="text-gray-300">Computers</span>
                 </h1>
               </div>
               <div className="absolute bottom-8 left-0 right-0">

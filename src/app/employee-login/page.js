@@ -75,7 +75,7 @@ export default function EmployeeLogin() {
 
   // Logo component with enhanced glow effect
   const Logo = ({ className = '' }) => (
-    <div className={`${className} relative w-[150px] h-auto sm:w-[200px] md:w-[250px] lg:w-[280px] font-light`}>
+    <div className={`${className} relative w-[100px] h-auto xs:w-[130px] sm:w-[180px] md:w-[220px] lg:w-[250px] font-light`}>
       {/* Glow effect */}
       <div className="absolute inset-0 rounded-full bg-cyan-300/5" 
            style={{
@@ -263,14 +263,21 @@ export default function EmployeeLogin() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 p-8 relative overflow-hidden h-64">
+        <div className="bg-gradient-to-br from-slate-900 via-slate-800 to-gray-900 p-4 relative overflow-hidden h-48">
           <AnimatedBackground />
-          <div className="relative z-10 flex flex-col items-center justify-center h-full text-center">
-            <div className="mb-4">
+          <div className="relative z-10 flex flex-col justify-center items-center text-center w-full h-full">
+            <div className="scale-90 -mt-2 mb-0">
               <Logo />
             </div>
             <div className="mt-2">
-              <h1 className="text-xl font-semibold tracking-wide">
+              <h1 className="text-2xl font-light">
+                <span className="text-white font-thin italic">Welcome</span>
+                {' '}
+                <span className="font-light text-gray-300 text-lg">to</span>
+              </h1>
+            </div>
+            <div className="mt-0">
+              <h1 className="text-xl">
                 <span className="text-cyan-300">Square</span>{' '}
                 <span className="text-white">Computers</span>
               </h1>

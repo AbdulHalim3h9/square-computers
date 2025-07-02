@@ -11,14 +11,14 @@ export default function EmployeeDashboard() {
     // Redirect to login if not authenticated
     // const isAuthenticated = /* check auth status */;
     // if (!isAuthenticated) {
-    //   router.push('/employee-login');
+    //   router.push('/login');
     // }
   }, [router]);
 
   const handleLogout = () => {
     // In a real app, clear auth token and redirect
     // localStorage.removeItem('authToken');
-    router.push('/employee-login');
+    router.push('/login');
   };
 
   return (

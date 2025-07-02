@@ -14,15 +14,12 @@ const menuItems = [
       { name: 'MD Speech', href: '/about/md-speech' },
       { name: 'Mission & Vision', href: '/about/mission-vision' },
       { name: 'Why Us', href: '/about/why-us' },
+      { name: 'Our Team', href: '/team' },
       { name: 'Life at Square Computer\'s', href: '/about/life' }
     ]
   },
   {
-    title: 'Our Team',
-    href: '/team'
-  },
-  {
-    title: 'Product',
+    title: 'Products',
     submenu: [
       { name: 'Computer & Laptop', href: '/products/computers-laptops' },
       { name: 'Computer & IT Accessories', href: '/products/it-accessories' },
@@ -37,7 +34,7 @@ const menuItems = [
     ]
   },
   {
-    title: 'Service',
+    title: 'Services',
     href: '/services',
     submenu: [
       { name: 'All Services', href: '/services' },
@@ -70,6 +67,10 @@ const menuItems = [
     href: '/clients'
   },
   {
+    title: 'Build Solution',
+    href: '/build-solution'
+  },
+  {
     title: 'Support',
     submenu: [
       { name: 'Technical Support', href: '/support/technical-support' },
@@ -79,8 +80,8 @@ const menuItems = [
     ]
   },
   {
-    title: 'Employee Login',
-    href: '/employee-login'
+    title: 'Login',
+    href: '/login'
   }
 ];
 
@@ -91,6 +92,13 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  
+  // Prevent hydration mismatch by only rendering dropdowns on client side
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const pathname = usePathname();
   const router = useRouter();
   const dropdownRefs = useRef({});
@@ -129,18 +137,13 @@ export default function Navbar() {
   }, [isSearchExpanded, searchQuery, searchFormRef, navRef]);
 
   const toggleDropdown = (index, e) => {
-    console.log(e);
     if (e) {
       e.stopPropagation();
-      // Only prevent default on mobile to allow proper touch handling
-      if (window.innerWidth < 768) {
-        e.preventDefault();
-      }
+      e.preventDefault();
     }
     
-    // Toggle the dropdown
-    console.log(openDropdown);
-    setOpenDropdown(openDropdown === index ? null : index);
+    // Toggle the dropdown using a callback to ensure we're working with the latest state
+    setOpenDropdown(prevIndex => prevIndex === index ? null : index);
   };
 
   const openDropdownOnHover = (index) => {
@@ -149,11 +152,29 @@ export default function Navbar() {
     }
   };
 
+  const closeDropdownTimeout = useRef(null);
+
   const closeAllDropdowns = () => {
     if (window.innerWidth >= 768) {
-      setOpenDropdown(null);
+      // Clear any existing timeout to prevent multiple timeouts running
+      if (closeDropdownTimeout.current) {
+        clearTimeout(closeDropdownTimeout.current);
+      }
+      // Set a new timeout to close the dropdown
+      closeDropdownTimeout.current = setTimeout(() => {
+        setOpenDropdown(null);
+      }, 300); // 300ms delay before closing
     }
   };
+
+  // Clear timeout on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (closeDropdownTimeout.current) {
+        clearTimeout(closeDropdownTimeout.current);
+      }
+    };
+  }, []);
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -252,20 +273,21 @@ export default function Navbar() {
                 }}
               >
                 <div className="relative flex-shrink-0">
-                  <div className="relative h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 transform hover:scale-105 transition-transform duration-300">
+                  <div className="relative h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 transform hover:scale-105 transition-transform duration-300">
                     <Image 
                       src="/images/logo.png" 
                       alt="Square Computers Logo" 
                       fill
                       className="object-contain"
                       priority
+                      sizes="(max-width: 640px) 2.5rem, (max-width: 768px) 3rem, (max-width: 1024px) 3.5rem, 4rem"
                     />
                   </div>
                 </div>
                 <div className={`navbar-brand md:hidden xl:block transition-all duration-300 ${
                   (isMounted && isSearchExpanded) ? 'opacity-0 w-0 overflow-hidden' : 'opacity-100 w-auto'
                 }`}>
-                  <h1 className="text-lg sm:text-xl lg:text-3xl font-semibold leading-tight whitespace-nowrap">
+                  <h1 className="text-base sm:text-lg lg:text-2xl xl:text-3xl font-semibold leading-tight whitespace-nowrap">
                     <span className="square-text">Square</span>{' '}
                     <span className="computers-text">Computers</span>
                   </h1>
@@ -275,8 +297,8 @@ export default function Navbar() {
 
             {/* Search Bar */}
             <div className={`flex-1 px-2 sm:px-4 transition-all duration-300 ${
-              isMounted && isSearchExpanded ? 'absolute left-16 right-16 z-50' : 'relative mr-2'
-            }`}>
+              isMounted && isSearchExpanded ? 'absolute left-16 right-16 z-50' : 'relative md:mr-2'
+            } ${isMounted && !isSearchExpanded ? 'mr-2' : ''}`}>
               <form 
                 ref={searchFormRef}
                 onSubmit={handleSearch} 
@@ -325,48 +347,84 @@ export default function Navbar() {
               </form>
             </div>
 
-            {/* Desktop Navigation and Hamburger Button */}
-            <div className="flex items-center justify-end flex-1">
+              {/* Desktop Navigation and Hamburger Button */}
+              <div className="flex items-center justify-end">
               {/* Desktop Menu */}
-              <div className="hidden md:flex space-x-1 font-bold whitespace-nowrap" ref={navRef}>
+              <div className="hidden md:flex space-x-0 lg:space-x-0.5 xl:space-x-1 font-bold whitespace-nowrap" ref={navRef}>
                 {menuItems.map((item, index) => (
                   <div 
                     key={item.title} 
                     className="relative group" 
                     ref={el => dropdownRefs.current[index] = el}
-                    onMouseEnter={() => item.submenu && openDropdownOnHover(index)}
+                    onMouseEnter={() => {
+                      // Clear any pending close timeouts when re-entering the menu item
+                      if (closeDropdownTimeout.current) {
+                        clearTimeout(closeDropdownTimeout.current);
+                      }
+                      if (item.submenu) {
+                        openDropdownOnHover(index);
+                      }
+                    }}
                     onMouseLeave={closeAllDropdowns}
                   >
-                    {item.href ? (
-                      <Link
-                        href={item.href}
-                        className="px-3 py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium"
-                      >
-                        {item.title}
-                      </Link>
-                    ) : (
-                      <button
-                        onClick={(e) => toggleDropdown(index, e)}
-                        className={`px-3 py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium ${
-                          openDropdown === index ? 'text-cyan-600' : ''
-                        }`}
-                      >
-                        {item.title}
-                        {item.submenu && (
-                          <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        )}
-                      </button>
-                    )}
+                    <div className="flex items-center">
+                      {item.href ? (
+                        <Link
+                          href={item.href}
+                          className="px-1 sm:px-1.5 md:px-2 lg:px-2.5 py-1.5 sm:py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium"
+                        >
+                          {item.title}
+                          {item.submenu && isClient && (
+                            <span className="ml-0 sm:ml-0.5">
+                              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 inline-block" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </span>
+                          )}
+                        </Link>
+                      ) : (
+                        <>
+                          <button
+                            onClick={(e) => toggleDropdown(index, e)}
+                            className={`px-1 sm:px-1.5 md:px-2 lg:px-2.5 py-1.5 sm:py-2 flex items-center text-gray-700 hover:text-cyan-600 transition-all duration-300 text-sm md:text-base font-medium ${
+                              openDropdown === index ? 'text-cyan-600' : ''
+                            }`}
+                          >
+                            {item.title}
+                          </button>
+                          {item.submenu && isClient && (
+                            <button
+                              onClick={(e) => toggleDropdown(index, e)}
+                              className="text-gray-500 hover:text-cyan-600 ml-0 sm:ml-0.5 focus:outline-none"
+                            >
+                              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                              </svg>
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </div>
                     
                     {item.submenu && (
                       <div 
-                        className={`absolute left-0 mt-1 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 z-50 transition-all duration-200 ${
+                        className={`absolute left-0 mt-1 min-w-[max-content] w-auto rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 py-1 z-50 transition-all duration-200 ${
                           openDropdown === index ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
                         }`}
+                        style={{
+                          minWidth: '200px',
+                          width: 'auto',
+                          maxWidth: 'calc(100vw - 2rem)'
+                        }}
+                        onMouseEnter={() => {
+                          // Clear the close timeout when mouse enters the dropdown
+                          if (closeDropdownTimeout.current) {
+                            clearTimeout(closeDropdownTimeout.current);
+                          }
+                        }}
+                        onMouseLeave={closeAllDropdowns}
                       >
-                        <div className="py-1">
+                        <div className="py-1 whitespace-nowrap px-2">
                           {item.submenu.map((subItem, subIndex) => (
                             <Link
                               key={subIndex}
@@ -395,32 +453,46 @@ export default function Navbar() {
               </div>
 
               {/* Hamburger Button - Always visible on mobile */}
-              <div className="md:hidden flex-shrink-0 ml-1">
-                <button
-                  onClick={() => setIsOpen(!isOpen)}
-                  className="inline-flex items-center justify-center p-2 rounded-lg text-gray-700 hover:text-cyan-500 hover:bg-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
-                  aria-expanded={isOpen}
-                >
-                  <span className="sr-only">Open main menu</span>
-                  <div className="relative w-6 h-6">
-                    <span
-                      className={`absolute block h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
-                        isOpen ? 'rotate-45 translate-y-0' : '-translate-y-2'
-                      }`}
-                    ></span>
-                    <span
-                      className={`absolute block h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
-                        isOpen ? 'opacity-0' : 'opacity-100'
-                      }`}
-                    ></span>
-                    <span
-                      className={`absolute block h-0.5 w-6 bg-current transform transition-all duration-300 ease-in-out ${
-                        isOpen ? '-rotate-45 translate-y-0' : 'translate-y-2'
-                      }`}
-                    ></span>
-                  </div>
-                </button>
-              </div>
+                <div className="md:hidden flex-shrink-0 ml-2 w-8 flex justify-end">
+                  <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="inline-flex items-center justify-center p-1.5 sm:p-2 rounded-lg text-gray-700 hover:text-cyan-500 hover:bg-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
+                    aria-expanded={isOpen}
+                  >
+                    <span className="sr-only">Open main menu</span>
+                    <div className="relative w-5 h-5 sm:w-6 sm:h-6">
+                      <span
+                        className={`absolute block h-0.5 w-5 sm:w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                          isOpen ? 'rotate-45 translate-y-0' : '-translate-y-1.5 sm:-translate-y-2'
+                        }`}
+                        style={{
+                          top: '50%',
+                          transformOrigin: 'center',
+                          marginTop: isOpen ? '0' : '-0.25rem'
+                        }}
+                      ></span>
+                      <span
+                        className={`absolute block h-0.5 w-5 sm:w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                          isOpen ? 'opacity-0' : 'opacity-100'
+                        }`}
+                        style={{
+                          top: '50%',
+                          marginTop: '-0.125rem'
+                        }}
+                      ></span>
+                      <span
+                        className={`absolute block h-0.5 w-5 sm:w-6 bg-current transform transition-all duration-300 ease-in-out ${
+                          isOpen ? '-rotate-45 translate-y-0' : 'translate-y-1 sm:translate-y-1.5'
+                        }`}
+                        style={{
+                          top: '50%',
+                          transformOrigin: 'center',
+                          marginTop: isOpen ? '0' : '0.25rem'
+                        }}
+                      ></span>
+                    </div>
+                  </button>
+                </div>
               
             </div>
           </div>
@@ -428,79 +500,106 @@ export default function Navbar() {
 
         {/* Mobile menu */}
         <div
-          className={`md:hidden transition-all duration-500 ease-out ${
-            isOpen 
-              ? 'max-h-screen opacity-100 translate-y-0' 
-              : 'max-h-0 opacity-0 -translate-y-4 overflow-hidden'
-          }`}
-        >
-          <div className="mobile-menu-gradient border-t border-cyan-100/50">
-            <div className="px-4 py-6 space-y-2 sm:px-6">
-              {menuItems.map((item, index) => (
-                <div key={item.title} className="border-b border-gray-100/50 last:border-b-0">
-                  {item.href ? (
-                    <Link
-                      href={item.href}
-                      className={`block px-4 py-3 text-gray-700 hover:text-cyan-500 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-transparent rounded-xl text-base sm:text-lg font-medium transition-all duration-300 transform hover:translate-x-2`}
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {item.title}
-                    </Link>
-                  ) : (
-                    <div>
-                      <button
-                        onClick={(e) => toggleDropdown(index, e)}
-                        className={`w-full flex justify-between items-center px-4 py-3 text-left text-gray-700 hover:text-cyan-500 rounded-xl text-base sm:text-lg font-medium transition-all duration-300`}
-                      >
-                        {item.title}
-                        {item.submenu && (
-                          <svg 
-                            className={`w-4 h-4 transition-transform duration-200 ${openDropdown === index ? 'transform rotate-180' : ''}`}
-                            fill="none" 
-                            stroke="currentColor" 
-                            viewBox="0 0 24 24" 
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                        )}
-                      </button>
-                      {item.submenu && (
-                        <div className={`overflow-hidden transition-all duration-300 ${openDropdown === index ? 'max-h-96' : 'max-h-0'}`}>
-                          <div className="pl-6 py-2 space-y-1">
-                            {item.submenu.map((subItem, subIndex) => (
-                              <Link
-                                key={subIndex}
-                                href={subItem.href}
-                                className="block px-4 py-2 text-sm text-gray-600 hover:text-cyan-500 hover:bg-cyan-50 rounded-lg transition-colors duration-200"
-                                onClick={() => setIsOpen(false)}
-                              >
-                                {subItem.name}
-                              </Link>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              ))}
-              {/* Mobile Employee Login Link */}
-              <div className="px-4 py-3 border-t border-gray-100/50">
-                <Link
-                  href="/employee-login"
-                  className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors duration-200"
-                  onClick={() => setIsOpen(false)}
-                >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+  className={`md:hidden transition-all duration-500 ease-out ${
+    isOpen 
+      ? 'max-h-[80vh] opacity-100 translate-y-0' 
+      : 'max-h-0 opacity-0 -translate-y-4 overflow-hidden'
+  }`}
+>
+  <div className="mobile-menu-gradient border-t border-cyan-100/50">
+    <div className="px-4 py-6 space-y-2 sm:px-6">
+      {menuItems.map((item, index) => (
+        <div key={item.title} className="border-b border-gray-100/50 last:border-b-0">
+          {item.href ? (
+            <Link
+              href={item.href}
+              className="block px-4 py-3 text-gray-700 hover:text-cyan-500 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-transparent rounded-xl text-base sm:text-lg font-medium transition-all duration-300 transform hover:translate-x-2"
+              onClick={() => setIsOpen(false)}
+            >
+              {item.title}
+            </Link>
+          ) : (
+            <div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('Button clicked for:', item.title, 'Index:', index, 'Current openDropdown:', openDropdown); // Debug log
+                  setOpenDropdown(prev => {
+                    const newState = prev === index ? null : index;
+                    console.log('New openDropdown state:', newState); // Debug log
+                    return newState;
+                  });
+                }}
+                className={`w-full flex justify-between items-center px-4 py-3 text-left text-gray-700 hover:text-cyan-500 rounded-xl text-base sm:text-lg font-medium transition-all duration-300 ${
+                  openDropdown === index ? 'text-cyan-500' : ''
+                }`}
+                aria-expanded={openDropdown === index}
+                aria-controls={`submenu-${index}`}
+              >
+                <span>{item.title}</span>
+                {item.submenu && (
+                  <svg 
+                    className={`w-4 h-4 transition-transform duration-300 ${
+                      openDropdown === index ? 'rotate-180' : 'rotate-0'
+                    }`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24" 
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
-                  Employee Login
-                </Link>
-              </div>
+                )}
+              </button>
+              {item.submenu && (
+                <div 
+                  id={`submenu-${index}`}
+                  className={`overflow-hidden transition-all duration-300 ${
+                    openDropdown === index ? 'max-h-[60vh] opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  <div 
+                    className="pl-6 py-2 space-y-1 max-h-[50vh] overflow-y-auto pr-2"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {item.submenu.map((subItem, subIndex) => (
+                      <Link
+                        key={subIndex}
+                        href={subItem.href}
+                        target={subItem.external ? "_blank" : "_self"}
+                        rel={subItem.external ? "noopener noreferrer" : ""}
+                        className="block px-4 py-2.5 text-sm text-gray-600 hover:text-cyan-500 hover:bg-cyan-50 rounded-lg transition-colors duration-200"
+                        onClick={() => {
+                          setIsOpen(false);
+                          setOpenDropdown(null);
+                        }}
+                      >
+                        {subItem.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
         </div>
+      ))}
+      {/* Mobile Employee Login Link */}
+      <div className="px-4 py-3 border-t border-gray-100/50">
+        <Link
+          href="/login"
+          className="flex items-center justify-center w-full px-4 py-2 text-sm font-medium text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors duration-200"
+          onClick={() => setIsOpen(false)}
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          Employee Login
+        </Link>
+      </div>
+    </div>
+  </div>
+</div>
       </nav>
 
       {/* Custom animations */}

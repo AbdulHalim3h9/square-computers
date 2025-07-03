@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Logo from './Logo';
 import SearchBar from './SearchBar';
 import DesktopMenu from './DesktopMenu';
@@ -262,10 +263,13 @@ export default function Navbar() {
                 >
                   <div className="relative flex-shrink-0">
                     <div className="relative h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 lg:h-16 lg:w-16 transform hover:scale-105 transition-transform duration-300">
-                      <img 
+                      <Image 
                         src="/images/logo.png" 
                         alt="Square Computers Logo" 
-                        className="object-contain h-full w-full"
+                        className="object-contain"
+                        fill
+                        sizes="(max-width: 768px) 40px, (max-width: 1200px) 56px, 64px"
+                        priority
                       />
                     </div>
                   </div>

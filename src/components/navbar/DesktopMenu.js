@@ -35,7 +35,7 @@ import clsx from 'clsx';
  * @param {(index: number, event: React.MouseEvent) => void} props.toggleDropdown
  * @param {(index: number | null) => void} props.setOpenDropdown
  */
-const DesktopMenu = memo(({ menuItems, openDropdown, toggleDropdown, setOpenDropdown }) => {
+const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleDropdown, setOpenDropdown }) {
   const dropdownRefs = useRef({});
   const timeoutRef = useRef(null);
   const [isClient, setIsClient] = useState(false);
@@ -63,23 +63,26 @@ const DesktopMenu = memo(({ menuItems, openDropdown, toggleDropdown, setOpenDrop
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(fn, delay);
   }, []);
+  
+  // Memoize the debounce function to prevent unnecessary recreations
+  const memoizedDebounce = useCallback(debounce, [debounce]);
 
   const openDropdownOnHover = useCallback((index) => {
     if (isClient && !isMobile) {
       setOpenDropdown(index);
       setOpenSubmenu(null); // Reset second-level submenu on desktop hover
     }
-  }, [isClient, isMobile, setOpenDropdown]);
+  }, [isClient, isMobile, setOpenDropdown, setOpenSubmenu]);
 
   const closeAllDropdowns = useCallback(() => {
     if (isClient && !isMobile) {
-      debounce(() => {
+      memoizedDebounce(() => {
         setOpenDropdown(null);
         setHoveredCategory(null);
         setOpenSubmenu(null);
       }, 300);
     }
-  }, [isClient, isMobile, setOpenDropdown]);
+  }, [isClient, isMobile, setOpenDropdown, memoizedDebounce]);
 
   const handleSubmenuToggle = useCallback((subIndex) => {
     if (isClient && isMobile) {

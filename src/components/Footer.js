@@ -151,7 +151,7 @@ export default function Footer() {
               <div className="col-span-2 text-left">
                 
                 {/* Contact Us */}
-                <div className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 p-4 sm:p-6 rounded-xl border border-cyan-500/20 flex-1 max-w-sm mx-auto sm:mx-0">
+                <div className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 p-4 sm:p-6 rounded-xl border border-cyan-500/20 flex-1 mx-auto sm:mx-0">
                     <h5 className="text-cyan-300 font-medium mb-3 text-center sm:text-left text-base sm:text-lg">
                       Leave a message
                     </h5>
@@ -164,7 +164,7 @@ export default function Footer() {
                       <input 
                         type="email" 
                         placeholder="Your email"
-                        className="mt-2 px-3 py-2 bg-black/30 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 text-sm"
+                        className="mt-2 px-3 py-2 bg-black/30 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-cyan-500 text-sm max-w-sm"
                       />
                     </div>
                     <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-lg hover:from-cyan-600 hover:to-cyan-700 transition-all duration-200 text-sm whitespace-nowrap mt-4 sm:mt-6">

@@ -7,6 +7,9 @@ import Locations from '@/components/Locations';
 import Brands from '@/components/Brands';
 import dynamic from 'next/dynamic';
 
+// Dynamically import OurClients to avoid SSR issues
+const OurClients = dynamic(() => import('@/components/OurClients'), { ssr: true });
+
 // Dynamically import BlogList to avoid SSR issues with window object
 const BlogList = dynamic(() => import('@/components/BlogList'), { ssr: false });
 const { getLatestBlogs } = require('@/data/blogs');
@@ -329,6 +332,9 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      {/* Our Clients Section */}
+      <OurClients />
 
       <Brands />
 

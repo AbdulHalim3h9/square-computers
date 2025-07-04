@@ -15,118 +15,105 @@ export const menuItems = [
     isMegaMenu: true,
     submenu: [
       {
+        category: 'Computer & Laptop',
+        items: [
+          { name: 'Desktop Computers', href: '/products?category=desktops' },
+          { name: 'Laptops', href: '/products?category=laptops' },
+          { name: 'Workstations', href: '/products?category=workstations' },
+          { name: 'Servers', href: '/products?category=servers' },
+          { name: 'View All', href: '/products?category=computers', isViewAll: true }
+        ]
+      },
+      {
+        category: 'Computer & IT Accessories',
+        items: [
+          { name: 'Keyboards & Mice', href: '/products?category=keyboards-mice' },
+          { name: 'Monitors', href: '/products?category=monitors' },
+          { name: 'Printers & Scanners', href: '/products?category=printers' },
+          { name: 'Networking Devices', href: '/products?category=networking' },
+          { name: 'Storage Devices', href: '/products?category=storage' },
+          { name: 'View All', href: '/products?category=it-accessories', isViewAll: true }
+        ]
+      },
+      {
         category: 'Access Control and Time Attendance',
         items: [
-          { name: 'Fingerprint Time Attendance', href: '/collections/fingerprint' },
-          { name: 'Face Recognition', href: '/collections/face-recognition-device' },
-          { name: 'RFID Card', href: '/collections/rfid-card' },
-          { name: 'Palm Recognition', href: '/collections/palm-recognition' },
-          { name: 'IRIS', href: '/collections/iris' },
-          { name: 'Readers & Accessories', href: '/collections/readers-and-accessories' },
-          { name: 'Software', href: '/collections/software' },
-          { name: 'Fingerprint Scanner', href: '/collections/fingerprint-scanner' },
-          { name: 'Exit Button', href: '/collections/exit-button' },
-          { name: 'Controller', href: '/collections/control-terminal' },
-          { name: 'EM Lock', href: '/collections/door-em-lock' },
-          { name: 'View All', href: '/collections/access-control-time-attendance', isViewAll: true }
+          { name: 'Fingerprint Devices', href: '/products?category=fingerprint' },
+          { name: 'Face Recognition', href: '/products?category=face-recognition' },
+          { name: 'RFID Systems', href: '/products?category=rfid' },
+          { name: 'Turnstiles', href: '/products?category=turnstiles' },
+          { name: 'Access Control Kits', href: '/products?category=access-control-kits' },
+          { name: 'View All', href: '/products?category=access-control', isViewAll: true }
         ]
       },
       {
         category: 'Security Surveillance',
         items: [
-          { name: 'IP Camera', href: '/collections/ip-camera' },
-          { name: 'HD Camera', href: '/collections/hd-camera' },
-          { name: 'Wifi Camera', href: '/collections/wifi-camera' },
-          { name: 'DVR', href: '/collections/dvr' },
-          { name: 'NVR', href: '/collections/nvr' },
-          { name: 'Accessories', href: '/collections/security-surveillance-accessories' },
-          { name: 'Power Adapter', href: '/collections/power-adapter' },
-          { name: 'View All', href: '/collections/cctv-surveillance', isViewAll: true }
-        ]
-      },
-      {
-        category: 'Smart Lock',
-        items: [
-          { name: 'Hotel Door Lock', href: '/collections/hotel-door-lock' },
-          { name: 'Home Door Lock', href: '/collections/home-door-lock' },
-          { name: 'View All', href: '/collections/smart-lock', isViewAll: true }
+          { name: 'IP Cameras', href: '/products?category=ip-cameras' },
+          { name: 'CCTV Cameras', href: '/products?category=cctv' },
+          { name: 'DVR/NVR Systems', href: '/products?category=dvr-nvr' },
+          { name: 'Video Door Phones', href: '/products?category=door-phones' },
+          { name: 'View All', href: '/products?category=security', isViewAll: true }
         ]
       },
       {
         category: 'Networking Components',
         items: [
-          { name: 'Router', href: '/collections/router' },
-          { name: 'Switch', href: '/collections/network-switch' },
-          { name: 'Accessories', href: '/collections/network-accessories' },
-          { name: 'Server PC', href: '/collections/server-pc' },
-          { name: 'UTP Cable', href: '/collections/utp-cable' },
-          { name: 'View All', href: '/collections/networking-components', isViewAll: true }
-        ]
-      },
-      {
-        category: 'Security & Vehicle Scanner',
-        items: [
-          { name: 'Archway Metal Detector', href: '/collections/archway-metal-detector-gate' },
-          { name: 'Hand Held Metal Detector', href: '/collections/hand-held-metal-detector' },
-          { name: 'X-ray Baggage Scanner', href: '/collections/xray-baggage-scanner' },
-          { name: 'Vehicle Inspection', href: '/collections/vehicle-inspection' },
-          { name: 'EAS System', href: '/collections/eas-system' },
-          { name: 'Liquid Detector', href: '/collections/liquid-detector' },
-          { name: 'Accessories', href: '/collections/vehicle-accessories' },
-          { name: 'View All', href: '/collections/security-and-vehicle-scanner', isViewAll: true }
+          { name: 'Routers', href: '/products?category=routers' },
+          { name: 'Switches', href: '/products?category=switches' },
+          { name: 'Access Points', href: '/products?category=access-points' },
+          { name: 'Network Cables', href: '/products?category=cables' },
+          { name: 'View All', href: '/products?category=networking', isViewAll: true }
         ]
       },
       {
         category: 'Point Of Sale - POS',
         items: [
-          { name: 'POS Terminal', href: '/collections/pos-terminal' },
-          { name: 'Barcode Scanner', href: '/collections/barcode-scanner' },
-          { name: 'Thermal Printer', href: '/collections/thermal-printer' },
-          { name: 'Cash Drawer', href: '/collections/cash-drawer' },
-          { name: 'Handheld POS', href: '/collections/handheld-pos' },
-          { name: 'View All', href: '/collections/point-of-sale-pos', isViewAll: true }
+          { name: 'POS Systems', href: '/products?category=pos-systems' },
+          { name: 'Barcode Scanners', href: '/products?category=barcode-scanners' },
+          { name: 'Receipt Printers', href: '/products?category=receipt-printers' },
+          { name: 'Cash Drawers', href: '/products?category=cash-drawers' },
+          { name: 'View All', href: '/products?category=pos', isViewAll: true }
         ]
       },
       {
         category: 'Display Solutions',
         items: [
-          { name: 'Monitor', href: '/collections/monitor' },
-          { name: 'Interactive Display', href: '/collections/interactive-display-price-in-bd' },
-          { name: 'Accessories', href: '/collections/accessories' },
-          { name: 'View All', href: '/collections/display-solutions', isViewAll: true }
+          { name: 'Digital Signage', href: '/products?category=digital-signage' },
+          { name: 'Video Walls', href: '/products?category=video-walls' },
+          { name: 'Interactive Displays', href: '/products?category=interactive-displays' },
+          { name: 'Commercial TVs', href: '/products?category=commercial-tvs' },
+          { name: 'View All', href: '/products?category=displays', isViewAll: true }
         ]
       },
       {
         category: 'Gadgets and Accessories',
         items: [
-          { name: 'Speaker', href: '/collections/speaker' },
-          { name: 'Power Bank', href: '/collections/power-bank' },
-          { name: 'Data Cable', href: '/collections/data-cable' },
-          { name: 'Earphone', href: '/collections/earphone' },
-          { name: 'Charger', href: '/collections/charger' },
-          { name: 'Battery', href: '/collections/battery' },
-          { name: 'Power Socket', href: '/collections/power-socket' },
-          { name: 'View All', href: '/collections/gadgets-and-accessories', isViewAll: true }
+          { name: 'Smart Watches', href: '/products?category=smart-watches' },
+          { name: 'Wireless Earbuds', href: '/products?category=earbuds' },
+          { name: 'Power Banks', href: '/products?category=power-banks' },
+          { name: 'Mobile Accessories', href: '/products?category=mobile-accessories' },
+          { name: 'View All', href: '/products?category=gadgets', isViewAll: true }
         ]
       },
       {
-        category: 'ID-Card Solution',
+        category: 'IPS and Battery',
         items: [
-          { name: 'Card Printer', href: '/collections/card-printer' },
-          { name: 'Accessories', href: '/collections/id-card-accessories' },
-          { name: 'View All', href: '/collections/id-card-solution', isViewAll: true }
+          { name: 'Home IPS', href: '/products?category=home-ips' },
+          { name: 'Commercial IPS', href: '/products?category=commercial-ips' },
+          { name: 'Batteries', href: '/products?category=batteries' },
+          { name: 'Stabilizers', href: '/products?category=stabilizers' },
+          { name: 'View All', href: '/products?category=ips', isViewAll: true }
         ]
       },
       {
-        category: 'PA & Conference System',
+        category: 'Sound System',
         items: [
-          { name: 'Microphone', href: '/collections/microphone' },
-          { name: 'Amplifier', href: '/collections/amplifier' },
-          { name: 'Speaker', href: '/collections/speaker-system' },
-          { name: 'Conference Camera', href: '/collections/conference-camera' },
-          { name: 'IP PA System', href: '/collections/ip-pa-system' },
-          { name: 'PA Conference System', href: '/collections/pa-conference' },
-          { name: 'View All', href: '/collections/pa-conference-system', isViewAll: true }
+          { name: 'PA Systems', href: '/products?category=pa-systems' },
+          { name: 'Speakers', href: '/products?category=speakers' },
+          { name: 'Microphones', href: '/products?category=microphones' },
+          { name: 'Amplifiers', href: '/products?category=amplifiers' },
+          { name: 'View All', href: '/products?category=sound-systems', isViewAll: true }
         ]
       },
       {
@@ -214,10 +201,7 @@ export const menuItems = [
       { name: 'HP', href: '/brands/hp' }
     ]
   },
-  {
-    title: 'Our Clients',
-    href: '/clients'
-  },
+
   {
     title: 'Build Solution',
     href: '/build-solution'

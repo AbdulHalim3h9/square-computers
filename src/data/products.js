@@ -1,39 +1,106 @@
 export const products = [
   {
     id: 1,
-    slug: 'gaming-pc-pro',
-    name: 'Gaming PC Pro',
-    category: 'Gaming Desktops',
-    price: 1299.99,
-    image: '/images/gaming-pc.jpg',
+    slug: 'fingerprint-time-attendance',
+    name: 'ZKteco F18 Fingerprint Time Attendance',
+    category: 'Access Control',
+    price: 199.99,
+    image: '/images/fingerprint-time-attendance.jpg',
     images: [
-      '/images/gaming-pc-1.jpg',
-      '/images/gaming-pc-2.jpg',
-      '/images/gaming-pc-3.jpg',
+      '/images/fingerprint-time-attendance-1.jpg',
+      '/images/fingerprint-time-attendance-2.jpg',
     ],
-    description: 'High-performance gaming PC with RTX 4070 and Ryzen 7 5800X',
+    description: 'ZKteco F18 Fingerprint Time Attendance Device with 3000 fingerprints capacity',
     details: [
-      'NVIDIA GeForce RTX 4070 12GB',
-      'AMD Ryzen 7 5800X (8-Core, 16-Thread)',
-      '16GB DDR4 3200MHz RAM',
-      '1TB NVMe SSD',
-      '750W 80+ Gold PSU',
-      'Liquid CPU Cooler',
-      'Windows 11 Pro',
-      'Wi-Fi 6 & Bluetooth 5.2'
+      '3000 fingerprints capacity',
+      '100,000 verification records',
+      '3.0-inch color screen',
+      'WiFi/Ethernet communication',
+      'Support USB flash disk download',
+      'Real-time monitoring',
+      'Multi-verification modes',
+      'Anti-passback function'
     ],
     specifications: {
-      processor: 'AMD Ryzen 7 5800X',
-      graphics: 'NVIDIA GeForce RTX 4070 12GB',
-      memory: '16GB DDR4 3200MHz',
-      storage: '1TB NVMe SSD',
-      powerSupply: '750W 80+ Gold',
-      operatingSystem: 'Windows 11 Pro',
-      warranty: '3 Years Limited'
+      brand: 'ZKteco',
+      model: 'F18',
+      fingerprintCapacity: '3000',
+      recordCapacity: '100,000',
+      display: '3.0-inch color screen',
+      communication: 'WiFi/Ethernet/USB',
+      powerSupply: '12V DC',
+      warranty: '1 Year Limited'
     }
   },
   {
     id: 2,
+    slug: 'face-recognition-device',
+    name: 'Hikvision DS-K1T672 Face Recognition Terminal',
+    category: 'Access Control',
+    price: 499.99,
+    image: '/images/face-recognition-device.jpg',
+    images: [
+      '/images/face-recognition-device-1.jpg',
+      '/images/face-recognition-device-2.jpg',
+    ],
+    description: 'Hikvision Face Recognition Terminal with temperature screening',
+    details: [
+      'Dual-lens wide-angle camera',
+      'Face recognition distance: 0.3m to 3m',
+      'Temperature measurement accuracy: ±0.5°C',
+      'Supports mask detection',
+      'Anti-spoofing with live detection',
+      '5000 face capacity',
+      '100,000 recognition records',
+      'IP65 rated weatherproof'
+    ],
+    specifications: {
+      brand: 'Hikvision',
+      model: 'DS-K1T672',
+      faceCapacity: '5000',
+      recordCapacity: '100,000',
+      recognitionDistance: '0.3m - 3m',
+      temperatureRange: '30°C - 45°C',
+      communication: 'WiFi/Ethernet',
+      powerSupply: '12V DC',
+      warranty: '2 Years Limited'
+    }
+  },
+  {
+    id: 3,
+    slug: 'ip-camera',
+    name: 'Dahua 4MP IP Camera',
+    category: 'Security Surveillance',
+    price: 129.99,
+    image: '/images/ip-camera.jpg',
+    images: [
+      '/images/ip-camera-1.jpg',
+      '/images/ip-camera-2.jpg',
+    ],
+    description: 'Dahua 4MP IP Camera with Starlight Technology',
+    details: [
+      '4MP resolution (2688 × 1520)',
+      'Starlight technology for color night vision',
+      '3.6mm fixed lens',
+      'IP67 weatherproof rating',
+      'Built-in microphone',
+      'H.265+ compression',
+      'Wide dynamic range',
+      'Supports microSD card up to 256GB'
+    ],
+    specifications: {
+      brand: 'Dahua',
+      model: 'IPC-HDW2431T-AS-S2',
+      resolution: '4MP (2688 × 1520)',
+      lens: '3.6mm fixed',
+      nightVision: '30m IR distance',
+      storage: 'MicroSD up to 256GB',
+      powerSupply: '12V DC / PoE',
+      warranty: '3 Years Limited'
+    }
+  },
+  {
+    id: 4,
     slug: 'ultrabook-pro',
     name: 'UltraBook Pro',
     category: 'Laptops',
@@ -69,7 +136,7 @@ export const products = [
     }
   },
   {
-    id: 3,
+    id: 5,
     slug: 'office-workstation',
     name: 'Office Workstation',
     category: 'Business Desktops',

@@ -198,7 +198,12 @@ export default function OurClients() {
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-gray-500 text-sm">And many more trusted partners...</p>
+          <a 
+            href="/clients" 
+            className="inline-block px-8 py-3 bg-cyan-600 text-white font-medium text-sm leading-tight uppercase rounded-md shadow-md hover:bg-cyan-700 hover:shadow-lg focus:bg-cyan-700 focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 active:bg-cyan-800 active:shadow-lg transition duration-150 ease-in-out transform hover:-translate-y-0.5"
+          >
+            View All Clients
+          </a>
         </div>
       </div>
 

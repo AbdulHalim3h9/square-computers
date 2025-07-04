@@ -103,7 +103,7 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
 
   const handleCategoryLeave = useCallback(() => {
     debounce(() => setHoveredCategory(null), 150);
-  }, []);
+  }, [debounce]);
 
   const renderRegularDropdown = (item, index) => {
     if (!isClient) return null;

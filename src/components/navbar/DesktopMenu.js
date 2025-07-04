@@ -102,8 +102,11 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
   }, []);
 
   const handleCategoryLeave = useCallback(() => {
-    debounce(() => setHoveredCategory(null), 150);
-  }, [debounce]);
+    // Use the debounce function directly without including it in dependencies
+    // as it's a stable reference from the import
+    const timer = setTimeout(() => setHoveredCategory(null), 150);
+    return () => clearTimeout(timer);
+  }, []);
 
   const renderRegularDropdown = (item, index) => {
     if (!isClient) return null;

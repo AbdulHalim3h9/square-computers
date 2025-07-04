@@ -1,12 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { products } from '@/data/products';
 import FilterSidebar from '@/components/products/FilterSidebar';
 import ProductList from '@/components/products/ProductList';
 
-export default function ProductsPage() {
+// This component needs to be wrapped in Suspense
+export const dynamic = 'force-dynamic';
+
+function ProductsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -53,7 +56,7 @@ export default function ProductsPage() {
 
     setFilters(initialFilters);
     setIsLoading(false);
-  }, [categoryParam, maxPriceParam, minPriceParam, products]);
+  }, [categoryParam, maxPriceParam, minPriceParam]);
 
   // Filter and sort products when filters or sort changes
   useEffect(() => {
@@ -181,36 +184,49 @@ export default function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6 text-gray-900">Our Products</h1>
-        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-12">
-          Browse our wide range of high-quality products designed to meet all your needs.
-        </p>
-        
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:w-1/4">
-            <FilterSidebar 
-              filters={{ categories }}
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="w-full md:w-1/4">
+            <FilterSidebar
+              categories={categories}
+              filters={filters}
               onFilterChange={handleFilterChange}
-              initialFilters={{
-                categories: filters.categories,
-                priceRange: filters.priceRange
-              }}
             />
           </div>
-          
-          {/* Products Grid */}
-          <div className="lg:w-3/4">
-            <ProductList 
-              products={filteredProducts}
-              onSortChange={handleSortChange}
-              onItemsPerPageChange={handleItemsPerPageChange}
-            />
+          <div className="w-full md:w-3/4">
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl font-bold text-gray-900">Products</h1>
+              <div className="flex items-center space-x-4">
+                <select
+                  className="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  value={sortParam || 'default'}
+                  onChange={(e) => handleSortChange(e.target.value)}
+                >
+                  <option value="default">Sort by</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="name-asc">Name: A to Z</option>
+                  <option value="name-desc">Name: Z to A</option>
+                </select>
+              </div>
+            </div>
+            <ProductList products={filteredProducts} />
           </div>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   );
 }

@@ -1,81 +1,53 @@
-import { useRef, useEffect, useState, useCallback, memo } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Search as SearchIcon, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
-// Throttle function for resize events
-const throttle = (func, limit) => {
-  let inThrottle;
-  return function(...args) {
-    if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-};
-
-const SearchBar = memo(({ 
-  isSearchExpanded, 
-  setIsSearchExpanded, 
-  searchQuery, 
-  setSearchQuery 
-}) => {
+export default function SearchBar({ isSearchExpanded, setIsSearchExpanded, searchQuery, setSearchQuery }) {
   const router = useRouter();
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Memoize the mobile check function
-  const checkIfMobile = useCallback(() => {
-    setIsMobile(window.innerWidth < 768);
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Optimized resize handler
-  useEffect(() => {
-    const throttledCheck = throttle(checkIfMobile, 100);
-    
-    // Initial check
-    throttledCheck();
-    
-    // Add throttled resize listener
-    window.addEventListener('resize', throttledCheck, { passive: true });
-    
-    return () => {
-      window.removeEventListener('resize', throttledCheck);
-    };
-  }, [checkIfMobile]);
-
-  // Memoize the search handler
-  const handleSearch = useCallback((e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-    const trimmedQuery = searchQuery.trim();
-    if (trimmedQuery) {
-      router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setIsSearchExpanded(false);
     }
-  }, [searchQuery, router, setIsSearchExpanded]);
+  };
 
-  // Optimized click outside handler
+  // Handle click outside to collapse
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        searchContainerRef.current && 
-        !searchContainerRef.current.contains(event.target) && 
-        isExpanded
-      ) {
-        setIsExpanded(false);
-        setIsSearchExpanded(false);
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        if (isExpanded) {
+          setIsExpanded(false);
+          setIsSearchExpanded(false);
+        }
       }
     };
 
-    // Use capture phase for better performance
-    document.addEventListener('mousedown', handleClickOutside, true);
+    // Add event listener when component mounts
+    document.addEventListener('mousedown', handleClickOutside);
     
+    // Clean up event listener on unmount
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside, true);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isExpanded, setIsSearchExpanded]);
+  }, [isExpanded, isSearchExpanded]);
+
+  // Focus handling
   useEffect(() => {
     if (isSearchExpanded && searchInputRef.current) {
       searchInputRef.current.focus();
@@ -90,92 +62,66 @@ const SearchBar = memo(({
     }
   };
 
-  // Memoize the input change handler
-  const handleInputChange = useCallback((e) => {
-    setSearchQuery(e.target.value);
-  }, []);
-
-  // Memoize the form click handler
-  const handleFormClick = useCallback((e) => {
-    if (!isExpanded) {
-      e.preventDefault();
-      setIsExpanded(true);
-      setIsSearchExpanded(true);
-    }
-  }, [isExpanded, setIsSearchExpanded]);
-
-  // Memoize the search button click handler
-  const handleSearchButtonClick = useCallback((e) => {
-    if (!isExpanded) {
-      e.preventDefault();
-      setIsExpanded(true);
-      setIsSearchExpanded(true);
-    }
-  }, [isExpanded, setIsSearchExpanded]);
-
-  // Memoize the clear button click handler
-  const handleClearClick = useCallback((e) => {
-    e.preventDefault();
-    setSearchQuery('');
-    setIsExpanded(false);
-    setIsSearchExpanded(false);
-  }, [setSearchQuery, setIsSearchExpanded]);
-
-  // Memoize the focus handler
-  const handleFocus = useCallback(() => {
-    setIsExpanded(true);
-    setIsSearchExpanded(true);
-  }, [setIsSearchExpanded]);
-
   return (
     <div 
       ref={searchContainerRef}
       className={`relative transition-all duration-300 ${isExpanded ? 'px-2 ms-4 w-full' : 'w-auto'}`}
     >
       <form 
-        onSubmit={handleSearch}
+        onSubmit={handleSearch} 
         className={`relative flex items-center ${isExpanded ? 'w-full' : 'w-8'}`}
-        onClick={handleFormClick}
+        onClick={(e) => {
+          if (!isExpanded) {
+            e.preventDefault();
+            setIsExpanded(true);
+            setIsSearchExpanded(true);
+          }
+        }}
       >
         <input
           ref={searchInputRef}
           type="text"
           placeholder={isExpanded ? "Search..." : ""}
-          className={`${
-            isExpanded ? 'w-full px-4' : 'w-0 opacity-0'
-          } py-2 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm transition-all duration-300`}
+          className={`${isExpanded ? 'w-full px-4' : 'w-0 opacity-0'} py-2 rounded-full border border-slate-300 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-sm transition-all duration-300`}
           value={searchQuery}
-          onChange={handleInputChange}
-          onFocus={handleFocus}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => {
+            setIsExpanded(true);
+            setIsSearchExpanded(true);
+          }}
           onBlur={handleBlur}
-          aria-label="Search products"
         />
         <button 
           type={isExpanded ? "submit" : "button"}
-          className={`absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-cyan-600 transition-colors ${
-            !isExpanded ? 'right-0' : ''
-          }`}
-          onClick={handleSearchButtonClick}
-          aria-label={isExpanded ? "Submit search" : "Open search"}
+          className={`absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-cyan-600 transition-colors ${!isExpanded ? 'right-0' : ''}`}
+          onClick={(e) => {
+            if (!isExpanded) {
+              e.preventDefault();
+              setIsExpanded(true);
+              setIsSearchExpanded(true);
+            }
+          }}
         >
-          <SearchIcon className={isExpanded ? "w-4 h-4" : "w-6 h-6"} />
+          {isExpanded ? (
+            <SearchIcon className="w-4 h-4" />
+          ) : (
+            <SearchIcon className="w-6 h-6" />
+          )}
         </button>
         {isExpanded && isMobile && (
           <button
             type="button"
-            onClick={handleClearClick}
+            onClick={(e) => {
+              e.preventDefault();
+              setSearchQuery('');
+              setIsExpanded(false);
+              setIsSearchExpanded(false);
+            }}
             className="absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
-            aria-label="Clear search"
           >
-            <X className="w-4 h-4" />
           </button>
         )}
       </form>
     </div>
   );
-});
-
-// Set display name for better debugging
-SearchBar.displayName = 'SearchBar';
-
-export default SearchBar;
+}

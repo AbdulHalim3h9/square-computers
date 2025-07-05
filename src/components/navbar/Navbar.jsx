@@ -1,73 +1,49 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback, useMemo, memo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import Logo from './Logo';
+import SearchBar from './SearchBar';
+import DesktopMenu from './DesktopMenu';
+import MobileMenu from './MobileMenu';
 import { menuItems } from './menuItems';
 import '../../styles/navbar.css';
 
-// Dynamically import heavy components with no SSR
-const SearchBar = dynamic(() => import('./SearchBar'), { ssr: false });
-const DesktopMenu = dynamic(() => import('./DesktopMenu'), { ssr: false });
-const MobileMenu = dynamic(() => import('./MobileMenu'), { ssr: false });
-
-// Throttle function to limit the rate of function execution
-const throttle = (func, limit) => {
-  let inThrottle;
-  return function(...args) {
-    if (!inThrottle) {
-      func.apply(this, args);
-      inThrottle = true;
-      setTimeout(() => (inThrottle = false), limit);
-    }
-  };
-};
-
-const Navbar = () => {
+export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [expandedItems, setExpandedItems] = useState({});
   const navRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
 
-  // Memoize navbar classes to prevent recalculation on every render
   const navbarClasses = useMemo(
-    () => `fixed w-full z-50 bg-white transition-all duration-300 ease-out ${
-      scrolled 
-        ? 'shadow-md shadow-cyan-100/20' 
-        : 'shadow-sm shadow-transparent'
-    }`,
+    () => `fixed w-full z-50 bg-white shadow-lg shadow-cyan-100/20 transition-all duration-300 ease-out ${scrolled ? 'shadow-md' : 'shadow-sm'}`,
     [scrolled]
   );
 
-  // Memoize the toggle function to prevent unnecessary re-renders
   const toggleDropdown = useCallback(
     (index, e) => {
-      e?.stopPropagation?.();
-      e?.preventDefault?.();
+      if (e) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
       setOpenDropdown((prevIndex) => (prevIndex === index ? null : index));
     },
     []
   );
 
-  // Optimized scroll handler with throttling
   useEffect(() => {
-    const handleScroll = throttle(() => {
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
-    }, 50);
-
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  }, []);
 
-  // Click outside handler
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target) && isOpen) {

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import { getProductsByCategory } from '@/data/products';
 import ProductList from '@/components/products/ProductList';
 import FilterSidebar from '@/components/products/FilterSidebar';
 
-// Sample filter options (you can customize these based on your product data)
+/** @type {{ price: Array<{ id: string, label: string, value: [number, number] }> }} */
 const FILTER_OPTIONS = {
   price: [
     { id: 'under-500', label: 'Under $500', value: [0, 500] },
@@ -14,19 +14,31 @@ const FILTER_OPTIONS = {
     { id: '1000-2000', label: '$1000 - $2000', value: [1000, 2000] },
     { id: 'over-2000', label: 'Over $2000', value: [2000, Infinity] },
   ],
-  // Add more filter categories as needed
 };
 
+/**
+ * Category page component displaying products with filters and sorting.
+ * @returns {JSX.Element} The category page component.
+ */
 export default function CategoryPage() {
   const params = useParams();
   const category = params.category;
   const [isLoading, setIsLoading] = useState(true);
-  const [allProducts, setAllProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState({});
   const [sortBy, setSortBy] = useState('default');
   const [itemsPerPage, setItemsPerPage] = useState(16);
-  
-  // Format category name for display
+
+  // Debounce utility
+  const debounce = useCallback((func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  }, []);
+
+  // Format category name
   const categoryName = useMemo(() => 
     category
       .split('-')
@@ -37,61 +49,82 @@ export default function CategoryPage() {
 
   // Load products
   useEffect(() => {
-    const categoryProducts = getProductsByCategory(category);
-    setAllProducts(categoryProducts);
-    setIsLoading(false);
+    const fetchProducts = async () => {
+      try {
+        const categoryProducts = await getProductsByCategory(category);
+        setProducts(categoryProducts);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setProducts([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProducts();
   }, [category]);
 
-  // Apply filters and sorting
-  const filteredProducts = useMemo(() => {
-    let result = [...allProducts];
+  // Debounced filter and sort updates
+  const applyFiltersAndSort = useCallback((newFilters, newSortBy) => {
+    let result = [...products];
 
     // Apply price filter
-    if (filters.price) {
+    if (newFilters.price) {
       result = result.filter(product => 
-        product.price >= filters.price[0] && product.price <= filters.price[1]
+        product.price >= newFilters.price[0] && product.price <= newFilters.price[1]
       );
     }
 
     // Apply sorting
-    switch (sortBy) {
+    switch (newSortBy) {
       case 'price-asc':
         result.sort((a, b) => a.price - b.price);
         break;
       case 'price-desc':
-        result.sort((a, b) => b.price - a.price);
+        result.sort((a, b) => b.price - b.price);
         break;
       case 'name-asc':
         result.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case 'name-desc':
-        result.sort((a, b) => b.name.localeCompare(a.name));
+        result.sort((a, b) => b.name.localeCompare(b.name));
         break;
       default:
-        // Default sorting (e.g., by relevance or as they come from the API)
         break;
     }
 
     return result;
-  }, [allProducts, filters, sortBy]);
+  }, [products]);
 
-  // Handle filter changes
-  const handleFilterChange = (filterType, value) => {
-    setFilters(prev => ({
-      ...prev,
-      [filterType]: value
-    }));
-  };
+  const debouncedApplyFiltersAndSort = useMemo(() => 
+    debounce((filters, sortBy) => {
+      const filtered = applyFiltersAndSort(filters, sortBy);
+      setProducts(filtered); // Update visible products
+    }, 300),
+    [applyFiltersAndSort, debounce]
+  );
+
+  // Memoized filtered and sorted products
+  const filteredProducts = useMemo(() => applyFiltersAndSort(filters, sortBy), [filters, sortBy, applyFiltersAndSort]);
+
+  // Handle filter change
+  const handleFilterChange = useCallback((filterType, value) => {
+    setFilters(prev => {
+      const newFilters = { ...prev, [filterType]: value };
+      debouncedApplyFiltersAndSort(newFilters, sortBy);
+      return newFilters;
+    });
+  }, [debouncedApplyFiltersAndSort, sortBy]);
 
   // Handle sort change
-  const handleSortChange = (value) => {
+  const handleSortChange = useCallback((value) => {
     setSortBy(value);
-  };
+    debouncedApplyFiltersAndSort(filters, value);
+  }, [debouncedApplyFiltersAndSort, filters]);
 
   // Handle items per page change
-  const handleItemsPerPageChange = (value) => {
+  const handleItemsPerPageChange = useCallback((value) => {
     setItemsPerPage(value);
-  };
+  }, []);
 
   if (isLoading) {
     return (
@@ -106,7 +139,7 @@ export default function CategoryPage() {
             </div>
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-gray-100 rounded-lg h-96"></div>
+                <div key={i} className="bg-gray-100 rounded-lg h-96 shadow-sm"></div>
               ))}
             </div>
           </div>
@@ -117,25 +150,23 @@ export default function CategoryPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">{categoryName}</h1>
-      
+      <h1 className="text-3xl font-bold mb-8 text-gray-900">{categoryName}</h1>
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Filters Sidebar */}
-        <div className="w-full md:w-64 flex-shrink-0">
+        <aside className="w-full md:w-64 flex-shrink-0">
           <FilterSidebar
             filters={FILTER_OPTIONS}
             onFilterChange={handleFilterChange}
+            aria-label="Product filters"
           />
-        </div>
-
-        {/* Product List */}
-        <div className="flex-1">
+        </aside>
+        <main className="flex-1">
           <ProductList
-            products={filteredProducts}
+            products={filteredProducts.slice(0, itemsPerPage)}
             onSortChange={handleSortChange}
             onItemsPerPageChange={handleItemsPerPageChange}
+            aria-label="Product list"
           />
-        </div>
+        </main>
       </div>
     </div>
   );

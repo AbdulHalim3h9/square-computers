@@ -1,44 +1,39 @@
-'use client';
+"use client";
 
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
+import { useCallback } from 'react';
 
-const Logo = () => {
+export default function Logo({ isSearchExpanded }) {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (pathname === '/') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       router.push('/');
     }
-  };
+  }, [pathname, router]);
 
   return (
-    <div className="flex-shrink-0">
-      <div className="logo-container" onClick={handleClick}>
-        <div className="logo-image">
-          <div className="logo">
-            <Image 
-              src="/images/logo.png" 
-              alt="Square Computers Logo" 
-              fill
-              className="object-contain"
-              priority
-              sizes="(max-width: 640px) 2.5rem, (max-width: 768px) 3rem, (max-width: 1024px) 3.5rem, 4rem"
-            />
-          </div>
-        </div>
-        <div className="brand-text">
-          <h1 className="brand-title">
-            <span className="square-text">Square</span>{' '}
-            <span className="computers-text">Computers</span>
-          </h1>
-        </div>
+    <div className="flex items-center flex-shrink-0 cursor-pointer" onClick={handleClick}>
+      <div className="relative h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 transform hover:scale-105 transition-transform duration-300">
+        <Image 
+          src="/images/logo.png" 
+          alt="Square Computers Logo" 
+          fill
+          className="object-contain"
+          priority
+          sizes="(max-width: 768px) 40px, (max-width: 1200px) 56px, 64px"
+        />
       </div>
+      {!isSearchExpanded || window.innerWidth >= 768 ? (
+        <h1 className="navbar-brand text-base sm:text-lg md:hidden lg:block lg:text-2xl font-semibold mx-2">
+          <span className="square-text">Square</span>{' '}
+          <span className="computers-text">Computers</span>
+        </h1>
+      ) : null}
     </div>
   );
-};
-
-export default Logo;
+}

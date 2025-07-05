@@ -1,134 +1,180 @@
-'use client';
+"use client";
 
 import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
 
-/**
- * @typedef {Object} SubMenuItem
- * @property {string} name
- * @property {string} [href]
- * @property {boolean} [external]
- * @property {SubMenuItem[]} [submenu]
- * @property {boolean} [isViewAll]
- */
-
-/**
- * @typedef {Object} MegaMenuCategory
- * @property {string} category
- * @property {SubMenuItem[]} items
- */
-
-/**
- * @typedef {Object} MenuItem
- * @property {string} title
- * @property {string} [href]
- * @property {(SubMenuItem[] | MegaMenuCategory[])} [submenu]
- * @property {boolean} [isMegaMenu]
- */
-
-/**
- * DesktopMenu component
- * @param {Object} props
- * @param {MenuItem[]} props.menuItems
- * @param {number | null} props.openDropdown
- * @param {(index: number, event: React.MouseEvent) => void} props.toggleDropdown
- * @param {(index: number | null) => void} props.setOpenDropdown
- */
-const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleDropdown, setOpenDropdown }) {
+const DesktopMenu = memo(({ menuItems, openDropdown, toggleDropdown, setOpenDropdown }) => {
   const dropdownRefs = useRef({});
   const timeoutRef = useRef(null);
   const [isClient, setIsClient] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [hoveredSubItem, setHoveredSubItem] = useState(null);
   const [hoveredCategory, setHoveredCategory] = useState(null);
-  const [openSubmenu, setOpenSubmenu] = useState(null); // Track second-level submenu on mobile
+  const [openSubmenu, setOpenSubmenu] = useState(null);
+
+  const clearDropdownTimeout = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     setIsClient(true);
     setIsMobile(window.innerWidth < 768);
-    
+
     const handleResize = () => {
+      clearDropdownTimeout();
       setIsMobile(window.innerWidth < 768);
     };
     
     window.addEventListener('resize', handleResize);
     return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      clearDropdownTimeout();
       window.removeEventListener('resize', handleResize);
     };
-  }, []);
+  }, [clearDropdownTimeout]);
 
-  const debounce = useCallback((fn, delay) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(fn, delay);
-  }, []);
-  
-  // Memoize the debounce function to prevent unnecessary recreations
-  const memoizedDebounce = useCallback(debounce, [debounce]);
-
-  const openDropdownOnHover = useCallback((index) => {
-    if (isClient && !isMobile) {
-      setOpenDropdown(index);
-      setOpenSubmenu(null); // Reset second-level submenu on desktop hover
-    }
-  }, [isClient, isMobile, setOpenDropdown, setOpenSubmenu]);
+  const openDropdownOnHover = useCallback(
+    (index) => {
+      if (isClient && !isMobile) {
+        clearDropdownTimeout();
+        setOpenDropdown(index);
+        setOpenSubmenu(null);
+      }
+    },
+    [isClient, isMobile, setOpenDropdown, clearDropdownTimeout]
+  );
 
   const closeAllDropdowns = useCallback(() => {
     if (isClient && !isMobile) {
-      memoizedDebounce(() => {
+      clearDropdownTimeout();
+      timeoutRef.current = setTimeout(() => {
         setOpenDropdown(null);
         setHoveredCategory(null);
+        setHoveredSubItem(null);
         setOpenSubmenu(null);
-      }, 300);
+      }, 200);
     }
-  }, [isClient, isMobile, setOpenDropdown, memoizedDebounce]);
+  }, [isClient, isMobile, setOpenDropdown, clearTimeout]);
 
-  const handleSubmenuToggle = useCallback((subIndex) => {
-    if (isClient && isMobile) {
-      setOpenSubmenu(openSubmenu === subIndex ? null : subIndex);
-    }
-  }, [isClient, isMobile, openSubmenu]);
-  
-  const getMaxWidth = useCallback((items) => {
-    if (!isClient || !items || !items.length) return 'auto';
-    const maxLength = Math.max(...items.map(item => (item.name || '').length));
-    return `${Math.min(maxLength * 8 + 40, 300)}px`;
-  }, [isClient]);
+  const handleSubmenuToggle = useCallback(
+    (subIndex) => {
+      if (isClient && isMobile) {
+        setOpenSubmenu(openSubmenu === subIndex ? null : subIndex);
+      }
+    },
+    [isClient, isMobile, openSubmenu]
+  );
 
-  const handleCategoryHover = useCallback((index) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setHoveredCategory(index);
-  }, []);
+  const getMaxWidth = useCallback(
+    (items) => {
+      if (!isClient || !items || !items.length) return 'auto';
+      const maxLength = Math.max(...items.map((item) => (item.name || '').length));
+      return `${Math.min(maxLength * 8 + 40, 300)}px`;
+    },
+    [isClient]
+  );
+
+  const handleCategoryHover = useCallback(
+    (index) => {
+      if (!isMobile) {
+        clearDropdownTimeout();
+        setHoveredCategory(index);
+      }
+    },
+    [isMobile, clearDropdownTimeout]
+  );
 
   const handleCategoryLeave = useCallback(() => {
-    // Use the debounce function directly without including it in dependencies
-    // as it's a stable reference from the import
-    const timer = setTimeout(() => setHoveredCategory(null), 150);
-    return () => clearTimeout(timer);
-  }, []);
+    if (!isMobile) {
+      clearDropdownTimeout();
+      timeoutRef.current = setTimeout(() => setHoveredCategory(null), 100);
+    }
+  }, [isMobile, clearDropdownTimeout]);
+
+  const handleSubItemHover = useCallback(
+    (index) => {
+      if (!isMobile) {
+        clearDropdownTimeout();
+        setHoveredSubItem(index);
+      }
+    },
+    [isMobile, clearDropdownTimeout]
+  );
+
+  const handleSubItemLeave = useCallback(() => {
+    if (!isMobile) {
+      clearDropdownTimeout();
+      timeoutRef.current = setTimeout(() => setHoveredSubItem(null), 100);
+    }
+  }, [isMobile, clearDropdownTimeout]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isMobile) return;
+    clearDropdownTimeout();
+    timeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+      setHoveredCategory(null);
+      setHoveredSubItem(null);
+      setOpenSubmenu(null);
+    }, 100);
+  }, [isMobile, clearDropdownTimeout]);
+
+  const handleMouseEnter = useCallback(() => {
+    if (isMobile) return;
+    clearDropdownTimeout();
+  }, [isMobile, clearDropdownTimeout]);
+
+  const handleLinkClick = useCallback(() => {
+    if (isMobile) return;
+    clearDropdownTimeout();
+    setOpenDropdown(null);
+    setHoveredCategory(null);
+    setHoveredSubItem(null);
+    setOpenSubmenu(null);
+  }, [isMobile, clearDropdownTimeout]);
+
+  const handleCategoryMouseEnter = useCallback(
+    (category) => {
+      if (isMobile) return;
+      clearDropdownTimeout();
+      setHoveredCategory(category);
+      setHoveredSubItem(null);
+    },
+    [isMobile, clearDropdownTimeout]
+  );
+
+  const handleSubItemMouseEnter = useCallback(
+    (subItem) => {
+      if (isMobile) return;
+      clearDropdownTimeout();
+      setHoveredSubItem(subItem);
+    },
+    [isMobile, clearDropdownTimeout]
+  );
 
   const renderRegularDropdown = (item, index) => {
     if (!isClient) return null;
-    
+
     const submenuWidth = getMaxWidth(item.submenu);
     const isActive = openDropdown === index;
 
     return (
       <div
-        key={index}
         className={clsx(
           'dropdown-menu w-full bg-white shadow-lg rounded-md border border-gray-200 z-50 transition-all duration-200',
           isMobile ? 'relative mt-0' : 'absolute left-0 mt-2',
           isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
         )}
         style={isMobile ? {} : { width: submenuWidth }}
-        onMouseEnter={() => !isMobile && clearTimeout(timeoutRef.current)}
-        onMouseLeave={() => !isMobile && closeAllDropdowns()}
+        onMouseEnter={clearDropdownTimeout}
+        onMouseLeave={handleMouseLeave}
       >
         <div className="py-1 whitespace-nowrap px-2">
           {item.submenu.map((subItem, subIndex) => (
-            <div key={subIndex} className="relative">
+            <div key={subIndex} className="relative group">
               <div className="flex items-center">
                 <Link
                   href={subItem.href || '#'}
@@ -139,13 +185,18 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
                     if (!subItem.submenu || isMobile) setOpenDropdown(null);
                     if (isMobile && subItem.submenu) handleSubmenuToggle(subIndex);
                   }}
-                  onMouseEnter={() => isActive && !isMobile && setHoveredSubItem(subIndex)}
-                  onMouseLeave={() => isActive && !isMobile && setHoveredSubItem(null)}
+                  onMouseEnter={() => isActive && !isMobile && handleSubItemHover(subIndex)}
+                  onMouseLeave={() => isActive && !isMobile && handleSubItemLeave()}
                 >
                   {subItem.name}
                   {subItem.external && (
                     <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  )}
+                  {subItem.submenu && (
+                    <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   )}
                 </Link>
@@ -155,10 +206,7 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
                     className="text-gray-500 hover:text-cyan-600 ml-1 focus:outline-none transition-colors duration-200"
                   >
                     <svg
-                      className={clsx(
-                        'w-4 h-4 transition-transform duration-200',
-                        openSubmenu === subIndex && 'transform rotate-180'
-                      )}
+                      className={clsx('w-4 h-4 transition-transform duration-200', openSubmenu === subIndex && 'transform rotate-180')}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -168,24 +216,35 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
                   </button>
                 )}
               </div>
-              {subItem.submenu && (isMobile ? openSubmenu === subIndex : hoveredSubItem === subIndex) && (
+              {subItem.submenu && (
                 <div
                   className={clsx(
-                    'bg-white shadow-lg rounded-md border border-gray-200 z-50',
-                    isMobile ? 'relative mt-0 ml-4 w-full' : 'absolute left-full top-0 mt-[-8px] w-48'
+                    'bg-white shadow-lg rounded-md border border-gray-200 z-50 transition-all duration-200',
+                    isMobile ? 'relative mt-0 ml-4 w-full' : 'absolute left-full top-0 w-48',
+                    (isMobile ? openSubmenu === subIndex : hoveredSubItem === subIndex)
+                      ? 'opacity-100 translate-x-0'
+                      : 'opacity-0 translate-x-2 pointer-events-none'
                   )}
-                  onMouseEnter={() => !isMobile && setHoveredSubItem(subIndex)}
-                  onMouseLeave={() => !isMobile && setHoveredSubItem(null)}
+                  style={!isMobile ? { left: '100%', top: '0', marginLeft: '4px' } : {}}
+                  onMouseEnter={() => !isMobile && clearDropdownTimeout()}
+                  onMouseLeave={() => !isMobile && handleSubItemLeave()}
                 >
                   <div className="py-1 px-2">
                     {subItem.submenu.map((subSubItem, subSubIndex) => (
                       <Link
                         key={subSubIndex}
                         href={subSubItem.href || '#'}
-                        className="block text-sm p-2 hover:bg-gray-100 rounded transition-colors duration-150"
+                        target={subSubItem.external ? '_blank' : '_self'}
+                        rel={subSubItem.external ? 'noopener noreferrer' : ''}
+                        className="block text-sm p-2 hover:bg-gray-100 rounded transition-colors duration-150 whitespace-nowrap"
                         onClick={() => setOpenDropdown(null)}
                       >
                         {subSubItem.name}
+                        {subSubItem.external && (
+                          <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        )}
                       </Link>
                     ))}
                   </div>
@@ -200,7 +259,7 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
 
   const renderMegaMenu = (item, index) => {
     if (!isClient) return null;
-    
+
     const isOpen = openDropdown === index;
 
     return (
@@ -211,24 +270,18 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
           isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
         )}
         style={isMobile ? {} : { minWidth: '600px', maxWidth: '800px', width: 'max-content' }}
-        onMouseEnter={() => !isMobile && clearTimeout(timeoutRef.current)}
-        onMouseLeave={() => !isMobile && (handleCategoryLeave(), closeAllDropdowns())}
+        onMouseEnter={clearDropdownTimeout}
+        onMouseLeave={handleMouseLeave}
       >
         <div className={clsx('flex', isMobile && 'flex-col')}>
-          <div className={clsx(
-            'bg-gray-50 rounded-l-lg',
-            hoveredCategory !== null && !isMobile ? 'w-96 border-r border-gray-200' : 'w-full rounded-r-lg'
-          )}>
+          <div
+            className={clsx(
+              'bg-gray-50 rounded-l-lg',
+              hoveredCategory !== null && !isMobile ? 'w-96 border-r border-gray-200' : 'w-full rounded-r-lg'
+            )}
+          >
             <div className="p-4">
-              <ul
-                className="space-y-1 max-h-screen"
-                onWheel={(e) => {
-                  const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-                  if ((e.deltaY < 0 && scrollTop === 0) || (e.deltaY > 0 && scrollTop + clientHeight >= scrollHeight)) {
-                    e.preventDefault();
-                  }
-                }}
-              >
+              <ul className="space-y-1 max-h-screen overflow-y-auto" onWheel={(e) => e.stopPropagation()}>
                 {item.submenu.map((category, catIndex) => (
                   <li key={catIndex}>
                     <button
@@ -236,12 +289,9 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
                         'w-full text-left p-3 rounded-md transition-all duration-200 flex items-center justify-between group',
                         hoveredCategory === catIndex ? 'bg-cyan-100 text-cyan-700 shadow-sm' : 'text-gray-700 hover:bg-gray-100'
                       )}
-                      onMouseEnter={() => !isMobile && handleCategoryHover(catIndex)}
-                      onMouseLeave={() => !isMobile && handleCategoryLeave()}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleCategoryHover(catIndex);
-                      }}
+                      onMouseEnter={() => handleCategoryHover(catIndex)}
+                      onMouseLeave={handleCategoryLeave}
+                      onClick={() => isMobile && setHoveredCategory(hoveredCategory === catIndex ? null : catIndex)}
                     >
                       <span className="text-sm font-medium">{category.category}</span>
                       <svg
@@ -263,24 +313,18 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
           </div>
           {hoveredCategory !== null && item.submenu[hoveredCategory] && (
             <div
-              className={clsx(
-                'p-6 border-l border-gray-200 max-h-screen overflow-y-auto',
-                isMobile ? 'w-full' : 'flex-1'
-              )}
-              onMouseEnter={() => !isMobile && clearTimeout(timeoutRef.current)}
-              onMouseLeave={() => !isMobile && handleCategoryLeave()}
-              onWheel={(e) => {
-                const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
-                if ((e.deltaY < 0 && scrollTop === 0) || (e.deltaY > 0 && scrollTop + clientHeight >= scrollHeight)) {
-                  e.preventDefault();
-                }
-              }}
+              className={clsx('p-6 border-l border-gray-200 max-h-screen overflow-y-auto', isMobile ? 'w-full' : 'flex-1')}
+              onMouseEnter={clearDropdownTimeout}
+              onMouseLeave={handleCategoryLeave}
+              onWheel={(e) => e.stopPropagation()}
             >
               <div className="grid grid-cols-1 gap-2">
                 {item.submenu[hoveredCategory].items.map((subItem, subIndex) => (
                   <Link
                     key={subIndex}
                     href={subItem.href || '#'}
+                    target={subItem.external ? '_blank' : '_self'}
+                    rel={subItem.external ? 'noopener noreferrer' : ''}
                     className={clsx(
                       'block p-3 rounded-md transition-all duration-200 group',
                       subItem.isViewAll ? 'bg-cyan-50 border border-cyan-200 hover:bg-cyan-100 hover:border-cyan-300' : 'hover:bg-gray-50 border border-transparent hover:border-gray-200'
@@ -288,10 +332,12 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
                     onClick={() => setOpenDropdown(null)}
                   >
                     <div className="flex items-center justify-between">
-                      <span className={clsx(
-                        'text-sm font-medium',
-                        subItem.isViewAll ? 'text-cyan-700' : 'text-gray-700 group-hover:text-cyan-600'
-                      )}>
+                      <span
+                        className={clsx(
+                          'text-sm font-medium',
+                          subItem.isViewAll ? 'text-cyan-700' : 'text-gray-700 group-hover:text-cyan-600'
+                        )}
+                      >
                         {subItem.name}
                       </span>
                       {subItem.isViewAll && (
@@ -302,6 +348,11 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
                           viewBox="0 0 24 24"
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      )}
+                      {subItem.external && (
+                        <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
                       )}
                     </div>
@@ -316,26 +367,24 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
   };
 
   return (
-    <div className="desktop-menu relative flex flex-col md:flex-row">
+    <div className="desktop-menu relative flex flex-col md:flex-row md:space-x-1 lg:space-x-2">
       {menuItems.map((item, index) => (
         <div
           key={item.title}
           className={clsx('menu-item relative', { 'mega-menu-parent': item.isMegaMenu })}
-          ref={el => (dropdownRefs.current[index] = el)}
-          onMouseEnter={() => {
-            clearTimeout(timeoutRef.current);
-            if (item.submenu) openDropdownOnHover(index);
-          }}
-          onMouseLeave={() => !item.isMegaMenu && closeAllDropdowns()}
+          ref={(el) => (dropdownRefs.current[index] = el)}
+          onMouseEnter={() => item.submenu && openDropdownOnHover(index)}
+          onMouseLeave={() => item.submenu && closeAllDropdowns()}
         >
           <div className="flex items-center">
             {item.href ? (
               <Link
                 href={item.href}
                 className={clsx(
-                  'menu-link px-3 py-2 text-sm font-medium transition-colors duration-200 flex items-center',
+                  'menu-link px-4 py-2 text-sm font-medium transition-colors duration-200 flex items-center',
                   openDropdown === index ? 'text-cyan-600' : 'text-gray-700 hover:text-cyan-600'
                 )}
+                onClick={() => !item.submenu && setOpenDropdown(null)}
               >
                 {item.icon && <span className="mr-1">{item.icon}</span>}
                 {item.title}
@@ -358,17 +407,18 @@ const DesktopMenu = memo(function DesktopMenu({ menuItems, openDropdown, toggleD
             ) : (
               <div className="flex items-center">
                 <button
-                  onClick={(e) => toggleDropdown(index, e)}
+                  onClick={(e) => isMobile && toggleDropdown(index, e)}
                   className={clsx(
                     'menu-button px-3 py-2 text-sm font-medium transition-colors duration-200',
                     openDropdown === index ? 'text-cyan-600' : 'text-gray-700 hover:text-cyan-600'
                   )}
                 >
+                  {item.icon && <span className="mr-1">{item.icon}</span>}
                   {item.title}
                 </button>
                 {item.submenu && isClient && (
                   <button
-                    onClick={(e) => toggleDropdown(index, e)}
+                    onClick={(e) => isMobile && toggleDropdown(index, e)}
                     className="text-gray-500 hover:text-cyan-600 ml-1 focus:outline-none transition-colors duration-200"
                   >
                     <svg

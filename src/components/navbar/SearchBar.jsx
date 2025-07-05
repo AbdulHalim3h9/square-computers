@@ -1,38 +1,72 @@
-import { useRef, useEffect, useState, useCallback } from 'react';
+import { useRef, useEffect, useState, useCallback, memo } from 'react';
 import { Search as SearchIcon, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function SearchBar({ isSearchExpanded, setIsSearchExpanded, searchQuery, setSearchQuery }) {
+function SearchBar({ isSearchExpanded, setIsSearchExpanded, searchQuery, setSearchQuery }) {
   const router = useRouter();
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [searchAnimation, setSearchAnimation] = useState(false);
 
+  // Handle window resize for mobile detection
   useEffect(() => {
-    const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
+    const checkIfMobile = () => setIsMobile(window.innerWidth < 768);
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Debounce search function
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return function(...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func.apply(this, args), delay);
+  // Focus input when overlay opens
+  useEffect(() => {
+    if (isOverlayOpen && searchInputRef.current) {
+      setTimeout(() => {
+        searchInputRef.current.focus();
+      }, 150);
+    }
+  }, [isOverlayOpen]);
+
+  // Close overlay with Escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === 'Escape' && isOverlayOpen) {
+        closeOverlay();
+      }
     };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isOverlayOpen]);
+
+  const openOverlay = () => {
+    setSearchAnimation(true);
+    setIsOverlayOpen(true);
+    document.body.style.overflow = 'hidden';
   };
 
-  // Search products function
+  const closeOverlay = () => {
+    setSearchAnimation(false);
+    setTimeout(() => {
+      setIsOverlayOpen(false);
+      setIsSearchExpanded(false);
+      document.body.style.overflow = '';
+    }, 200);
+  };
+
+  // Simplified debounce utility
+  const debounce = useCallback((func, delay) => {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  }, []);
+
+  // Search products
   const searchProducts = useCallback(async (query) => {
     if (!query.trim()) {
       setSearchResults([]);
@@ -45,6 +79,8 @@ export default function SearchBar({ isSearchExpanded, setIsSearchExpanded, searc
       if (response.ok) {
         const data = await response.json();
         setSearchResults(data);
+      } else {
+        setSearchResults([]);
       }
     } catch (error) {
       console.error('Search error:', error);
@@ -54,80 +90,60 @@ export default function SearchBar({ isSearchExpanded, setIsSearchExpanded, searc
     }
   }, []);
 
-  // Debounced search
-  const debouncedSearch = useCallback(
-    debounce((query) => searchProducts(query), 300),
-    []
-  );
+  const debouncedSearch = useCallback(debounce(searchProducts, 300), [searchProducts]);
 
-  // Handle search input change
-  const handleSearchChange = (e) => {
+  // Handle search input
+  const handleSearchChange = useCallback((e) => {
     const query = e.target.value;
     setSearchQuery(query);
     debouncedSearch(query);
-  };
+  }, [setSearchQuery, debouncedSearch]);
 
-  // Handle search form submission
-  const handleSearch = (e) => {
+  // Handle form submission
+  const handleSearch = useCallback((e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       setSearchResults([]);
       setIsSearchExpanded(false);
     }
-  };
+  }, [searchQuery, router, setIsSearchExpanded]);
 
-  // Handle click outside to collapse
+  // Handle click outside to close overlay
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
-        if (isExpanded) {
-          setIsExpanded(false);
-          setIsSearchExpanded(false);
-        }
+      if (
+        isOverlayOpen && 
+        searchContainerRef.current && 
+        !searchContainerRef.current.contains(event.target) &&
+        !event.target.closest('button[aria-label="Open search"]')
+      ) {
+        closeOverlay();
       }
     };
 
-    // Add event listener when component mounts
-    document.addEventListener('mousedown', handleClickOutside);
-    
-    // Clean up event listener on unmount
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isExpanded, isSearchExpanded]);
+    if (isOverlayOpen) {
+      const timer = setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
+      }, 10);
 
-  // Focus handling
-  useEffect(() => {
-    if (isSearchExpanded && searchInputRef.current) {
-      searchInputRef.current.focus();
-      setIsExpanded(true);
+      return () => {
+        clearTimeout(timer);
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('touchstart', handleClickOutside);
+      };
     }
-  }, [isSearchExpanded]);
-
-  const handleBlur = () => {
-    if (isMobile && !searchQuery.trim()) {
-      setIsExpanded(false);
-      setIsSearchExpanded(false);
-    }
-  };
-
-  // Handle search result click
-  const handleResultClick = () => {
-    setSearchResults([]);
-    setIsExpanded(false);
-    setIsSearchExpanded(false);
-    setSearchQuery('');
-  };
+  }, [isOverlayOpen]);
 
   // Handle keyboard navigation
-  const handleKeyDown = (e) => {
+  const handleKeyDown = useCallback((e) => {
     if (!searchResults.length) return;
-    
+
     const focusedElement = document.activeElement;
     const items = Array.from(document.querySelectorAll('[data-search-result]'));
     const currentIndex = items.findIndex(item => item === focusedElement);
-    
+
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
@@ -137,7 +153,6 @@ export default function SearchBar({ isSearchExpanded, setIsSearchExpanded, searc
           items[0]?.focus();
         }
         break;
-        
       case 'ArrowUp':
         e.preventDefault();
         if (currentIndex > 0) {
@@ -146,132 +161,93 @@ export default function SearchBar({ isSearchExpanded, setIsSearchExpanded, searc
           items[items.length - 1]?.focus();
         }
         break;
-        
       case 'Escape':
         setSearchResults([]);
-        setIsExpanded(false);
         setIsSearchExpanded(false);
         searchInputRef.current?.blur();
         break;
-        
       default:
         break;
     }
-  };
-
-  // Mobile search overlay
-  const searchOverlay = isMobile && isSearchExpanded && (
-    <div className="search-overlay">
-      <div className="w-full max-w-xl px-4">
-        <div className="relative bg-white rounded-lg shadow-xl animate-slide-in">
-          <div className="flex items-center px-4 py-3 border-b border-gray-200">
-            <Search className="w-5 h-5 text-gray-400 mr-3" />
-            <input
-              ref={searchInputRef}
-              type="text"
-              placeholder="Search products and services..."
-              className="flex-1 outline-none text-base"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              onKeyDown={(e) => {
-                if (e.key === 'Escape') {
-                  setSearchResults([]);
-                  setIsExpanded(false);
-                  setIsSearchExpanded(false);
-                } else if (e.key === 'Enter' && !searchResults.length) {
-                  handleSearch(e);
-                } else if (['ArrowDown', 'ArrowUp'].includes(e.key)) {
-                  handleKeyDown(e);
-                }
-              }}
-              aria-expanded={searchResults.length > 0}
-              aria-controls="search-results"
-              aria-label="Search products"
-              aria-autocomplete="list"
-              role="combobox"
-            />
-            <button
-              onClick={() => {
-                setSearchQuery('');
-                setSearchResults([]);
-                setIsExpanded(false);
-                setIsSearchExpanded(false);
-              }}
-              className="ml-2 text-gray-400 hover:text-gray-600"
-              aria-label="Clear search"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-          
-          {searchQuery.trim() && (
-            <div 
-              id="search-results"
-              className="max-h-[calc(100vh-120px)] overflow-y-auto search-results-scrollbar"
-              role="listbox"
-              aria-label="Search results"
-            >
-              {renderSearchResults()}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+  }, [searchResults, setIsSearchExpanded]);
 
   // Render search results
   const renderSearchResults = () => {
     if (isLoading) {
       return (
-        <div className="p-4 text-center text-gray-500">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-cyan-500 mx-auto mb-2"></div>
-          <p>Searching...</p>
+        <div className="py-8 text-center">
+          <div className="inline-flex items-center gap-2 text-gray-500">
+            <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
+            Searching...
+          </div>
         </div>
       );
     }
 
     if (searchResults.length > 0) {
       return (
-        <>
-          <div className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-            Products ({searchResults.length})
-          </div>
-          {searchResults.map((product) => (
+        <div className="py-2 space-y-1">
+          {searchResults.map((product, index) => (
             <Link
               key={product.id}
               href={`/products/${product.slug}`}
-              className="search-result-item"
-              onClick={handleResultClick}
-              data-search-result
-              tabIndex="0"
+              className="flex items-center p-4 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-cyan-50 transition-all duration-300 ease-out transform hover:scale-[1.02] hover:shadow-sm group"
+              onClick={(e) => {
+                e.preventDefault();
+                setSearchResults([]);
+                setSearchQuery('');
+                closeOverlay();
+                router.push(`/products/${product.slug}`);
+              }}
+              tabIndex={0}
               role="option"
               aria-selected="false"
+              style={{
+                animationDelay: `${index * 50}ms`
+              }}
             >
-              <div className="flex-shrink-0 h-10 w-10 bg-gray-100 rounded-md overflow-hidden">
+              <div className="flex-shrink-0 h-12 w-12 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300">
                 {product.image && (
                   <Image
                     src={product.image}
                     alt={product.name}
-                    width={40}
-                    height={40}
-                    className="h-full w-full object-cover"
+                    width={48}
+                    height={48}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 )}
               </div>
-              <div className="ml-3 overflow-hidden">
-                <p className="text-sm font-medium text-gray-900 truncate">{product.name}</p>
-                <p className="text-sm text-gray-500">${product.price.toFixed(2)}</p>
+              <div className="ml-4 overflow-hidden flex-1">
+                <p className="text-sm font-semibold text-gray-900 truncate group-hover:text-blue-600 transition-colors duration-200">
+                  {product.name}
+                </p>
+                <p className="text-sm text-gray-500 group-hover:text-gray-600 transition-colors duration-200">
+                  ${product.price.toFixed(2)}
+                </p>
+              </div>
+              <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
               </div>
             </Link>
           ))}
-        </>
+        </div>
       );
     }
 
     if (searchQuery.trim() && !isLoading) {
       return (
-        <div className="p-4 text-center text-gray-500">
-          <p>No results found for "{searchQuery}"</p>
+        <div className="py-12 text-center">
+          <div className="text-gray-400 mb-2">
+            <svg className="w-12 h-12 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <p className="text-gray-500 text-lg">No results found</p>
+          <p className="text-gray-400 text-sm mt-1">Try searching for something else</p>
         </div>
       );
     }
@@ -280,109 +256,80 @@ export default function SearchBar({ isSearchExpanded, setIsSearchExpanded, searc
   };
 
   return (
-    <div 
-      ref={searchContainerRef}
-      className={`relative transition-all duration-300 px-2 w-full ${isMobile ? 'z-50' : ''}`}
-    >
-      {!isMobile || !isSearchExpanded ? (
-        <form 
-          onSubmit={handleSearch} 
-          className="relative flex items-center w-full"
-          onClick={(e) => {
-            if (!isExpanded && !isMobile) {
-              e.preventDefault();
-              setIsExpanded(true);
-              setIsSearchExpanded(true);
-            }
-          }}
-        >
-          <input
-            ref={searchInputRef}
-            type="text"
-            placeholder={isExpanded ? "Search products and services..." : "Search"}
-            className={`search-input ${isExpanded ? 'pl-10 pr-10' : 'pl-10 pr-8'} ${isExpanded ? 'opacity-100' : 'opacity-70'}`}
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onFocus={() => {
-              if (!isMobile) {
-                setIsExpanded(true);
-                setIsSearchExpanded(true);
-                if (searchQuery.trim()) {
-                  searchProducts(searchQuery);
-                }
-              }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !searchResults.length) {
-                handleSearch(e);
-              } else if (['ArrowDown', 'ArrowUp', 'Escape'].includes(e.key)) {
-                handleKeyDown(e);
-              }
-            }}
-            aria-expanded={searchResults.length > 0}
-            aria-controls="search-results"
-            aria-label="Search products"
-            aria-autocomplete="list"
-            role="combobox"
-          />
-          <SearchIcon className="absolute left-3 w-4 h-4 text-gray-400" />
-          
-          {isExpanded && searchQuery && (
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                setSearchQuery('');
-                setSearchResults([]);
-                if (isMobile) {
-                  setIsExpanded(false);
-                  setIsSearchExpanded(false);
-                }
-              }}
-              className={`search-button ${isExpanded ? 'right-8' : 'right-0'}`}
-              aria-label="Clear search"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-          
-          <button 
-            type="submit"
-            className="search-button"
-            aria-label="Search"
-          >
-            <SearchIcon className="w-4 h-4" />
-          </button>
-        </form>
-      ) : null}
-      
-      {/* Screen reader announcements */}
-      <div 
-        className="sr-only" 
-        aria-live="polite"
-        aria-atomic="true"
+    <>
+      {/* Search Button */}
+      <button
+        onClick={openOverlay}
+        className="relative p-3 text-gray-600 hover:text-blue-600 focus:outline-none transition-all duration-200 rounded-xl hover:bg-blue-50 group"
+        aria-label="Open search"
       >
-        {isLoading 
-          ? 'Searching...' 
-          : searchResults.length > 0 
-            ? `${searchResults.length} results found`
-            : searchQuery.trim() && 'No results found'}
-      </div>
+        <SearchIcon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500 opacity-0 group-hover:opacity-10 transition-opacity duration-200"></div>
+      </button>
 
-      {/* Desktop Search Results Dropdown */}
-      {!isMobile && isExpanded && searchQuery.trim() && (
-        <div 
-          id="search-results"
-          className="absolute z-50 mt-1 w-full bg-white rounded-lg shadow-lg border border-gray-200 max-h-96 overflow-y-auto search-results-scrollbar animate-fade-in"
-          role="listbox"
-          aria-label="Search results"
-        >
-          {renderSearchResults()}
+      {/* Overlay */}
+      {isOverlayOpen && (
+        <div className="fixed inset-0 z-50 overflow-y-auto">
+          {/* Blurred Background */}
+          <div 
+            className={`fixed inset-0 bg-black/40 backdrop-blur-md transition-all duration-300 ${
+              searchAnimation ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+          
+          {/* Search Container */}
+          <div className="relative flex items-center justify-center min-h-screen text-center sm:block m-2">
+            <div 
+              ref={searchContainerRef}
+              className={`inline-block w-full max-w-2xl px-6 pt-6 pb-6 overflow-hidden text-left align-middle transition-all duration-300 transform bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 sm:my-8 sm:max-w-3xl sm:p-8 ${
+                searchAnimation 
+                  ? 'opacity-100 scale-100 translate-y-0' 
+                  : 'opacity-0 scale-95 translate-y-4'
+              }`}
+            >
+              <div className="relative">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+                  <SearchIcon className="w-6 h-6 text-gray-400" />
+                </div>
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search products and services..."
+                  className="w-full py-5 pl-14 pr-14 text-lg bg-gray-50/50 border-2 border-gray-200/50 rounded-2xl focus:ring-0 focus:border-blue-500 focus:bg-white/80 focus:outline-none transition-all duration-300 placeholder-gray-400"
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && searchQuery.trim()) {
+                      handleSearch(e);
+                      closeOverlay();
+                    }
+                  }}
+                  autoComplete="off"
+                />
+                <button
+                  type="button"
+                  onClick={closeOverlay}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition-all duration-200"
+                  aria-label="Close search"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Search Results */}
+              {searchQuery.trim() && (
+                <div className={`mt-4 max-h-[60vh] overflow-y-auto rounded-2xl transition-all duration-300 ${
+                  searchResults.length > 0 ? 'bg-white/30 backdrop-blur-sm border border-white/20' : ''
+                }`}>
+                  {renderSearchResults()}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
-      
-      {/* Mobile search overlay */}
-      {searchOverlay}
-    </div>
+    </>
   );
 }
+
+export default memo(SearchBar);

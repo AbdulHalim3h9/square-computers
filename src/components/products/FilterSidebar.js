@@ -121,18 +121,6 @@ export default function FilterSidebar({ filters = {}, onFilterChange }) {
             </div>
           </div>
           
-          <div className="px-2 py-4">
-            <Slider
-              value={priceRange}
-              min={0}
-              max={5000}
-              step={10}
-              onValueChange={handleSliderChange}
-              minStepsBetweenThumbs={1}
-              className="w-full"
-            />
-          </div>
-          
           <div className="flex justify-between text-sm text-gray-500">
             <span>${priceRange[0].toLocaleString()}</span>
             <span>${priceRange[1].toLocaleString()}</span>

@@ -65,17 +65,20 @@ function ProductsContent() {
     let result = [...products];
 
     // Apply category filter
-    if (filters.categories.length > 0) {
+    if (filters.categories && filters.categories.length > 0) {
       result = result.filter(product => 
         filters.categories.includes(product.category)
       );
     }
 
     // Apply price range filter
-    result = result.filter(product => 
-      product.price >= filters.priceRange[0] && 
-      product.price <= filters.priceRange[1]
-    );
+    if (filters.priceRange) {
+      const [minPrice, maxPrice] = filters.priceRange;
+      result = result.filter(product => 
+        product.price >= minPrice && 
+        product.price <= maxPrice
+      );
+    }
 
     // Apply sorting
     if (sortParam) {
@@ -129,10 +132,10 @@ function ProductsContent() {
   }, [filters, sortParam, isLoading, pathname, router, searchParams]);
 
   const handleFilterChange = (newFilters) => {
-    setFilters({
-      categories: newFilters.categories || [],
-      priceRange: newFilters.priceRange || [0, 5000]
-    });
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      ...newFilters
+    }));
   };
 
   const handleSortChange = (sortValue) => {

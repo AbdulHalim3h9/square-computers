@@ -1,119 +1,144 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { Slider } from '@/components/ui/slider';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
-const FilterSection = ({ title, children }) => (
-  <div className="mb-6">
+const FilterSection = ({ title, children, className = '' }) => (
+  <div className={`mb-6 ${className}`}>
     <h3 className="text-lg font-semibold text-gray-800 mb-3">{title}</h3>
-    <div className="space-y-2">
+    <div className="space-y-4">
       {children}
     </div>
   </div>
 );
 
-const FilterCheckbox = ({ id, label, value, checked, onChange, count }) => (
-  <div className="flex items-center justify-between">
-    <div className="flex items-center">
-      <input
-        id={id}
-        type="checkbox"
-        className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
-        checked={checked}
-        onChange={onChange}
-        value={value}
-      />
-      <label htmlFor={id} className="ml-2 text-sm text-gray-700">
-        {label}
-      </label>
-    </div>
-    {count !== undefined && (
-      <span className="text-xs text-gray-500">{count}</span>
-    )}
-  </div>
-);
-
-export default function FilterSidebar({ filters, onFilterChange }) {
-  const [selectedCategories, setSelectedCategories] = useState([]);
+export default function FilterSidebar({ filters = {}, onFilterChange }) {
   const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(5000);
 
-  const handleCategoryChange = (category) => {
-    const newCategories = selectedCategories.includes(category)
-      ? selectedCategories.filter(c => c !== category)
-      : [...selectedCategories, category];
-    
-    setSelectedCategories(newCategories);
-    onFilterChange({ categories: newCategories, priceRange });
+  // Initialize price range from filters
+  useEffect(() => {
+    if (filters.priceRange) {
+      setPriceRange([Number(filters.priceRange[0]), Number(filters.priceRange[1])]);
+      setMinPrice(Number(filters.priceRange[0]));
+      setMaxPrice(Number(filters.priceRange[1]));
+    }
+  }, [filters.priceRange]);
+
+  // Debounce the price range update
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (onFilterChange) {
+        onFilterChange({
+          ...filters,
+          priceRange: [minPrice, maxPrice]
+        });
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [minPrice, maxPrice, filters, onFilterChange]);
+
+  const handleSliderChange = (values) => {
+    setPriceRange(values);
+    setMinPrice(values[0]);
+    setMaxPrice(values[1]);
   };
 
-  const handlePriceChange = (min, max) => {
-    const newRange = [min, max];
-    setPriceRange(newRange);
-    onFilterChange({ categories: selectedCategories, priceRange: newRange });
+  const handleMinPriceChange = (e) => {
+    const value = Math.min(Number(e.target.value), priceRange[1] - 1);
+    setMinPrice(value);
+    setPriceRange([value, priceRange[1]]);
+  };
+
+  const handleMaxPriceChange = (e) => {
+    const value = Math.max(Number(e.target.value), priceRange[0] + 1);
+    setMaxPrice(value);
+    setPriceRange([priceRange[0], value]);
+  };
+
+  const clearFilters = () => {
+    setPriceRange([0, 5000]);
+    setMinPrice(0);
+    setMaxPrice(5000);
+    if (onFilterChange) {
+      onFilterChange({
+        ...filters,
+        priceRange: [0, 5000]
+      });
+    }
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-sm">
-      <h2 className="text-xl font-bold mb-4 text-gray-800">Filters</h2>
+    <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-gray-800">Filters</h2>
+        <button 
+          onClick={clearFilters}
+          className="text-sm text-blue-600 hover:text-blue-700 transition-colors"
+        >
+          Clear all
+        </button>
+      </div>
       
-      <FilterSection title="Categories">
-        {filters.categories.map(({ name, count }) => (
-          <FilterCheckbox
-            key={name}
-            id={`category-${name}`}
-            label={`${name} (${count})`}
-            value={name}
-            checked={selectedCategories.includes(name)}
-            onChange={() => handleCategoryChange(name)}
-          />
-        ))}
-      </FilterSection>
-
       <FilterSection title="Price Range">
-        <div className="px-2">
-          <div className="flex justify-between text-xs text-gray-500 mb-2">
-            <span>${priceRange[0]}</span>
-            <span>${priceRange[1]}+</span>
-          </div>
-          <div className="relative">
-            <div className="h-1 bg-gray-200 rounded-full">
-              <div 
-                className="h-1 bg-blue-600 rounded-full" 
-                style={{
-                  width: '100%',
-                  left: '0%',
-                }}
-              />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between space-x-4">
+            <div className="flex-1">
+              <Label htmlFor="min-price" className="text-sm font-medium text-gray-700 block mb-1">
+                Min Price
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                <Input
+                  id="min-price"
+                  type="number"
+                  min="0"
+                  max={priceRange[1] - 1}
+                  value={minPrice}
+                  onChange={handleMinPriceChange}
+                  className="pl-8"
+                />
+              </div>
             </div>
-            <input
-              type="range"
-              min="0"
-              max="5000"
-              step="100"
-              value={priceRange[0]}
-              onChange={(e) => handlePriceChange(Number(e.target.value), priceRange[1])}
-              className="absolute w-full h-1 -top-1 appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
+            <div className="flex-1">
+              <Label htmlFor="max-price" className="text-sm font-medium text-gray-700 block mb-1">
+                Max Price
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                <Input
+                  id="max-price"
+                  type="number"
+                  min={priceRange[0] + 1}
+                  max="10000"
+                  value={maxPrice}
+                  onChange={handleMaxPriceChange}
+                  className="pl-8"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <div className="px-2 py-4">
+            <Slider
+              value={priceRange}
+              min={0}
+              max={5000}
+              step={10}
+              onValueChange={handleSliderChange}
+              minStepsBetweenThumbs={1}
+              className="w-full"
             />
-            <input
-              type="range"
-              min="0"
-              max="5000"
-              step="100"
-              value={priceRange[1]}
-              onChange={(e) => handlePriceChange(priceRange[0], Number(e.target.value))}
-              className="absolute w-full h-1 -top-1 appearance-none pointer-events-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-blue-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:pointer-events-auto"
-            />
+          </div>
+          
+          <div className="flex justify-between text-sm text-gray-500">
+            <span>${priceRange[0].toLocaleString()}</span>
+            <span>${priceRange[1].toLocaleString()}</span>
           </div>
         </div>
       </FilterSection>
-
-      <button 
-        onClick={() => {
-          setSelectedCategories([]);
-          setPriceRange([0, 5000]);
-          onFilterChange({ categories: [], priceRange: [0, 5000] });
-        }}
-        className="mt-4 text-sm text-blue-600 hover:text-blue-700"
-      >
-        Clear all filters
-      </button>
     </div>
   );
 }

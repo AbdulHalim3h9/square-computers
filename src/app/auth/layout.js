@@ -1,13 +1,37 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
+
+// Create a wrapper component that uses useSearchParams
+function AuthLayoutContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [formType, setFormType] = useState('login');
+  
+  // Handle URL query params
+  useEffect(() => {
+    const formParam = searchParams.get('form');
+    if (['login', 'register'].includes(formParam)) {
+      setFormType(formParam);
+    }
+  }, [searchParams]);
+  
+  return (
+    <AuthLayoutInner 
+      formType={formType} 
+      setFormType={setFormType} 
+      router={router} 
+    />
+  );
+}
+
+// Main layout component
 // Import forms with no SSR
 const LoginForm = dynamic(() => import('@/components/forms').then(mod => mod.LoginForm), { ssr: false });
 const RegisterForm = dynamic(() => import('@/components/forms').then(mod => mod.RegisterForm), { ssr: false });
-const ForgotPasswordForm = dynamic(() => import('@/components/forms').then(mod => mod.ForgotPasswordForm), { ssr: false });
 
 // Import AnimatedBackground with no SSR
 const AnimatedBackground = dynamic(
@@ -16,8 +40,14 @@ const AnimatedBackground = dynamic(
 );
 
 export default function AuthLayout({ children }) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <AuthLayoutContent />
+    </Suspense>
+  );
+}
+
+function AuthLayoutInner({ formType, setFormType, router }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,25 +56,18 @@ export default function AuthLayout({ children }) {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [formType, setFormType] = useState('login');
   const popupRef = useRef(null);
 
-  // Check if mobile and handle URL query params on component mount
+  // Check if mobile on component mount
   useEffect(() => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
 
-    // Handle URL query params
-    const formParam = searchParams.get('form');
-    if (['login', 'register', 'forgot-password'].includes(formParam)) {
-      setFormType(formParam);
-    }
-
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
     return () => window.removeEventListener('resize', checkIfMobile);
-  }, [searchParams]);
+  }, []);
 
   const handleDemoLogin = async (e) => {
     e?.preventDefault();
@@ -138,21 +161,7 @@ export default function AuthLayout({ children }) {
     }
   };
 
-  const handleForgotPassword = async (e) => {
-    e?.preventDefault();
-    setLoading(true);
-    setError('');
-    try {
-      // Forgot password logic here
-      setSuccess('If an account exists with this email, you will receive a password reset link shortly.');
-    } catch (err) {
-      setError(err.message || 'Failed to send reset link');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSwitchToRegister = () => {
+const handleSwitchToRegister = () => {
     setFormType('register');
     setError('');
     setSuccess('');
@@ -164,13 +173,6 @@ export default function AuthLayout({ children }) {
     setError('');
     setSuccess('');
     router.push('/auth?form=login');
-  };
-
-  const handleForgotPasswordClick = () => {
-    setFormType('forgot-password');
-    setError('');
-    setSuccess('');
-    router.push('/auth?form=forgot-password');
   };
 
   // Logo component with enhanced glow effect
@@ -287,7 +289,6 @@ export default function AuthLayout({ children }) {
                   error={error}
                   success={success}
                   handleSubmit={handleLogin}
-                  onForgotPassword={handleForgotPasswordClick}
                   onSwitchToRegister={handleSwitchToRegister}
                   onDemoLogin={handleDemoLogin}
                 />
@@ -333,29 +334,7 @@ export default function AuthLayout({ children }) {
                 </div>
               </>
             )}
-            
-            {formType === 'forgot-password' && (
-              <>
-                <ForgotPasswordForm
-                  email={email}
-                  setEmail={setEmail}
-                  loading={loading}
-                  error={error}
-                  success={success}
-                  handleSubmit={handleForgotPassword}
-                  onBackToLogin={handleSwitchToLogin}
-                />
-                <div className="mt-6 text-center">
-                  <button
-                    type="button"
-                    className="text-sm font-medium text-cyan-600 hover:text-cyan-500"
-                    onClick={handleSwitchToLogin}
-                  >
-                    Return to Sign In
-                  </button>
-                </div>
-              </>
-            )}
+
           </div>
         </div>
       </div>
@@ -376,14 +355,12 @@ export default function AuthLayout({ children }) {
           <div className="w-full md:w-1/2 p-8">
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {formType === 'login' ? 'Sign In to Your Account' : formType === 'register' ? 'Create Account' : 'Reset Password'}
+                {formType === 'login' ? 'Sign In to Your Account' : 'Create Account'}
               </h2>
               <p className="text-gray-600">
                 {formType === 'login' 
                   ? 'Enter your credentials to access your account' 
-                  : formType === 'register' 
-                    ? 'Create a new account to get started' 
-                    : 'Enter your email to receive a password reset link'}
+                  : 'Create a new account to get started'}
               </p>
             </div>
 
@@ -398,7 +375,6 @@ export default function AuthLayout({ children }) {
                   error={error}
                   success={success}
                   handleSubmit={handleLogin}
-                  onForgotPassword={handleForgotPasswordClick}
                   onSwitchToRegister={handleSwitchToRegister}
                   onDemoLogin={handleDemoLogin}
                 />
@@ -445,28 +421,7 @@ export default function AuthLayout({ children }) {
               </>
             )}
 
-            {formType === 'forgot-password' && (
-              <>
-                <ForgotPasswordForm
-                  email={email}
-                  setEmail={setEmail}
-                  loading={loading}
-                  error={error}
-                  success={success}
-                  handleSubmit={handleForgotPassword}
-                  onBackToLogin={handleSwitchToLogin}
-                />
-                <div className="mt-6 text-center">
-                  <button
-                    type="button"
-                    className="text-sm font-medium text-cyan-600 hover:text-cyan-500"
-                    onClick={handleSwitchToLogin}
-                  >
-                    Return to Sign In
-                  </button>
-                </div>
-              </>
-            )}
+
           </div>
         </div>
       </div>

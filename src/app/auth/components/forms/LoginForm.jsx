@@ -9,7 +9,6 @@ const LoginForm = ({
   error,
   success,
   handleSubmit,
-  onForgotPassword,
   onSwitchToRegister,
   onDemoLogin
 }) => {
@@ -48,21 +47,12 @@ Email Address
       </div>
 
       <div>
-        <div className="flex items-center justify-between mb-2">
-          <label
-            htmlFor="password"
-            className="block text-sm font-light text-gray-700"
-          >
-            Password
-          </label>
-          <button
-            type="button"
-            onClick={onForgotPassword}
-            className="text-sm font-medium text-cyan-600 hover:text-cyan-500 transition duration-200"
-          >
-            Forgot?
-          </button>
-        </div>
+        <label
+          htmlFor="password"
+          className="block text-sm font-light text-gray-700 mb-2"
+        >
+          Password
+        </label>
         <input
           id="password"
           name="password"

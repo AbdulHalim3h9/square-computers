@@ -352,32 +352,6 @@ export const products = [
       warranty: '3 Years Limited'
     }
   },
-  {
-    id: 53,
-    slug: '4k-office-monitor',
-    name: '4K Office Monitor',
-    category: 'monitors',
-    price: 499.99,
-    image: 'https://images.unsplash.com/photo-1593642532973-d31b97d1e6b4',
-    images: ['https://images.unsplash.com/photo-1593642532973-d31b97d1e6b4', 'https://images.unsplash.com/photo-1587829748821-7735f4a1e7d1'],
-    description: 'High-resolution monitor for professional work',
-    details: [
-      '27" 4K UHD',
-      '60Hz Refresh Rate',
-      '5ms Response Time',
-      'IPS Panel',
-      'USB-C Hub',
-      'Ergonomic Stand',
-      'Flicker-Free'
-    ],
-    specifications: {
-      size: '27"',
-      resolution: '4K UHD',
-      refreshRate: '60Hz',
-      responseTime: '5ms',
-      warranty: '2 Years Limited'
-    }
-  },
 
   // Printers
   {

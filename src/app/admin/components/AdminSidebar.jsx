@@ -3,7 +3,33 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useCallback, useEffect } from 'react';
-import { FiChevronDown, FiChevronRight, FiGrid, FiUsers, FiShoppingBag, FiFileText, FiMapPin, FiMail, FiPhone, FiMessageSquare, FiFacebook, FiInstagram, FiLinkedin, FiTwitter, FiUser, FiAward, FiTruck, FiPackage, FiDollarSign, FiCreditCard, FiSettings } from 'react-icons/fi';
+import { 
+  FiChevronDown, 
+  FiChevronRight, 
+  FiGrid, 
+  FiUsers, 
+  FiShoppingBag, 
+  FiFileText, 
+  FiMapPin, 
+  FiMail, 
+  FiPhone, 
+  FiMessageSquare, 
+  FiFacebook, 
+  FiInstagram, 
+  FiLinkedin, 
+  FiTwitter, 
+  FiUser, 
+  FiAward, 
+  FiTruck, 
+  FiPackage, 
+  FiDollarSign, 
+  FiCreditCard, 
+  FiSettings, 
+  FiChevronLeft,
+  FiMenu,
+  FiLogOut
+} from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 const menuItems = [
   {
@@ -14,34 +40,17 @@ const menuItems = [
   {
     title: 'Content Management',
     icon: <FiFileText className="w-5 h-5" />,
-    children: [
-      { title: 'Services', href: '/admin/services' },
-      { title: 'About Us', href: '/admin/about' },
-      { title: 'Blogs', href: '/admin/blogs' },
-      { title: 'Team', href: '/admin/team' },
-      { title: "Chairman's Speech", href: '/admin/chairman-speech' },
-      { title: 'MDS Speech', href: '/admin/mds-speech' },
-    ],
+    href: '/admin/content-management',
   },
   {
     title: 'Clients & Partners',
     icon: <FiUsers className="w-5 h-5" />,
-    children: [
-      { title: 'Clients', href: '/admin/clients' },
-      { title: 'Partners', href: '/admin/partners' },
-      { title: 'Brands', href: '/admin/brands' },
-    ],
+    href: '/admin/clients-partners',
   },
   {
     title: 'Contact Information',
     icon: <FiMail className="w-5 h-5" />,
-    children: [
-      { title: 'Locations', href: '/admin/locations' },
-      { title: 'Email', href: '/admin/contact/email' },
-      { title: 'Phone/WhatsApp', href: '/admin/contact/phone' },
-      { title: 'Facebook Messenger', href: '/admin/contact/facebook' },
-      { title: 'Social Links', href: '/admin/social-links' },
-    ],
+    href: '/admin/contact',
   },
   {
     title: 'Products',
@@ -70,6 +79,34 @@ const menuItems = [
 ];
 
 export default function AdminSidebar({ onClose }) {
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    if (typeof window !== 'undefined') {
+      // Default to collapsed on mobile, use saved state on desktop
+      const isMobile = window.innerWidth < 768;
+      const savedState = localStorage.getItem('sidebarCollapsed');
+      return savedState !== null ? savedState === 'true' : isMobile;
+    }
+    return false;
+  });
+  
+  // Handle window resize to update collapsed state
+  const handleResize = useCallback(() => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile && !isCollapsed) {
+      setIsCollapsed(true);
+    }
+  }, [isCollapsed]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
+    // Set initial state
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleResize]);
+  
   const pathname = usePathname();
   const [expandedItems, setExpandedItems] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -80,7 +117,9 @@ export default function AdminSidebar({ onClose }) {
   });
 
   useEffect(() => {
-    localStorage.setItem('sidebarExpandedItems', JSON.stringify(expandedItems));
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebarExpandedItems', JSON.stringify(expandedItems));
+    }
   }, [expandedItems]);
 
   const toggleItem = useCallback((title) => {
@@ -107,8 +146,49 @@ export default function AdminSidebar({ onClose }) {
     const isExpanded = expandedItems[item.title];
     const active = isActive(item.href);
 
+    if (isCollapsed) {
+      return (
+        <div key={index} className="mb-1 group relative">
+          <div
+            className="flex items-center justify-center w-10 h-10 mx-2 text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-all duration-200 cursor-pointer shadow-sm"
+            title={item.title}
+          >
+            {item.href ? (
+              <Link href={item.href} onClick={onClose} className="flex items-center justify-center w-full h-full">
+                <span>{item.icon}</span>
+              </Link>
+            ) : (
+              <span>{item.icon}</span>
+            )}
+          </div>
+          
+          {hasChildren && (
+            <div className="absolute left-full ml-2 top-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible bg-white shadow-lg rounded-lg py-2 w-48 z-50 transition-all duration-200 border border-gray-200">
+              <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b border-gray-100">
+                {item.title}
+              </div>
+              {item.children.map((child, childIndex) => (
+                <Link
+                  key={childIndex}
+                  href={child.href}
+                  onClick={onClose}
+                  className={`block px-4 py-2 text-sm transition-colors duration-150 ${
+                    isActive(child.href) 
+                      ? 'bg-blue-50 text-blue-600 font-medium' 
+                      : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
+                  }`}
+                >
+                  {child.title}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
     return (
-      <div key={index} className="mb-1">
+      <div key={index} className="mb-1 mx-2">
         {hasChildren ? (
           <>
             <button
@@ -116,26 +196,32 @@ export default function AdminSidebar({ onClose }) {
               onKeyDown={(e) => handleKeyDown(e, item.title)}
               aria-expanded={isExpanded}
               aria-controls={`submenu-${index}`}
-              className={`w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-cyan-300 ${
-                active
-                  ? 'bg-cyan-50 text-cyan-600 border-l-4 border-cyan-500'
-                  : 'text-gray-700 hover:bg-gray-50 hover:text-cyan-600'
+              className={`w-full flex items-center justify-between rounded-lg transition-all duration-200 ease-in-out focus:outline-none ${
+                active || isExpanded
+                  ? 'bg-blue-50 text-blue-600'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
               }`}
             >
-              <div className="flex items-center">
-                <span className="mr-3">{item.icon}</span>
-                <span>{item.title}</span>
+              <div className="flex items-center w-full">
+                <div className="flex items-center justify-center w-10 h-10 bg-cyan-600 text-white rounded-lg mr-3 flex-shrink-0">
+                  {item.icon}
+                </div>
+                <div className="space-y-1 flex-1">
+                  <span className="truncate flex-1 font-medium text-sm">{item.title}</span>
+                </div>
+                <div className="flex-shrink-0 ml-2 mr-2">
+                  {isExpanded ? (
+                    <FiChevronDown className="w-4 h-4 transition-transform duration-200" />
+                  ) : (
+                    <FiChevronRight className="w-4 h-4 transition-transform duration-200" />
+                  )}
+                </div>
               </div>
-              {isExpanded ? (
-                <FiChevronDown className="w-4 h-4 transition-transform duration-200" />
-              ) : (
-                <FiChevronRight className="w-4 h-4 transition-transform duration-200" />
-              )}
             </button>
             <div
               id={`submenu-${index}`}
-              className={`ml-8 mt-1 space-y-1 overflow-hidden transition-all duration-200 ease-in-out ${
-                isExpanded ? 'max-h-96' : 'max-h-0'
+              className={`ml-6 mt-1 space-y-1 overflow-hidden transition-all duration-200 ease-in-out ${
+                isExpanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
               }`}
             >
               {item.children.map((child, childIndex) => (
@@ -143,10 +229,10 @@ export default function AdminSidebar({ onClose }) {
                   key={childIndex}
                   href={child.href}
                   onClick={onClose}
-                  className={`block px-4 py-2 text-sm rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-cyan-300 ${
+                  className={`block px-4 py-2 text-sm rounded-lg transition-all duration-150 focus:outline-none ${
                     isActive(child.href)
-                      ? 'bg-cyan-50 text-cyan-600 font-medium border-l-2 border-cyan-500 -ml-1 pl-3'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-cyan-600'
+                      ? 'bg-blue-50 text-blue-600 font-medium border-l-2 border-blue-500 -ml-1 pl-3'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'
                   }`}
                 >
                   {child.title}
@@ -158,28 +244,90 @@ export default function AdminSidebar({ onClose }) {
           <Link
             href={item.href || '#'}
             onClick={onClose}
-            aria-disabled={!item.href}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-cyan-300 ${
+            className={`flex items-center rounded-lg transition-all duration-200 focus:outline-none ${
               active
-                ? 'bg-cyan-50 text-cyan-600 border-l-4 border-cyan-500'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-cyan-600'
+                ? 'bg-blue-50 text-blue-600 shadow-sm'
+                : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
             } ${!item.href ? 'opacity-50 cursor-not-allowed' : ''}`}
+            title={isCollapsed ? item.title : undefined}
           >
-            <span className="mr-3">{item.icon}</span>
-            <span>{item.title}</span>
+            <div className="flex items-center justify-center w-10 h-10 bg-cyan-600 text-white rounded-lg mr-3 flex-shrink-0">
+              {item.icon}
+            </div>
+            <span className="truncate font-medium text-sm">{item.title}</span>
           </Link>
         )}
       </div>
     );
   };
 
+  // Sidebar collapse state
+  const displayCollapsed = isCollapsed;
+  
+  // Handle logout functionality
+  const handleLogout = () => {
+    if (typeof window !== 'undefined') {
+      // Clear authentication data
+      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('user');
+      
+      // Redirect to login page
+      window.location.href = '/auth/login';
+    }
+  };
+
+  // Toggle sidebar collapse state
+  const toggleSidebar = () => {
+    const newState = !isCollapsed;
+    setIsCollapsed(newState);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebarCollapsed', newState);
+    }
+  };
+
   return (
-    <div className="h-full bg-white border-r border-gray-100 w-64 flex-shrink-0 overflow-y-auto">
-      <div className="h-16 flex items-center px-4 border-b border-gray-100 sticky top-0 bg-white z-10">
-        <h2 className="text-xl font-bold text-gray-800">Admin Panel</h2>
+    <div className={`h-screen bg-white border-r border-gray-200 ${
+      displayCollapsed ? 'w-16' : 'w-64'
+    } flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col fixed md:relative z-20`}>
+      {/* Admin Panel Header */}
+      <div className={`h-16 flex items-center justify-center border-b border-gray-200 bg-white ${displayCollapsed ? 'px-0' : 'px-4'}`} style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+        {displayCollapsed ? (
+          <div className="w-8 h-8 bg-cyan-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+            A
+          </div>
+        ) : (
+          <h2 className="text-lg font-semibold text-gray-800 whitespace-nowrap">Admin Panel</h2>
+        )}
       </div>
-      <nav className="p-4 space-y-2 overflow-y-auto" role="navigation" aria-label="Admin Sidebar">
-        {menuItems.map((item, index) => renderMenuItem(item, index))}
+      
+      {/* Navigation */}
+      <nav className="flex-1 px-2 pt-4 pb-8 overflow-y-auto overflow-x-hidden flex flex-col" role="navigation" aria-label="Admin Sidebar">
+        <div className="flex justify-end mb-4">
+          <button 
+            onClick={toggleSidebar}
+            className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
+            aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+              <FiChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+        
+        <div className="space-y-1 flex-1">
+          {menuItems.map((item, index) => renderMenuItem(item, index))}
+        </div>
+        
+        {/* Logout Button */}
+        <div className="mt-auto pt-4 border-t border-gray-100">
+          <button
+            onClick={handleLogout}
+            className={`w-full flex items-center ${
+              isCollapsed ? 'justify-center' : 'px-3'
+            } py-2 text-sm font-medium text-red-600 rounded-md hover:bg-red-50 group`}
+          >
+            <FiLogOut className="w-5 h-5" />
+            {!isCollapsed && <span className="ml-3">Logout</span>}
+          </button>
+        </div>
       </nav>
     </div>
   );

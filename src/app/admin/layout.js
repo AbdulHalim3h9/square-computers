@@ -3,32 +3,43 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import AdminSidebar from './components/AdminSidebar';
-import AdminHeader from './components/AdminHeader';
 import Navbar from '@/components/navbar/Navbar';
 
-export default function AdminLayout({ children }) {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+function useMobileDetection() {
   const [isMobile, setIsMobile] = useState(false);
-  const router = useRouter();
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setIsMounted(true);
-
-      // Check authentication
-      const isAuthenticated = localStorage.getItem('isAuthenticated');
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-      // Check if mobile
+      
       const checkIfMobile = () => {
-        const mobile = window.innerWidth < 1024;
-        setIsMobile(mobile);
-        setIsSidebarOpen(!mobile); // Sidebar open by default on desktop, closed on mobile
+        setIsMobile(window.innerWidth < 1024);
       };
 
       checkIfMobile();
       window.addEventListener('resize', checkIfMobile);
+      return () => window.removeEventListener('resize', checkIfMobile);
+    }
+  }, []);
+
+  return { isMobile, isMounted };
+}
+
+export default function AdminLayout({ children }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const router = useRouter();
+  const { isMobile, isMounted } = useMobileDetection();
+
+  // Handle authentication and initial sidebar state
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Check authentication
+      const isAuthenticated = localStorage.getItem('isAuthenticated');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+      // Set initial sidebar state based on screen size
+      setIsSidebarOpen(window.innerWidth >= 1024);
 
       // Redirect if not authenticated or not admin
       if (!isAuthenticated || !user?.isAdmin) {
@@ -37,16 +48,20 @@ export default function AdminLayout({ children }) {
       } else {
         console.log('User is authenticated:', { isAuthenticated, user });
       }
-
-      return () => {
-        window.removeEventListener('resize', checkIfMobile);
-      };
     }
   }, [router]);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  // Handle sidebar toggle event from AdminSidebar
+  useEffect(() => {
+    const handleToggleSidebar = () => {
+      setIsSidebarOpen(true);
+    };
+
+    document.addEventListener('toggleSidebar', handleToggleSidebar);
+    return () => {
+      document.removeEventListener('toggleSidebar', handleToggleSidebar);
+    };
+  }, []);
 
   if (!isMounted) {
     return (
@@ -57,45 +72,49 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {/* Main Navbar */}
-      <div className="fixed top-0 left-0 right-0 z-50 h-16">
-        <Navbar />
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Desktop Sidebar - Always visible */}
+      <div className="hidden lg:block h-screen sticky top-0">
+        <AdminSidebar />
       </div>
 
-      <div className="flex flex-1 pt-16">
-        {/* Sidebar */}
-        <div
-          className={`fixed inset-y-0 left-0 transform ${
-            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-          } z-40 w-64 bg-white shadow-lg transition-transform duration-300 ease-in-out lg:translate-x-0 lg:sticky lg:top-16 lg:h-[calc(100vh-64px)] ${
-            !isSidebarOpen ? 'lg:hidden' : ''
-          }`}
+      {/* Mobile Sidebar Toggle Button - Only show when sidebar is closed */}
+      {!isSidebarOpen && (
+        <button 
+          className="fixed bottom-6 left-4 z-50 p-3 bg-white rounded-full shadow-lg lg:hidden"
+          onClick={() => setIsSidebarOpen(true)}
+          aria-label="Open menu"
         >
-          <AdminSidebar onClose={() => setIsSidebarOpen(false)} />
-        </div>
+          <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      )}
 
-        {/* Main content area */}
-        <div className={`flex-1 flex flex-col transition-all duration-300`}>
-          {/* Admin header */}
-          <div className="sticky top-16 z-30 bg-white shadow-sm h-16">
-            <AdminHeader onToggleSidebar={toggleSidebar} />
-          </div>
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && isMobile && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
-          {/* Main content */}
-          <main className="flex-1 bg-gray-50 overflow-y-auto p-4 md:p-6" style={{ minHeight: 'calc(100vh - 128px)' }}>
+      {/* Mobile Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } lg:hidden`}
+      >
+        <AdminSidebar isExpanded={true} onClose={() => setIsSidebarOpen(false)} />
+      </div>
+
+      {/* Main Content */}
+      <div className={`flex-1 min-w-0 transition-all duration-300`}>
+        <main className="min-h-screen pt-16">
+          <div className="p-4 sm:p-6">
             {children}
-          </main>
-
-          {/* Overlay for mobile */}
-          {isSidebarOpen && isMobile && (
-            <div
-              className="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
-              style={{ top: '64px' }}
-              onClick={() => setIsSidebarOpen(false)}
-            ></div>
-          )}
-        </div>
+          </div>
+        </main>
       </div>
     </div>
   );

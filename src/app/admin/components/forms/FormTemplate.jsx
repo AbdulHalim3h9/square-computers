@@ -1,15 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
-export default function FormTemplate({ title, fields, onSubmit, submitButtonText = 'Save Changes' }) {
-  const [formData, setFormData] = useState(() => {
+export default function FormTemplate({ 
+  title = '', 
+  fields = [], 
+  onSubmit = () => {}, 
+  submitButtonText = 'Save Changes' 
+}) {
+  // Initialize form data based on fields
+  const [formData, setFormData] = useState({});
+  
+  // Update form data when fields change
+  useEffect(() => {
     const initialData = {};
-    fields.forEach(field => {
-      initialData[field.name] = field.initialValue || '';
-    });
-    return initialData;
-  });
+    if (Array.isArray(fields)) {
+      fields.forEach(field => {
+        if (field && field.name) {
+          initialData[field.name] = field.initialValue || '';
+        }
+      });
+    }
+    setFormData(initialData);
+  }, [fields]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -21,7 +35,25 @@ export default function FormTemplate({ title, fields, onSubmit, submitButtonText
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    if (typeof onSubmit === 'function') {
+      onSubmit(formData);
+    }
+  };
+
+  // Add PropTypes for better development experience
+  FormTemplate.propTypes = {
+    title: PropTypes.string,
+    fields: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      label: PropTypes.string,
+      type: PropTypes.string,
+      initialValue: PropTypes.any,
+      required: PropTypes.bool,
+      placeholder: PropTypes.string,
+      // Add other field properties as needed
+    })),
+    onSubmit: PropTypes.func,
+    submitButtonText: PropTypes.string,
   };
 
   return (

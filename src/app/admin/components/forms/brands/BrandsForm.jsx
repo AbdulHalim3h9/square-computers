@@ -2,21 +2,29 @@
 
 import { useState } from 'react';
 
-export default function PartnersForm() {
+export default function BrandsForm() {
   const [name, setName] = useState('');
-  const [website, setWebsite] = useState('');
+  const [category, setCategory] = useState('');
   const [logo, setLogo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const categories = [
+    'Electronics',
+    'Computers',
+    'Accessories',
+    'Software',
+    'Other'
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      console.log('Saving partner:', { name, website, logo });
+      console.log('Saving brand:', { name, category, logo });
       await new Promise(resolve => setTimeout(resolve, 1000));
       // Show success message
     } catch (error) {
-      console.error('Error saving partner:', error);
+      console.error('Error saving brand:', error);
     } finally {
       setIsLoading(false);
     }
@@ -25,51 +33,56 @@ export default function PartnersForm() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Add New Partner</h2>
-        <p className="text-sm text-gray-500">Add a new partner to your network</p>
+        <h2 className="text-xl font-semibold text-gray-900 mb-2">Add New Brand</h2>
+        <p className="text-sm text-gray-500">Add a new brand to your catalog</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="partner-name" className="block text-sm font-medium text-gray-700 mb-1">
-            Partner Name <span className="text-red-500">*</span>
+          <label htmlFor="brand-name" className="block text-sm font-medium text-gray-700 mb-1">
+            Brand Name <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
-            id="partner-name"
+            id="brand-name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter partner name"
+            placeholder="Enter brand name"
             required
           />
         </div>
 
         <div>
-          <label htmlFor="partner-website" className="block text-sm font-medium text-gray-700 mb-1">
-            Website
+          <label htmlFor="brand-category" className="block text-sm font-medium text-gray-700 mb-1">
+            Category
           </label>
-          <input
-            type="url"
-            id="partner-website"
-            value={website}
-            onChange={(e) => setWebsite(e.target.value)}
+          <select
+            id="brand-category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://partner-website.com"
-          />
+          >
+            <option value="">Select a category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat.toLowerCase()}>
+                {cat}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div>
-          <label htmlFor="partner-logo" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="brand-logo" className="block text-sm font-medium text-gray-700 mb-1">
             Logo URL
           </label>
           <input
             type="url"
-            id="partner-logo"
+            id="brand-logo"
             value={logo}
             onChange={(e) => setLogo(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="https://example.com/partner-logo.png"
+            placeholder="https://example.com/brand-logo.png"
           />
         </div>
 
@@ -79,7 +92,7 @@ export default function PartnersForm() {
             disabled={isLoading}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50"
           >
-            {isLoading ? 'Saving...' : 'Save Partner'}
+            {isLoading ? 'Saving...' : 'Save Brand'}
           </button>
         </div>
       </form>

@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Logo from './Logo';
 import SearchBar from './SearchBar';
 import DesktopMenu from './DesktopMenu';
 import MobileMenu from './MobileMenu';
+import AdminActions from './AdminActions';
 import { menuItems } from './menuItems';
+import { FiUser } from 'react-icons/fi';
 import '../../styles/navbar.css';
 
 export default function Navbar() {
@@ -16,9 +19,27 @@ export default function Navbar() {
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [expandedItems, setExpandedItems] = useState({});
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
   const navRef = useRef(null);
   const pathname = usePathname();
   const router = useRouter();
+
+  // Filter out login menu item when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      setFilteredMenuItems(menuItems.filter(item => item.title !== 'Login'));
+    } else {
+      setFilteredMenuItems(menuItems);
+    }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const authStatus = localStorage.getItem('isAuthenticated');
+      setIsAuthenticated(authStatus === 'true');
+    }
+  }, [pathname]);
 
   const navbarClasses = useMemo(
     () => `fixed w-full z-50 bg-white shadow-lg shadow-cyan-100/20 transition-all duration-300 ease-out ${scrolled ? 'shadow-md' : 'shadow-sm'}`,
@@ -94,6 +115,27 @@ export default function Navbar() {
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
               />
+              
+              <div className="hidden md:flex items-center space-x-2">
+                {isAuthenticated ? (
+                  <Link
+                    href="/admin/dashboard"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors duration-200"
+                  >
+                    <FiUser className="w-4 h-4" />
+                    <span>Admin Panel</span>
+                  </Link>
+                ) : (
+                  <Link
+                    href="/auth/login"
+                    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors duration-200"
+                  >
+                    <FiUser className="w-4 h-4" />
+                    <span>Login</span>
+                  </Link>
+                )}
+              </div>
+              
               <div className="md:hidden flex-shrink-0 w-12 h-12 flex items-center justify-center ml-2 z-60">
                 <button
                   onClick={() => setIsOpen(!isOpen)}
@@ -125,19 +167,20 @@ export default function Navbar() {
               </div>
             </div>
             <div className="hidden md:block">
-              <DesktopMenu
-                menuItems={menuItems}
-                openDropdown={openDropdown}
+              <DesktopMenu 
+                menuItems={filteredMenuItems} 
+                openDropdown={openDropdown} 
                 toggleDropdown={toggleDropdown}
                 setOpenDropdown={setOpenDropdown}
+                isSearchExpanded={isSearchExpanded}
               />
             </div>
           </div>
         </div>
-        <MobileMenu
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          menuItems={menuItems}
+        <MobileMenu 
+          isOpen={isOpen} 
+          setIsOpen={setIsOpen} 
+          menuItems={filteredMenuItems} 
           expandedItems={expandedItems}
           setExpandedItems={setExpandedItems}
         />

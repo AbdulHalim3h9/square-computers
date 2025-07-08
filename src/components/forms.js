@@ -44,7 +44,6 @@ export const LoginForm = ({
           </label>
           <div className="mt-1">
             <div className="flex justify-between items-center">
-              <span className="text-sm">Password</span>
               <div className="text-sm">
                 {/* Empty div to maintain layout */}
               </div>

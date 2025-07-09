@@ -4,6 +4,7 @@ import Navbar from '@/components/navbar/Navbar';
 import Footer from '@/components/Footer';
 import FloatingHelp from '@/components/FloatingHelp';
 import RibbonWrapper from '@/components/RibbonWrapper';
+import { MenuProvider } from '@/components/navbar/MenuContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,14 +18,16 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={`${inter.className} relative`}>
         <RibbonWrapper />
-        <div className="relative">
-          <Navbar className="!pt-0" />
-          <main className="min-h-screen">
-            {children}
-          </main>
-          <Footer />
-          <FloatingHelp />
-        </div>
+        <MenuProvider>
+          <div className="relative">
+            <Navbar className="!pt-0" />
+            <main className="min-h-screen">
+              {children}
+            </main>
+            <Footer />
+            <FloatingHelp />
+          </div>
+        </MenuProvider>
       </body>
     </html>
   );

@@ -1,162 +1,116 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { FiChevronDown, FiChevronUp, FiUser, FiLogOut } from 'react-icons/fi';
+import clsx from 'clsx';
+import { useMenuContext } from './MenuContext';
 
-export default function MobileMenu({ isOpen, setIsOpen, menuItems, expandedItems, setExpandedItems }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const pathname = usePathname();
-  const router = useRouter();
+export default function MobileMenu({ isOpen, setIsOpen, menuItems }) {
+  const { expandedItems, setExpandedItems, closeAllMenus } = useMenuContext();
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const authStatus = localStorage.getItem('isAuthenticated');
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
-      setIsAuthenticated(authStatus === 'true');
-      setIsAdmin(user?.isAdmin === true);
-    }
-  }, [pathname]);
-
-  const toggleItem = (title, hasSubmenu = false) => {
-    if (hasSubmenu) {
-      setExpandedItems(prev => ({
+  const toggleItemExpanded = useCallback(
+    (itemKey) => {
+      setExpandedItems((prev) => ({
         ...prev,
-        [title]: !prev[title]
+        [itemKey]: !prev[itemKey],
       }));
-    }
-  };
+    },
+    [setExpandedItems]
+  );
 
-  const handleLogout = () => {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('isAuthenticated');
-      localStorage.removeItem('user');
-      setIsOpen(false);
-      router.push('/');
-      router.refresh();
-    }
-  };
+  const renderMobileMenuItems = useCallback(
+    (items, level = 0, parentIndex = '') => {
+      if (!items?.length) return null;
 
-  if (!isOpen) return null;
+      return items.map((item, index) => {
+        const isMegaMenuItem = item.items && Array.isArray(item.items);
+        const hasSubmenu = (item.submenu?.length > 0) || isMegaMenuItem;
+        const itemKey = parentIndex ? `${parentIndex}-${index}` : `${index}`;
+        const isExpanded = expandedItems[itemKey];
+        const submenuItems = isMegaMenuItem ? item.items : item.submenu || [];
+
+        return (
+          <div key={itemKey} className={clsx(level > 0 && 'pl-4')}>
+            <div className="border-b border-gray-100/50 last:border-b-0">
+              {(!hasSubmenu && item.href) ? (
+                <Link
+                  href={item.href}
+                  className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-2"
+                  onClick={closeAllMenus}
+                >
+                  {item.name || item.title || item.category || 'Unnamed Item'}
+                </Link>
+              ) : (
+                <div>
+                  <button
+                    onClick={() => hasSubmenu && toggleItemExpanded(itemKey)}
+                    className={clsx(
+                      'w-full flex justify-between items-center px-4 py-3 text-left text-gray-700 hover:text-blue-600 rounded-xl text-sm font-medium transition-all duration-300',
+                      isExpanded && 'text-blue-600'
+                    )}
+                    aria-expanded={isExpanded}
+                    aria-controls={`submenu-${itemKey}`}
+                  >
+                    <span>{item.name || item.title || item.category || 'Unnamed Item'}</span>
+                    {hasSubmenu && (
+                      <svg
+                        className={clsx(
+                          'w-4 h-4 transition-transform duration-300',
+                          isExpanded && 'rotate-180'
+                        )}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    )}
+                  </button>
+                  {hasSubmenu && (
+                    <div
+                      id={`submenu-${itemKey}`}
+                      className={clsx(
+                        'overflow-hidden transition-all duration-300',
+                        isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+                      )}
+                    >
+                      <div className="pl-2 py-2 space-y-1">
+                        {renderMobileMenuItems(submenuItems, level + 1, itemKey)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      });
+    },
+    [expandedItems, toggleItemExpanded, closeAllMenus]
+  );
+
+  if (!menuItems?.length) return null;
 
   return (
-    <div className="md:hidden fixed inset-0 z-50 bg-white mt-16 overflow-y-auto">
-      <div className="px-4 pt-2 pb-8 space-y-1">
-        {menuItems
-          .filter(item => !item.requiresAuth || isAuthenticated)
-          .map((item, index) => {
-            const hasSubmenu = Array.isArray(item.submenu);
-            const isExpanded = expandedItems[item.title];
-            
-            return (
-              <div key={index} className="space-y-1">
-                {hasSubmenu ? (
-                  <>
-                    <button
-                      onClick={() => toggleItem(item.title, hasSubmenu)}
-                      className="flex items-center justify-between w-full px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md group"
-                    >
-                      <span>{item.title}</span>
-                      {isExpanded ? (
-                        <FiChevronUp className="h-5 w-5 text-gray-500" />
-                      ) : (
-                        <FiChevronDown className="h-5 w-5 text-gray-500" />
-                      )}
-                    </button>
-                    {isExpanded && (
-                      <div className="pl-6 space-y-1">
-                        {item.submenu.map((subItem, subIndex) => {
-                          const hasNestedItems = Array.isArray(subItem.items);
-                          const isNestedExpanded = expandedItems[`${item.title}-${subIndex}`];
-                          
-                          return (
-                            <div key={subIndex} className="space-y-1">
-                              {hasNestedItems ? (
-                                <>
-                                  <button
-                                    onClick={() => toggleItem(`${item.title}-${subIndex}`, true)}
-                                    className="flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md group"
-                                  >
-                                    <span>{subItem.category}</span>
-                                    {isNestedExpanded ? (
-                                      <FiChevronUp className="h-4 w-4 text-gray-500" />
-                                    ) : (
-                                      <FiChevronDown className="h-4 w-4 text-gray-500" />
-                                    )}
-                                  </button>
-                                  {isNestedExpanded && (
-                                    <div className="pl-4 space-y-1">
-                                      {subItem.items.map((nestedItem, nestedIndex) => (
-                                        <Link
-                                          key={`${subIndex}-${nestedIndex}`}
-                                          href={nestedItem.href}
-                                          className="block px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
-                                          onClick={() => setIsOpen(false)}
-                                        >
-                                          {nestedItem.name}
-                                        </Link>
-                                      ))}
-                                    </div>
-                                  )}
-                                </>
-                              ) : subItem.href ? (
-                                <Link
-                                  key={subIndex}
-                                  href={subItem.href}
-                                  target={subItem.external ? "_blank" : "_self"}
-                                  className="block px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
-                                  onClick={() => setIsOpen(false)}
-                                >
-                                  {subItem.name}
-                                </Link>
-                              ) : null}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <div>
-                    {item.href && (
-                      <Link
-                        href={item.href}
-                        className={`block px-4 py-3 text-base font-medium rounded-lg ${
-                          pathname === item.href
-                            ? 'text-cyan-600 bg-cyan-50'
-                            : 'text-gray-700 hover:bg-gray-50 hover:text-cyan-600'
-                        }`}
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        <div className="border-t border-gray-100 mt-4 pt-4">
-          {isAuthenticated ? (
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center px-4 py-3 text-base font-medium text-left text-gray-700 hover:bg-gray-50 hover:text-red-600 rounded-lg"
-            >
-              <FiLogOut className="mr-3 h-5 w-5 text-red-500" />
-              Logout
-            </button>
-          ) : (
-            <Link
-              href="/auth/login"
-              className="flex items-center px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
-              onClick={() => setIsOpen(false)}
-            >
-              <FiUser className="mr-3 h-5 w-5 text-cyan-600" />
-              Login
-            </Link>
-          )}
+    <div
+      className={clsx(
+        'md:hidden fixed inset-x-0 top-16 sm:top-20 bg-white shadow-lg z-40 transition-all duration-300 ease-in-out',
+        isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+      )}
+      style={{ maxHeight: 'calc(100vh - 4rem)' }}
+    >
+      <div className="border-t border-gray-100">
+        <div
+          className="px-4 py-2 space-y-1 sm:px-6 overflow-y-auto"
+          style={{ 
+            maxHeight: 'calc(100vh - 5rem)',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'thin',
+            msOverflowStyle: 'none',
+            scrollbarColor: 'transparent transparent'
+          }}
+        >
+          {renderMobileMenuItems(menuItems)}
         </div>
       </div>
     </div>

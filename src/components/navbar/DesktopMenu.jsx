@@ -1,256 +1,112 @@
-"use client";
+'use client';
 
-import { useState, useRef, useEffect, useCallback, memo } from 'react';
+import { useRef, useEffect, useCallback, memo } from 'react';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { useMenuContext } from './MenuContext';
 
-const DesktopMenu = memo(({ menuItems, openDropdown, toggleDropdown, setOpenDropdown }) => {
-  const dropdownRefs = useRef({});
+const DesktopMenu = memo(({ menuItems }) => {
+  const { openDropdown, setOpenDropdown, activeCategory, setActiveCategory } = useMenuContext();
+  const menuRef = useRef(null);
   const timeoutRef = useRef(null);
-  const [isClient, setIsClient] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [hoveredSubItem, setHoveredSubItem] = useState(null);
-  const [hoveredCategory, setHoveredCategory] = useState(null);
-  const [openSubmenu, setOpenSubmenu] = useState(null);
 
-  const clearDropdownTimeout = useCallback(() => {
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setOpenDropdown(null);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [setOpenDropdown]);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setOpenDropdown(null);
+        setActiveCategory(0);
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [setOpenDropdown, setActiveCategory]);
+
+  const clearMenuTimeout = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
   }, []);
 
-  useEffect(() => {
-    setIsClient(true);
-    setIsMobile(window.innerWidth < 768);
-
-    const handleResize = () => {
-      clearDropdownTimeout();
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => {
-      clearDropdownTimeout();
-      window.removeEventListener('resize', handleResize);
-    };
-  }, [clearDropdownTimeout]);
-
-  const openDropdownOnHover = useCallback(
+  const handleMouseEnter = useCallback(
     (index) => {
-      if (isClient && !isMobile) {
-        clearDropdownTimeout();
-        setOpenDropdown(index);
-        setOpenSubmenu(null);
-      }
+      clearMenuTimeout();
+      setOpenDropdown(index);
+      setActiveCategory(0);
     },
-    [isClient, isMobile, setOpenDropdown, clearDropdownTimeout]
+    [clearMenuTimeout, setOpenDropdown, setActiveCategory]
   );
-
-  const closeAllDropdowns = useCallback(() => {
-    if (isClient && !isMobile) {
-      clearDropdownTimeout();
-      timeoutRef.current = setTimeout(() => {
-        setOpenDropdown(null);
-        setHoveredCategory(null);
-        setHoveredSubItem(null);
-        setOpenSubmenu(null);
-      }, 200);
-    }
-  }, [isClient, isMobile, setOpenDropdown, clearTimeout]);
-
-  const handleSubmenuToggle = useCallback(
-    (subIndex) => {
-      if (isClient && isMobile) {
-        setOpenSubmenu(openSubmenu === subIndex ? null : subIndex);
-      }
-    },
-    [isClient, isMobile, openSubmenu]
-  );
-
-  const getMaxWidth = useCallback(
-    (items) => {
-      if (!isClient || !items || !items.length) return 'auto';
-      const maxLength = Math.max(...items.map((item) => (item.name || '').length));
-      return `${Math.min(maxLength * 8 + 40, 300)}px`;
-    },
-    [isClient]
-  );
-
-  const handleCategoryHover = useCallback(
-    (index) => {
-      if (!isMobile) {
-        clearDropdownTimeout();
-        setHoveredCategory(index);
-      }
-    },
-    [isMobile, clearDropdownTimeout]
-  );
-
-  const handleCategoryLeave = useCallback(() => {
-    if (!isMobile) {
-      clearDropdownTimeout();
-      timeoutRef.current = setTimeout(() => setHoveredCategory(null), 100);
-    }
-  }, [isMobile, clearDropdownTimeout]);
-
-  const handleSubItemHover = useCallback(
-    (index) => {
-      if (!isMobile) {
-        clearDropdownTimeout();
-        setHoveredSubItem(index);
-      }
-    },
-    [isMobile, clearDropdownTimeout]
-  );
-
-  const handleSubItemLeave = useCallback(() => {
-    if (!isMobile) {
-      clearDropdownTimeout();
-      timeoutRef.current = setTimeout(() => setHoveredSubItem(null), 100);
-    }
-  }, [isMobile, clearDropdownTimeout]);
 
   const handleMouseLeave = useCallback(() => {
-    if (isMobile) return;
-    clearDropdownTimeout();
+    clearMenuTimeout();
     timeoutRef.current = setTimeout(() => {
       setOpenDropdown(null);
-      setHoveredCategory(null);
-      setHoveredSubItem(null);
-      setOpenSubmenu(null);
-    }, 100);
-  }, [isMobile, clearDropdownTimeout]);
+    }, 200);
+  }, [clearMenuTimeout, setOpenDropdown]);
 
-  const handleMouseEnter = useCallback(() => {
-    if (isMobile) return;
-    clearDropdownTimeout();
-  }, [isMobile, clearDropdownTimeout]);
-
-  const handleLinkClick = useCallback(() => {
-    if (isMobile) return;
-    clearDropdownTimeout();
-    setOpenDropdown(null);
-    setHoveredCategory(null);
-    setHoveredSubItem(null);
-    setOpenSubmenu(null);
-  }, [isMobile, clearDropdownTimeout]);
-
-  const handleCategoryMouseEnter = useCallback(
-    (category) => {
-      if (isMobile) return;
-      clearDropdownTimeout();
-      setHoveredCategory(category);
-      setHoveredSubItem(null);
+  const handleToggleClick = useCallback(
+    (index, e) => {
+      e.preventDefault();
+      setOpenDropdown((prev) => (prev === index ? null : index));
+      setActiveCategory(0);
     },
-    [isMobile, clearDropdownTimeout]
+    [setOpenDropdown, setActiveCategory]
   );
 
-  const handleSubItemMouseEnter = useCallback(
-    (subItem) => {
-      if (isMobile) return;
-      clearDropdownTimeout();
-      setHoveredSubItem(subItem);
+  const handleLinkClick = useCallback(
+    (index, hasSubmenu) => (e) => {
+      if (hasSubmenu) {
+        e.preventDefault();
+        setOpenDropdown((prev) => (prev === index ? null : index));
+        setActiveCategory(0);
+      }
     },
-    [isMobile, clearDropdownTimeout]
+    [setOpenDropdown, setActiveCategory]
   );
+
+  const getMaxWidth = (items) => {
+    if (!items?.length) return 'auto';
+    const maxLength = Math.max(...items.map((item) => (item.name || '').length));
+    return `${Math.min(maxLength * 8 + 40, 300)}px`;
+  };
 
   const renderRegularDropdown = (item, index) => {
-    if (!isClient) return null;
-
-    const submenuWidth = getMaxWidth(item.submenu);
-    const isActive = openDropdown === index;
+    if (!item.submenu?.length) return null;
+    const isOpen = openDropdown === index;
 
     return (
       <div
         className={clsx(
-          'dropdown-menu w-full bg-white shadow-lg rounded-md border border-gray-200 z-50 transition-all duration-200',
-          isMobile ? 'relative mt-0' : 'absolute left-0 mt-2',
-          isActive ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
+          'absolute left-0 mt-2 bg-white rounded-md shadow-lg z-50 transition-all duration-300',
+          isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
         )}
-        style={isMobile ? {} : { width: submenuWidth }}
-        onMouseEnter={clearDropdownTimeout}
+        style={{ width: getMaxWidth(item.submenu) }}
+        onMouseEnter={() => handleMouseEnter(index)}
         onMouseLeave={handleMouseLeave}
+        role="menu"
+        aria-labelledby={`menu-button-${index}`}
       >
-        <div className="py-1 whitespace-nowrap px-2">
+        <div className="py-1">
           {item.submenu.map((subItem, subIndex) => (
-            <div key={subIndex} className="relative group">
-              <div className="flex items-center">
-                <Link
-                  href={subItem.href || '#'}
-                  target={subItem.external ? '_blank' : '_self'}
-                  rel={subItem.external ? 'noopener noreferrer' : ''}
-                  className="dropdown-link block w-full text-sm p-2 hover:bg-gray-100 rounded transition-colors duration-150"
-                  onClick={() => {
-                    if (!subItem.submenu || isMobile) setOpenDropdown(null);
-                    if (isMobile && subItem.submenu) handleSubmenuToggle(subIndex);
-                  }}
-                  onMouseEnter={() => isActive && !isMobile && handleSubItemHover(subIndex)}
-                  onMouseLeave={() => isActive && !isMobile && handleSubItemLeave()}
-                >
-                  {subItem.name}
-                  {subItem.external && (
-                    <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  )}
-                  {subItem.submenu && (
-                    <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  )}
-                </Link>
-                {subItem.submenu && isMobile && (
-                  <button
-                    onClick={() => handleSubmenuToggle(subIndex)}
-                    className="text-gray-500 hover:text-cyan-600 ml-1 focus:outline-none transition-colors duration-200"
-                  >
-                    <svg
-                      className={clsx('w-4 h-4 transition-transform duration-200', openSubmenu === subIndex && 'transform rotate-180')}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-              {subItem.submenu && (
-                <div
-                  className={clsx(
-                    'bg-white shadow-lg rounded-md border border-gray-200 z-50 transition-all duration-200',
-                    isMobile ? 'relative mt-0 ml-4 w-full' : 'absolute left-full top-0 w-48',
-                    (isMobile ? openSubmenu === subIndex : hoveredSubItem === subIndex)
-                      ? 'opacity-100 translate-x-0'
-                      : 'opacity-0 translate-x-2 pointer-events-none'
-                  )}
-                  style={!isMobile ? { left: '100%', top: '0', marginLeft: '4px' } : {}}
-                  onMouseEnter={() => !isMobile && clearDropdownTimeout()}
-                  onMouseLeave={() => !isMobile && handleSubItemLeave()}
-                >
-                  <div className="py-1 px-2">
-                    {subItem.submenu.map((subSubItem, subSubIndex) => (
-                      <Link
-                        key={subSubIndex}
-                        href={subSubItem.href || '#'}
-                        target={subSubItem.external ? '_blank' : '_self'}
-                        rel={subSubItem.external ? 'noopener noreferrer' : ''}
-                        className="block text-sm p-2 hover:bg-gray-100 rounded transition-colors duration-150 whitespace-nowrap"
-                        onClick={() => setOpenDropdown(null)}
-                      >
-                        {subSubItem.name}
-                        {subSubItem.external && (
-                          <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            <Link
+              key={subIndex}
+              href={subItem.href || '#'}
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+              onClick={() => setOpenDropdown(null)}
+              role="menuitem"
+            >
+              {subItem.name || 'Unnamed Item'}
+            </Link>
           ))}
         </div>
       </div>
@@ -258,192 +114,157 @@ const DesktopMenu = memo(({ menuItems, openDropdown, toggleDropdown, setOpenDrop
   };
 
   const renderMegaMenu = (item, index) => {
-    if (!isClient) return null;
-
+    if (!item.submenu?.length) return null;
     const isOpen = openDropdown === index;
 
     return (
       <div
         className={clsx(
-          'mega-menu w-full bg-white shadow-xl rounded-lg border border-gray-200 z-50 transition-all duration-200',
-          isMobile ? 'relative mt-0' : 'absolute left-0 top-full mt-2',
+          'absolute left-0 mt-2 bg-white rounded-md shadow-lg z-50 p-4 transition-all duration-300',
           isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
         )}
-        style={isMobile ? {} : { minWidth: '600px', maxWidth: '800px', width: 'max-content' }}
-        onMouseEnter={clearDropdownTimeout}
+        style={{ minWidth: '600px', maxWidth: '800px' }}
+        onMouseEnter={() => handleMouseEnter(index)}
         onMouseLeave={handleMouseLeave}
+        role="menu"
+        aria-labelledby={`menu-button-${index}`}
       >
-        <div className={clsx('flex', isMobile && 'flex-col')}>
-          <div
-            className={clsx(
-              'bg-gray-50 rounded-l-lg',
-              hoveredCategory !== null && !isMobile ? 'w-96 border-r border-gray-200' : 'w-full rounded-r-lg'
-            )}
-          >
-            <div className="p-4">
-              <ul className="space-y-1 max-h-screen overflow-y-auto" onWheel={(e) => e.stopPropagation()}>
-                {item.submenu.map((category, catIndex) => (
-                  <li key={catIndex}>
-                    <button
-                      className={clsx(
-                        'w-full text-left p-3 rounded-md transition-all duration-200 flex items-center justify-between group',
-                        hoveredCategory === catIndex ? 'bg-cyan-100 text-cyan-700 shadow-sm' : 'text-gray-700 hover:bg-gray-100'
-                      )}
-                      onMouseEnter={() => handleCategoryHover(catIndex)}
-                      onMouseLeave={handleCategoryLeave}
-                      onClick={() => isMobile && setHoveredCategory(hoveredCategory === catIndex ? null : catIndex)}
-                    >
-                      <span className="text-sm font-medium">{category.category}</span>
-                      <svg
-                        className={clsx(
-                          'w-4 h-4 transition-transform duration-200',
-                          hoveredCategory === catIndex && 'transform translate-x-1'
-                        )}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+        <div className="flex">
+          <div className="w-48 flex-shrink-0 border-r border-gray-200 pr-4">
+            {item.submenu.map((category, catIndex) => (
+              <button
+                key={catIndex}
+                onClick={() => setActiveCategory(catIndex)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setActiveCategory(catIndex);
+                  }
+                }}
+                className={clsx(
+                  'w-full text-left px-4 py-2 text-sm rounded-md mb-1 focus:outline-none',
+                  activeCategory === catIndex
+                    ? 'bg-blue-50 text-blue-600 font-medium'
+                    : 'text-gray-700 hover:bg-gray-50 focus:bg-gray-50'
+                )}
+                role="menuitem"
+                tabIndex={0}
+              >
+                {category.category || 'Unnamed Category'}
+              </button>
+            ))}
+          </div>
+          <div className="flex-1 pl-4">
+            <div className="grid grid-cols-2 gap-4">
+              {item.submenu[activeCategory]?.items?.map((subItem, subIndex) => (
+                <Link
+                  key={subIndex}
+                  href={subItem.href || '#'}
+                  className="block p-3 rounded-md hover:bg-gray-50 text-sm text-gray-700 hover:text-blue-600 focus:bg-gray-50 focus:text-blue-600 focus:outline-none"
+                  onClick={() => setOpenDropdown(null)}
+                  role="menuitem"
+                >
+                  {subItem.name || 'Unnamed Item'}
+                </Link>
+              )) || <div className="p-3 text-sm text-gray-500">No items available</div>}
             </div>
           </div>
-          {hoveredCategory !== null && item.submenu[hoveredCategory] && (
-            <div
-              className={clsx('p-6 border-l border-gray-200 max-h-screen overflow-y-auto', isMobile ? 'w-full' : 'flex-1')}
-              onMouseEnter={clearDropdownTimeout}
-              onMouseLeave={handleCategoryLeave}
-              onWheel={(e) => e.stopPropagation()}
-            >
-              <div className="grid grid-cols-1 gap-2">
-                {item.submenu[hoveredCategory].items.map((subItem, subIndex) => (
-                  <Link
-                    key={subIndex}
-                    href={subItem.href || '#'}
-                    target={subItem.external ? '_blank' : '_self'}
-                    rel={subItem.external ? 'noopener noreferrer' : ''}
-                    className={clsx(
-                      'block p-3 rounded-md transition-all duration-200 group',
-                      subItem.isViewAll ? 'bg-cyan-50 border border-cyan-200 hover:bg-cyan-100 hover:border-cyan-300' : 'hover:bg-gray-50 border border-transparent hover:border-gray-200'
-                    )}
-                    onClick={() => setOpenDropdown(null)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span
-                        className={clsx(
-                          'text-sm font-medium',
-                          subItem.isViewAll ? 'text-cyan-700' : 'text-gray-700 group-hover:text-cyan-600'
-                        )}
-                      >
-                        {subItem.name}
-                      </span>
-                      {subItem.isViewAll && (
-                        <svg
-                          className="w-4 h-4 text-cyan-600 group-hover:transform group-hover:translate-x-1 transition-transform duration-200"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      )}
-                      {subItem.external && (
-                        <svg className="w-3 h-3 ml-1 inline-block opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                        </svg>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     );
   };
 
+  if (!menuItems?.length) return null;
+
   return (
-    <div className="desktop-menu relative flex flex-col md:flex-row md:space-x-1 lg:space-x-2">
+    <div className="hidden md:flex items-center space-x-1" ref={menuRef} role="navigation">
       {menuItems.map((item, index) => (
         <div
           key={item.title}
-          className={clsx('menu-item relative', { 'mega-menu-parent': item.isMegaMenu })}
-          ref={(el) => (dropdownRefs.current[index] = el)}
-          onMouseEnter={() => item.submenu && openDropdownOnHover(index)}
-          onMouseLeave={() => item.submenu && closeAllDropdowns()}
+          className="relative h-full flex items-center"
+          onMouseEnter={() => item.submenu?.length && handleMouseEnter(index)}
+          onMouseLeave={() => item.submenu?.length && handleMouseLeave()}
         >
-          <div className="flex items-center">
-            {item.href ? (
-              <Link
-                href={item.href}
-                className={clsx(
-                  `px-3 py-6 text-sm font-medium rounded-md transition-all duration-200 flex items-center ${
-                    item.title === 'Admin Panel'
-                      ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white hover:from-cyan-600 hover:to-cyan-700 shadow-md'
-                      : openDropdown === index
-                      ? 'text-cyan-600 bg-cyan-50'
-                      : 'text-gray-700 hover:text-cyan-600 hover:bg-gray-50'
-                  }`
-                )}
-                onClick={() => !item.submenu && setOpenDropdown(null)}
-              >
-                {item.icon && <span className="mr-1">{item.icon}</span>}
-                {item.title}
-                {item.submenu && isClient && (
-                  <span className="ml-1">
-                    <svg
-                      className={clsx(
-                        'w-4 h-4 inline-block transition-transform duration-200',
-                        openDropdown === index && 'transform rotate-180'
-                      )}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </span>
-                )}
-              </Link>
-            ) : (
-              <div className="flex items-center">
-                <button
-                  onClick={(e) => isMobile && toggleDropdown(index, e)}
+          {item.href ? (
+            <Link
+              href={item.href}
+              className={clsx(
+                'px-4 py-2 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
+                openDropdown === index
+                  ? 'text-blue-600 bg-blue-50'
+                  : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100'
+              )}
+              onClick={handleLinkClick(index, !!item.submenu)}
+              onKeyDown={(e) => {
+                if (item.submenu?.length && (e.key === 'Enter' || e.key === ' ')) {
+                  e.preventDefault();
+                  setOpenDropdown(openDropdown === index ? null : index);
+                }
+              }}
+              id={`menu-button-${index}`}
+              aria-haspopup={!!item.submenu?.length}
+              aria-expanded={openDropdown === index}
+              aria-controls={item.submenu?.length ? `menu-${index}` : undefined}
+              role="button"
+            >
+              {item.title || 'Unnamed Menu'}
+              {item.submenu?.length && (
+                <svg
                   className={clsx(
-                    'px-3 py-6 text-sm font-medium transition-all duration-200 flex items-center',
-                    openDropdown === index ? 'text-cyan-600' : 'text-gray-700 hover:text-cyan-600 hover:bg-gray-50',
-                    item.title === 'Admin Panel' && 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white hover:from-cyan-600 hover:to-cyan-700 shadow-md'
+                    'w-4 h-4 ml-1 inline-block transition-transform duration-300',
+                    openDropdown === index && 'rotate-180'
                   )}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  {item.icon && <span className="mr-1">{item.icon}</span>}
-                  {item.title}
-                </button>
-                {item.submenu && isClient && (
-                  <button
-                    onClick={(e) => isMobile && toggleDropdown(index, e)}
-                    className="text-gray-500 hover:text-cyan-600 ml-1 focus:outline-none transition-colors duration-200"
-                  >
-                    <svg
-                      className={clsx(
-                        'w-4 h-4 transition-transform duration-200',
-                        openDropdown === index && 'transform rotate-180'
-                      )}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-          {item.submenu && (item.isMegaMenu ? renderMegaMenu(item, index) : renderRegularDropdown(item, index))}
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              )}
+            </Link>
+          ) : (
+            <button
+              className={clsx(
+                'px-4 py-2 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
+                openDropdown === index
+                  ? 'text-blue-600 bg-blue-50'
+                  : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100'
+              )}
+              onClick={(e) => item.submenu?.length && handleToggleClick(index, e)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  item.submenu?.length && setOpenDropdown(openDropdown === index ? null : index);
+                }
+              }}
+              onMouseEnter={() => item.submenu?.length && handleMouseEnter(index)}
+              onMouseLeave={() => item.submenu?.length && handleMouseLeave()}
+              id={`menu-button-${index}`}
+              aria-haspopup={!!item.submenu?.length}
+              aria-expanded={openDropdown === index}
+              aria-controls={item.submenu?.length ? `menu-${index}` : undefined}
+            >
+              {item.title || 'Unnamed Menu'}
+              {item.submenu?.length && (
+                <svg
+                  className={clsx(
+                    'w-4 h-4 ml-1 inline-block transition-transform duration-300',
+                    openDropdown === index && 'rotate-180'
+                  )}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              )}
+            </button>
+          )}
+          {item.submenu?.length && (
+            <div id={`menu-${index}`} role="menu">
+              {item.isMegaMenu ? renderMegaMenu(item, index) : renderRegularDropdown(item, index)}
+            </div>
+          )}
         </div>
       ))}
     </div>

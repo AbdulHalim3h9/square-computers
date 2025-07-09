@@ -381,8 +381,13 @@ const DesktopMenu = memo(({ menuItems, openDropdown, toggleDropdown, setOpenDrop
               <Link
                 href={item.href}
                 className={clsx(
-                  'menu-link px-4 py-2 text-sm font-medium transition-colors duration-200 flex items-center',
-                  openDropdown === index ? 'text-cyan-600' : 'text-gray-700 hover:text-cyan-600'
+                  `px-3 py-6 text-sm font-medium rounded-md transition-all duration-200 flex items-center ${
+                    item.title === 'Admin Panel'
+                      ? 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white hover:from-cyan-600 hover:to-cyan-700 shadow-md'
+                      : openDropdown === index
+                      ? 'text-cyan-600 bg-cyan-50'
+                      : 'text-gray-700 hover:text-cyan-600 hover:bg-gray-50'
+                  }`
                 )}
                 onClick={() => !item.submenu && setOpenDropdown(null)}
               >
@@ -409,8 +414,9 @@ const DesktopMenu = memo(({ menuItems, openDropdown, toggleDropdown, setOpenDrop
                 <button
                   onClick={(e) => isMobile && toggleDropdown(index, e)}
                   className={clsx(
-                    'menu-button px-3 py-2 text-sm font-medium transition-colors duration-200',
-                    openDropdown === index ? 'text-cyan-600' : 'text-gray-700 hover:text-cyan-600'
+                    'px-3 py-6 text-sm font-medium transition-all duration-200 flex items-center',
+                    openDropdown === index ? 'text-cyan-600' : 'text-gray-700 hover:text-cyan-600 hover:bg-gray-50',
+                    item.title === 'Admin Panel' && 'bg-gradient-to-r from-cyan-500 to-cyan-600 text-white hover:from-cyan-600 hover:to-cyan-700 shadow-md'
                   )}
                 >
                   {item.icon && <span className="mr-1">{item.icon}</span>}

@@ -20,11 +20,13 @@ export default function MobileMenu({ isOpen, setIsOpen, menuItems, expandedItems
     }
   }, [pathname]);
 
-  const toggleItem = (title) => {
-    setExpandedItems(prev => ({
-      ...prev,
-      [title]: !prev[title]
-    }));
+  const toggleItem = (title, hasSubmenu = false) => {
+    if (hasSubmenu) {
+      setExpandedItems(prev => ({
+        ...prev,
+        [title]: !prev[title]
+      }));
+    }
   };
 
   const handleLogout = () => {
@@ -42,99 +44,100 @@ export default function MobileMenu({ isOpen, setIsOpen, menuItems, expandedItems
   return (
     <div className="md:hidden fixed inset-0 z-50 bg-white mt-16 overflow-y-auto">
       <div className="px-4 pt-2 pb-8 space-y-1">
-        {isAuthenticated ? (
-          <div className="mb-4 border-b border-gray-100 pb-4">
-            <Link
-              href="/admin/dashboard"
-              className="flex items-center px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md group"
-              onClick={() => setIsOpen(false)}
-            >
-              <FiUser className="mr-3 h-5 w-5 text-gray-500 group-hover:text-cyan-600" />
-              Admin Panel
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="flex items-center w-full px-4 py-3 text-base font-medium text-red-600 hover:bg-red-50 rounded-md group"
-            >
-              <FiLogOut className="mr-3 h-5 w-5 text-red-500 group-hover:text-red-700" />
-              Logout
-            </button>
-          </div>
-        ) : (
-          <div className="mb-4 border-b border-gray-100 pb-4">
-            <Link
-              href="/auth/login"
-              className="flex items-center px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md group"
-              onClick={() => setIsOpen(false)}
-            >
-              <FiUser className="mr-3 h-5 w-5 text-gray-500 group-hover:text-cyan-600" />
-              Login
-            </Link>
-          </div>
-        )}
-        
-        {isAdmin && (
-          <div className="mb-4 border-b border-gray-100 pb-4">
-            <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-              Admin
-            </h3>
-            <Link
-              href="/admin"
-              className="flex items-center px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
-              onClick={() => setIsOpen(false)}
-            >
-              <FiUser className="mr-3 h-5 w-5 text-cyan-600" />
-              Admin Dashboard
-            </Link>
-          </div>
-        )}
-
-        <h3 className="px-4 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-          Menu
-        </h3>
-        
-        {menuItems.filter(item => item.href || item.children).map((item, index) => (
-          <div key={index} className="space-y-1">
-            {item.children ? (
-              <>
-                <button
-                  onClick={() => toggleItem(item.title)}
-                  className="w-full flex items-center justify-between px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
-                >
-                  <span>{item.title}</span>
-                  {expandedItems[item.title] ? (
-                    <FiChevronUp className="h-5 w-5" />
-                  ) : (
-                    <FiChevronDown className="h-5 w-5" />
-                  )}
-                </button>
-                {expandedItems[item.title] && (
-                  <div className="pl-6 space-y-1">
-                    {item.children.map((child, childIndex) => (
+        {menuItems
+          .filter(item => !item.requiresAuth || isAuthenticated)
+          .map((item, index) => {
+            const hasSubmenu = Array.isArray(item.submenu);
+            const isExpanded = expandedItems[item.title];
+            
+            return (
+              <div key={index} className="space-y-1">
+                {hasSubmenu ? (
+                  <>
+                    <button
+                      onClick={() => toggleItem(item.title, hasSubmenu)}
+                      className="flex items-center justify-between w-full px-4 py-3 text-base font-medium text-gray-900 hover:bg-gray-50 rounded-md group"
+                    >
+                      <span>{item.title}</span>
+                      {isExpanded ? (
+                        <FiChevronUp className="h-5 w-5 text-gray-500" />
+                      ) : (
+                        <FiChevronDown className="h-5 w-5 text-gray-500" />
+                      )}
+                    </button>
+                    {isExpanded && (
+                      <div className="pl-6 space-y-1">
+                        {item.submenu.map((subItem, subIndex) => {
+                          const hasNestedItems = Array.isArray(subItem.items);
+                          const isNestedExpanded = expandedItems[`${item.title}-${subIndex}`];
+                          
+                          return (
+                            <div key={subIndex} className="space-y-1">
+                              {hasNestedItems ? (
+                                <>
+                                  <button
+                                    onClick={() => toggleItem(`${item.title}-${subIndex}`, true)}
+                                    className="flex items-center justify-between w-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-md group"
+                                  >
+                                    <span>{subItem.category}</span>
+                                    {isNestedExpanded ? (
+                                      <FiChevronUp className="h-4 w-4 text-gray-500" />
+                                    ) : (
+                                      <FiChevronDown className="h-4 w-4 text-gray-500" />
+                                    )}
+                                  </button>
+                                  {isNestedExpanded && (
+                                    <div className="pl-4 space-y-1">
+                                      {subItem.items.map((nestedItem, nestedIndex) => (
+                                        <Link
+                                          key={`${subIndex}-${nestedIndex}`}
+                                          href={nestedItem.href}
+                                          className="block px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
+                                          onClick={() => setIsOpen(false)}
+                                        >
+                                          {nestedItem.name}
+                                        </Link>
+                                      ))}
+                                    </div>
+                                  )}
+                                </>
+                              ) : subItem.href ? (
+                                <Link
+                                  key={subIndex}
+                                  href={subItem.href}
+                                  target={subItem.external ? "_blank" : "_self"}
+                                  className="block px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
+                                  onClick={() => setIsOpen(false)}
+                                >
+                                  {subItem.name}
+                                </Link>
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div>
+                    {item.href && (
                       <Link
-                        key={childIndex}
-                        href={child.href}
-                        className="block px-4 py-2 text-base font-medium text-gray-600 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
+                        href={item.href}
+                        className={`block px-4 py-3 text-base font-medium rounded-lg ${
+                          pathname === item.href
+                            ? 'text-cyan-600 bg-cyan-50'
+                            : 'text-gray-700 hover:bg-gray-50 hover:text-cyan-600'
+                        }`}
                         onClick={() => setIsOpen(false)}
                       >
-                        {child.title}
+                        {item.title}
                       </Link>
-                    ))}
+                    )}
                   </div>
                 )}
-              </>
-            ) : (
-              <Link
-                href={item.href}
-                className="block px-4 py-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-cyan-600 rounded-lg"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.title}
-              </Link>
-            )}
-          </div>
-        ))}
-
+              </div>
+            );
+          })}
         <div className="border-t border-gray-100 mt-4 pt-4">
           {isAuthenticated ? (
             <button

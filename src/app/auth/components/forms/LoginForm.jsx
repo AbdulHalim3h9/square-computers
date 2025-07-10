@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@/components/ui/Button';
 
 const LoginForm = ({
   email,
@@ -67,22 +68,21 @@ Email Address
       </div>
 
       <div className="pt-2">
-        <button
+        <Button
           type="button"
           onClick={onDemoLogin}
-          className="w-full flex justify-center py-2 px-4 text-sm font-light text-cyan-600 hover:text-cyan-700 transition duration-200"
+          variant="ghost"
+          className="w-full justify-center py-2 text-sm font-light text-cyan-600 hover:text-cyan-700"
           disabled={loading}
         >
           {loading ? 'Signing in...' : 'Click here for a demo Admin Login'}
-        </button>
+        </Button>
       </div>
 
-      <button
+      <Button
         type="submit"
+        className="w-full justify-center py-3 text-base font-light shadow-lg"
         disabled={loading}
-        className={`w-full flex justify-center py-3 px-4 rounded-xl shadow-lg text-base font-light text-white bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-200 ${
-          loading ? 'opacity-70 cursor-not-allowed' : ''
-        }`}
       >
         {loading ? (
           <>
@@ -109,9 +109,9 @@ Email Address
             Signing in...
           </>
         ) : (
-          'Sign In'
+          'Sign In to Your Account'
         )}
-      </button>
+      </Button>
 
     </form>
   );

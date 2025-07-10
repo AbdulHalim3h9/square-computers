@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link.js';
 import { notFound } from 'next/navigation';
 import { getProductBySlug } from '@/data/products';
+import Button from '@/components/ui/Button';
 
 export async function generateMetadata({ params }) {
   const product = getProductBySlug(params.slug);
@@ -120,14 +121,14 @@ export default function ProductDetailPage({ params }) {
 
                 <div className="pt-4 border-t border-gray-200">
                   <div className="flex items-center space-x-4">
-                    <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 transition-colors font-medium">
+                    <Button className="flex-1 py-3">
                       Add to Cart
-                    </button>
-                    <button className="p-3 text-gray-600 hover:text-blue-600 transition-colors">
+                    </Button>
+                    <Button variant="ghost" size="icon" className="p-3 text-gray-600 hover:text-blue-600">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                       </svg>
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>

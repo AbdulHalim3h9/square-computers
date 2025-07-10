@@ -1,23 +1,23 @@
 'use client';
 
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useMenuContext } from '@/components/navbar/MenuContext';
-import { 
-  ChevronDown as FiChevronDown, 
-  ChevronRight as FiChevronRight, 
-  LayoutDashboard as FiGrid, 
-  FileText as FiFileText, 
-  Users as FiUsers, 
-  Mail as FiMail, 
-  Package as FiPackage, 
-  User as FiUser, 
-  DollarSign as FiDollarSign, 
-  Settings as FiSettings, 
+import Button from '@/components/ui/Button';
+import {
+  ChevronDown as FiChevronDown,
+  ChevronRight as FiChevronRight,
+  LayoutDashboard as FiGrid,
+  FileText as FiFileText,
+  Users as FiUsers,
+  Mail as FiMail,
+  Package as FiPackage,
+  User as FiUser,
+  DollarSign as FiDollarSign,
+  Settings as FiSettings,
   LogOut as FiLogOut,
-  Bell as FiBell
 } from 'lucide-react';
 
 const icons = {
@@ -32,47 +32,69 @@ const icons = {
   FiDollarSign,
   FiSettings,
   FiLogOut,
-  FiBell
 };
 
-const MenuItem = memo(({ item, isActive, toggleItem, isExpanded, isSidebarCollapsed }) => {
-  const Icon = icons[item.icon] || null;
-  
+const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
+  const { expandedItems, setExpandedItems } = useMenuContext();
+  const pathname = usePathname();
+  const isActive = useCallback(
+    (href) => {
+      if (href === '/admin') {
+        return pathname === href;
+      }
+      return pathname?.startsWith(href);
+    },
+    [pathname]
+  );
+
+  const isExpanded = expandedItems[item.href || ''];
+  const Icon = icons[item.icon] || FiGrid; // Fallback to FiGrid if icon is missing
+
   return (
-    <div key={item.href} className="mb-1">
+    <div className="mb-1">
       {item.submenu?.length > 0 ? (
         <>
-          <button
-            onClick={() => toggleItem(item.href)}
+          <Button
+            onClick={() =>
+              setExpandedItems((prev) => ({
+                ...prev,
+                [item.href]: !isExpanded,
+              }))
+            }
+            variant="ghost"
             className={clsx(
-              'w-full flex items-center justify-between rounded-lg text-sm font-medium transition-colors',
-              isMobileContext ? 'p-2.5' : 'p-3',
-              isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
+              'w-full flex items-center justify-between rounded-lg text-sm font-medium transition-all duration-200',
+              'px-3 py-2.5',
+              isActive(item.href)
+                ? 'bg-gradient-to-r from-cyan-600 to-cyan-800 text-white shadow-sm'
+                : 'text-gray-700 hover:bg-gray-100 hover:text-cyan-700'
             )}
             aria-expanded={isExpanded}
           >
             <div className="flex items-center">
-              {Icon && <Icon className="w-5 h-5" />}
-              {!isSidebarCollapsed && <span className="ml-3">{item.title}</span>}
+              {Icon && <Icon className="w-4 h-4 flex-shrink-0" />}
+              {!isSidebarCollapsed && <span className="ml-3 truncate">{item.title}</span>}
             </div>
             {!isSidebarCollapsed && (
-              isExpanded ? 
-                <icons.FiChevronDown className="w-4 h-4 transition-transform" /> : 
-                <icons.FiChevronRight className="w-4 h-4 transition-transform" />
+              isExpanded ? (
+                <FiChevronDown className="w-4 h-4 transition-transform duration-200 flex-shrink-0" />
+              ) : (
+                <FiChevronRight className="w-4 h-4 transition-transform duration-200 flex-shrink-0" />
+              )
             )}
-          </button>
+          </Button>
           {isExpanded && !isSidebarCollapsed && (
-            <div className="mt-1 ml-8 space-y-1">
+            <div className="mt-1 ml-7 space-y-1">
               {item.submenu.map((subItem) => (
                 <Link
                   key={subItem.href}
                   href={subItem.href}
                   className={clsx(
-                    'block text-sm rounded-lg transition-all duration-300 focus:outline-none',
-                    isMobileContext ? 'px-3 py-2' : 'px-4 py-2',
+                    'block text-sm rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2',
+                    'px-3 py-2',
                     isActive(subItem.href)
-                      ? 'bg-blue-50 text-blue-600 font-medium border-l-2 border-blue-500 -ml-1 pl-3'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'
+                      ? 'bg-gradient-to-r from-cyan-600 to-cyan-800 text-white font-medium'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-cyan-700'
                   )}
                 >
                   {subItem.name || subItem.title || 'Unnamed Item'}
@@ -85,13 +107,32 @@ const MenuItem = memo(({ item, isActive, toggleItem, isExpanded, isSidebarCollap
         <Link
           href={item.href || '#'}
           className={clsx(
-            'flex items-center rounded-lg p-3 text-sm font-medium transition-colors',
-            isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600',
+            'flex items-center rounded-lg text-sm font-medium transition-all duration-200 group',
+            'px-3 py-2.5',
+            'focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2',
+            isActive(item.href)
+              ? 'bg-gradient-to-r from-cyan-600 to-cyan-800 text-white shadow-sm'
+              : 'text-gray-700 hover:bg-gray-100 hover:text-cyan-700',
             !item.href ? 'opacity-50 cursor-not-allowed' : ''
           )}
         >
-          {Icon && <Icon className="w-5 h-5" />}
-          {!isSidebarCollapsed && <span className="ml-3">{item.title}</span>}
+          {Icon && (
+            <div className="relative">
+              <Icon 
+                className={clsx(
+                  'w-4 h-4 flex-shrink-0 transform transition-all duration-300 ease-out',
+                  'group-hover:scale-125',
+                  isActive(item.href) ? 'text-white' : 'text-current',
+                  isSidebarCollapsed ? 'mx-auto' : ''
+                )} 
+              />
+            </div>
+          )}
+          {!isSidebarCollapsed && (
+            <span className="ml-3 truncate transition-transform duration-300 group-hover:translate-x-1">
+              {item.title}
+            </span>
+          )}
         </Link>
       )}
     </div>
@@ -100,101 +141,103 @@ const MenuItem = memo(({ item, isActive, toggleItem, isExpanded, isSidebarCollap
 
 MenuItem.displayName = 'MenuItem';
 
-const AdminSidebar = memo(({ onClose }) => {
-  const { isSidebarCollapsed, toggleSidebar, expandedItems, setExpandedItems, closeAllMenus, isSidebarOpen } = useMenuContext();
+const AdminSidebar = memo(() => {
+  const { isSidebarCollapsed, toggleSidebar, isSidebarOpen, isMobile, toggleSidebarMobile } = useMenuContext();
   const pathname = usePathname();
 
-  const menuItems = useMemo(() => [
+  const menuItems = [
     { title: 'Dashboard', icon: 'FiGrid', href: '/admin/dashboard', submenu: [] },
     { title: 'Content Management', icon: 'FiFileText', href: '/admin/content-management', submenu: [] },
     { title: 'Clients & Partners', icon: 'FiUsers', href: '/admin/clients-partners', submenu: [] },
     { title: 'Contact Information', icon: 'FiMail', href: '/admin/contact', submenu: [] },
     { title: 'Products', icon: 'FiPackage', href: '/admin/products', submenu: [] },
-    { title: 'Customers', icon: 'FiUser', href: '/admin/customers', submenu: [] },
-    { title: 'Publish Notice', icon: 'FiBell', href: '/admin/notice', submenu: [] },
-  ], []);
-
-  const toggleItem = useCallback((href) => {
-    setExpandedItems(prev => ({
-      ...prev,
-      [href]: !prev[href]
-    }));
-  }, [setExpandedItems]);
-
-  const isActive = useCallback((href) => {
-    return pathname === href || pathname.startsWith(`${href}/`);
-  }, [pathname]);
+    { title: 'Users', icon: 'FiUser', href: '/admin/users', submenu: [] },
+    { title: 'Orders', icon: 'FiDollarSign', href: '/admin/orders', submenu: [] },
+    { title: 'Settings', icon: 'FiSettings', href: '/admin/settings', submenu: [] },
+  ];
 
   return (
     <div
       className={clsx(
         'bg-white border-r border-gray-200 flex-shrink-0 flex flex-col h-screen',
         'transition-all duration-300 will-change-transform pt-24 fixed left-0 top-0',
-        'z-40',
-        isSidebarCollapsed ? 'w-20' : 'w-64'
+        'z-40 shadow-sm',
+        isMobile && !isSidebarOpen ? 'hidden' : '',
+        isSidebarCollapsed ? 'w-16' : 'w-64'
       )}
     >
+      {/* Header */}
       <div
         className={clsx(
-          'h-16 flex items-center justify-between border-b border-gray-200 bg-white',
-          isSidebarCollapsed ? 'px-2' : 'px-4'
+          'h-16 flex items-center justify-between border-b border-gray-200 bg-white'
         )}
         style={{ position: 'sticky', top: 0, zIndex: 10 }}
       >
-        {isSidebarCollapsed ? (
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-            A
-          </div>
-        ) : (
-          <h2 className="text-lg font-semibold text-gray-500 whitespace-nowrap">Admin Panel</h2>
+        {!isSidebarCollapsed && (
+          <h2 className="text-lg font-semibold text-gray-800 whitespace-nowrap px-3">Admin Panel</h2>
         )}
-        <button
-          onClick={toggleSidebar}
-          className="p-1.5 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none"
-          aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-        >
-          <icons.FiChevronRight className={clsx('w-5 h-5', isSidebarCollapsed && 'rotate-180')} />
-        </button>
+        <div className="flex-1 flex justify-end">
+          <Button
+            onClick={isMobile ? () => toggleSidebarMobile(false) : toggleSidebar}
+            variant="ghost"
+            size="icon"
+            className="p-1.5 mr-3.5 my-2 text-gray-500 bg-gray-200 hover:bg-gray-300 hover:text-cyan-700 rounded-md transition-colors duration-200"
+            aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            <FiChevronRight
+              className={clsx(
+                'w-6 h-6 transition-all duration-300 ease-out',
+                isSidebarCollapsed && 'rotate-180',
+                'hover:scale-125 hover:text-cyan-700'
+              )}
+            />
+          </Button>
+        </div>
       </div>
+
+      {/* Navigation */}
       <nav
-        className="flex-1 px-2 pt-4 pb-8 overflow-y-auto overflow-x-hidden flex flex-col"
+        className="flex-1 px-3 pt-4 pb-8 overflow-y-auto overflow-x-hidden flex flex-col"
         role="navigation"
         aria-label="Admin Sidebar"
         style={{ minHeight: 'calc(100vh - 4rem)' }}
       >
-        <div className="space-y-1 flex-1">
-          {menuItems.map((item) => {
-            const itemKey = item.href || `menu-${item.title.toLowerCase().replace(/\s+/g, '-')}`;
-            return (
-              <MenuItem
-                key={itemKey}
-                item={item}
-                isActive={item.href ? isActive(item.href) : false}
-                isExpanded={!!expandedItems[itemKey]}
-                toggleItem={() => toggleItem(itemKey)}
-                isSidebarCollapsed={isSidebarCollapsed}
-              />
-            );
-          })}
+        <div className="space-y-1">
+          {menuItems.map((item) => (
+            <MenuItem
+              key={item.href}
+              item={item}
+              isSidebarCollapsed={isSidebarCollapsed}
+              isMobile={isMobile}
+            />
+          ))}
         </div>
-      <div className="mt-auto pt-4 border-t border-gray-100 px-2 mb-12">
-        <button
-          onClick={() => {
-            // Clear authentication data
-            localStorage.removeItem('isAuthenticated');
-            localStorage.removeItem('user');
-            // Redirect to login page
-            window.location.href = '/login';
-          }}
-          className={clsx(
-            'w-full flex items-center py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors',
-            isSidebarCollapsed ? 'justify-center' : 'px-4',
-            'focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
-          )}
-        >
-          <FiLogOut className="w-5 h-5" />
-          {!isSidebarCollapsed && <span className="ml-3">Logout</span>}
-        </button>
+
+        {/* Logout Button */}
+        <div className="mt-auto pt-4 border-t border-gray-100 mb-12">
+          <Button
+            onClick={() => {
+              try {
+                localStorage.removeItem('isAuthenticated');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+              } catch (error) {
+                console.error('Error during logout:', error);
+                window.location.href = '/login';
+              }
+            }}
+            variant="ghost"
+            className={clsx(
+              'w-full flex items-center text-sm font-medium transition-all duration-200',
+              'px-3 py-2.5 rounded-lg',
+              'text-red-600 hover:bg-red-50 hover:text-red-700',
+              'focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2',
+              isSidebarCollapsed ? 'justify-center' : ''
+            )}
+          >
+            <FiLogOut className="w-4 h-4 flex-shrink-0" />
+            {!isSidebarCollapsed && <span className="ml-3">Logout</span>}
+          </Button>
         </div>
       </nav>
     </div>

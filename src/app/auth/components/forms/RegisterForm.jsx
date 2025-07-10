@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from '@/components/ui/Button';
 
 const RegisterForm = ({
   email,
@@ -109,12 +110,10 @@ Username
         />
       </div>
 
-      <button
+      <Button
         type="submit"
+        className="w-full justify-center py-3 text-base font-light shadow-lg"
         disabled={loading}
-        className={`w-full flex justify-center py-3 px-4 rounded-xl shadow-lg text-base font-light text-white bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition duration-200 ${
-          loading ? 'opacity-70 cursor-not-allowed' : ''
-        }`}
       >
         {loading ? (
           <>
@@ -143,17 +142,18 @@ Username
         ) : (
           'Create Account'
         )}
-      </button>
+      </Button>
 
       <div className="text-center text-sm text-gray-600 mt-6">
         Already have an account?{' '}
-        <button
+        <Button
           type="button"
           onClick={onSwitchToLogin}
-          className="font-medium text-cyan-600 hover:text-cyan-500 focus:outline-none"
+          variant="ghost"
+          className="font-medium text-cyan-600 hover:text-cyan-500 p-0 h-auto"
         >
           Sign In
-        </button>
+        </Button>
       </div>
     </form>
   );

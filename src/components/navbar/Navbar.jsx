@@ -8,17 +8,18 @@ import SearchBar from './SearchBar';
 import DesktopMenu from './DesktopMenu';
 import MobileMenu from './MobileMenu';
 import { menuItems } from './menuItems';
+import Button from '@/components/ui/Button';
+import { useSearch } from '@/contexts/SearchContext';
 import '../../styles/navbar.css';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
   const navRef = useRef(null);
   const pathname = usePathname();
+  const { isSearchExpanded } = useSearch();
 
   // Filter menu items based on authentication
   useEffect(() => {
@@ -70,18 +71,15 @@ export default function Navbar() {
     <nav ref={navRef} className={navbarClasses}>
       <div className="w-full relative">
         <div className="flex items-center h-16 sm:h-20 px-4 md:px-6 lg:px-8">
-          <Logo isSearchExpanded={isSearchExpanded} />
+          <Logo />
           <div className="flex-1 flex items-center justify-end">
-            <SearchBar
-              isSearchExpanded={isSearchExpanded}
-              setIsSearchExpanded={setIsSearchExpanded}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-            />
+            <SearchBar />
             <div className="md:hidden flex-shrink-0 w-12 h-12 flex items-center justify-center ml-2 z-60">
-              <button
+              <Button
                 onClick={toggleMenu}
-                className="inline-flex items-center justify-center w-10 h-10 rounded-lg text-gray-700 hover:text-cyan-500 hover:bg-cyan-50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 transition-all duration-200"
+                variant="ghost"
+                size="icon"
+                className="w-10 h-10 text-gray-700 hover:text-cyan-500 hover:bg-cyan-50"
                 aria-expanded={isOpen}
                 aria-label="Toggle main menu"
               >
@@ -99,7 +97,7 @@ export default function Navbar() {
                     style={{ top: '50%', marginTop: isOpen ? '0' : '0.25rem' }}
                   />
                 </div>
-              </button>
+              </Button>
             </div>
           </div>
           <div className="hidden md:block">

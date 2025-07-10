@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Edit, Trash2, Search, Plus } from 'lucide-react';
+import Button from '@/components/ui/Button';
 
 const ProductsTable = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -31,10 +32,10 @@ const ProductsTable = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <button className="flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <Button className="text-sm">
           <Plus className="w-4 h-4 mr-2" />
           Add Product
-        </button>
+        </Button>
       </div>
 
       <div className="overflow-hidden border rounded-md">
@@ -70,12 +71,12 @@ const ProductsTable = () => {
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
                     <div className="flex justify-end space-x-2">
-                      <button className="p-1 text-gray-400 rounded-full hover:text-gray-600 hover:bg-gray-100">
+                      <Button variant="ghost" size="icon" className="text-gray-400 hover:text-gray-600">
                         <Edit className="w-4 h-4" />
-                      </button>
-                      <button className="p-1 text-red-400 rounded-full hover:text-red-600 hover:bg-red-50">
+                      </Button>
+                      <Button variant="ghost" size="icon" className="text-red-400 hover:text-red-600">
                         <Trash2 className="w-4 h-4" />
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

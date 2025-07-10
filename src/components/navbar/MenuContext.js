@@ -7,17 +7,33 @@ const MenuContext = createContext();
 export const MenuProvider = ({ children }) => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [activeCategory, setActiveCategory] = useState(0);
-  const [expandedItems, setExpandedItems] = useState({});
+  const [expandedItems, setExpandedItems] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('sidebarExpandedItems');
+        return saved ? JSON.parse(saved) : {};
+      } catch (error) {
+        console.error('Error reading sidebarExpandedItems from localStorage:', error);
+        return {};
+      }
+    }
+    return {};
+  });
+
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     if (typeof window !== 'undefined') {
-      const isMobile = window.innerWidth < 768;
-      const savedState = localStorage.getItem('sidebarCollapsed');
-      return savedState !== null ? savedState === 'true' : isMobile;
+      try {
+        const isMobile = window.innerWidth < 768;
+        const savedState = localStorage.getItem('sidebarCollapsed');
+        return savedState !== null ? savedState === 'true' : isMobile;
+      } catch (error) {
+        console.error('Error reading sidebarCollapsed from localStorage:', error);
+        return false;
+      }
     }
     return false;
   });
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.innerWidth < 768;
@@ -25,21 +41,29 @@ export const MenuProvider = ({ children }) => {
     return false;
   });
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const handleResize = () => {
-        setIsMobile(window.innerWidth < 768);
-      };
-      window.addEventListener('resize', handleResize);
-      handleResize(); // Initial check
-      return () => window.removeEventListener('resize', handleResize);
-    }
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile) {
+        setIsSidebarCollapsed(true); // Collapse sidebar on mobile by default
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('sidebarCollapsed', isSidebarCollapsed.toString());
-      localStorage.setItem('sidebarExpandedItems', JSON.stringify(expandedItems));
+      try {
+        localStorage.setItem('sidebarCollapsed', isSidebarCollapsed.toString());
+        localStorage.setItem('sidebarExpandedItems', JSON.stringify(expandedItems));
+      } catch (error) {
+        console.error('Error saving to localStorage:', error);
+      }
     }
   }, [isSidebarCollapsed, expandedItems]);
 
@@ -47,47 +71,35 @@ export const MenuProvider = ({ children }) => {
     setIsSidebarCollapsed((prev) => !prev);
   }, []);
 
-  const toggleMobileMenu = useCallback(() => {
-    setIsMobileMenuOpen((prev) => !prev);
-    if (!isMobileMenuOpen) setIsSidebarOpen(false); // Close sidebar when mobile menu opens
-  }, [isMobileMenuOpen]);
-
   const toggleSidebarMobile = useCallback((shouldOpen) => {
-    if (typeof shouldOpen === 'boolean') {
-      setIsSidebarOpen(shouldOpen);
-    } else {
-      setIsSidebarOpen((prev) => !prev);
-    }
-    if (!isSidebarOpen) {
-      setIsMobileMenuOpen(false); // Close mobile menu when sidebar opens
-    }
-  }, [isSidebarOpen]);
+    setIsSidebarOpen((prev) => (typeof shouldOpen === 'boolean' ? shouldOpen : !prev));
+  }, []);
 
   const closeAllMenus = useCallback(() => {
     setOpenDropdown(null);
     setActiveCategory(0);
     setExpandedItems({});
-    setIsMobileMenuOpen(false);
     setIsSidebarOpen(false);
   }, []);
 
   return (
     <MenuContext.Provider
       value={{
-        openDropdown,
-        setOpenDropdown,
-        activeCategory,
-        setActiveCategory,
+        // Sidebar state
         expandedItems,
         setExpandedItems,
         isSidebarCollapsed,
         toggleSidebar,
-        isMobileMenuOpen,
-        toggleMobileMenu,
         isSidebarOpen,
         toggleSidebarMobile,
-        closeAllMenus,
         isMobile,
+        
+        // Dropdown state
+        openDropdown,
+        setOpenDropdown,
+        activeCategory,
+        setActiveCategory,
+        closeAllMenus
       }}
     >
       {children}

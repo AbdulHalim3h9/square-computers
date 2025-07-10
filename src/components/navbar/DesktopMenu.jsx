@@ -183,62 +183,69 @@ const DesktopMenu = memo(({ menuItems }) => {
         return (
           <div key={index} className="relative h-full flex items-center">
             {item.href ? (
-              <Link
-                href={item.href}
-                className={clsx(
-                  'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
-                  isAdminPanel
-                    ? item.specialClass || 'bg-blue-600 text-white hover:bg-blue-700'
-                    : openDropdown === index
-                      ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100',
-                  'flex items-center space-x-1',
-                  isAdminPanel && 'px-4 py-2.5 font-semibold shadow-md hover:shadow-lg'
-                )}
-                onClick={handleLinkClick(index, !!item.submenu)}
-                onKeyDown={(e) => {
-                  if (item.submenu?.length && (e.key === 'Enter' || e.key === ' ')) {
-                    e.preventDefault();
-                    setOpenDropdown(openDropdown === index ? null : index);
-                  }
-                }}
-                id={`menu-button-${index}`}
-                aria-haspopup={!!item.submenu?.length}
-                aria-expanded={openDropdown === index}
-                aria-controls={item.submenu?.length ? `menu-${index}` : undefined}
-                role="button"
+              <div 
+                className="relative"
+                onMouseEnter={() => item.submenu?.length && handleMouseEnter(index)}
+                onMouseLeave={() => item.submenu?.length && handleMouseLeave()}
               >
-                {isAdminPanel && item.icon && (
-                  <span className="mr-1">
-                    {item.icon}
-                  </span>
-                )}
-                {item.title || 'Unnamed Menu'}
-                {item.submenu?.length && (
-                  <svg
-                    className={clsx(
-                      'w-4 h-4 ml-1 inline-block transition-transform duration-300',
-                      openDropdown === index && 'rotate-180'
-                    )}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                )}
-              </Link>
+                <Link
+                  href={item.href}
+                  className={clsx(
+                    'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap inline-flex items-center transform transition-all duration-300 ease-out',
+                    isAdminPanel
+                      ? item.specialClass || 'bg-blue-600 text-white hover:bg-blue-700 hover:translate-x-1'
+                      : openDropdown === index
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100 hover:translate-x-1',
+                    isAdminPanel && 'px-4 py-2.5 font-semibold shadow-md hover:shadow-lg hover:translate-x-1',
+                    'group-hover:translate-x-1'
+                  )}
+                  onClick={handleLinkClick(index, !!item.submenu)}
+                  onKeyDown={(e) => {
+                    if (item.submenu?.length && (e.key === 'Enter' || e.key === ' ')) {
+                      e.preventDefault();
+                      setOpenDropdown(openDropdown === index ? null : index);
+                    }
+                  }}
+                  id={`menu-button-${index}`}
+                  aria-haspopup={!!item.submenu?.length}
+                  aria-expanded={openDropdown === index}
+                  aria-controls={item.submenu?.length ? `menu-${index}` : undefined}
+                  role="button"
+                >
+                  {isAdminPanel && item.icon && (
+                    <span className="mr-1">
+                      {item.icon}
+                    </span>
+                  )}
+                  {item.title || 'Unnamed Menu'}
+                  {item.submenu?.length && (
+                    <svg
+                      className={clsx(
+                        'w-4 h-4 ml-1 inline-block transition-transform duration-300',
+                        openDropdown === index && 'rotate-180'
+                      )}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  )}
+                </Link>
+              </div>
             ) : (
               <button
                 className={clsx(
-                  'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
+                  'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap transform transition-all duration-300 ease-out',
                   isAdminPanel
-                    ? item.specialClass || 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? item.specialClass || 'bg-blue-600 text-white hover:bg-blue-700 hover:translate-x-1'
                     : openDropdown === index
                       ? 'text-blue-600 bg-blue-50'
-                      : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100',
+                      : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100 hover:translate-x-1',
                   'flex items-center space-x-1',
-                  isAdminPanel && 'px-4 py-2.5 font-semibold shadow-md hover:shadow-lg'
+                  isAdminPanel && 'px-4 py-2.5 font-semibold shadow-md hover:shadow-lg hover:translate-x-1',
+                  'group-hover:translate-x-1'
                 )}
                 onClick={(e) => item.submenu?.length && handleToggleClick(index, e)}
                 onKeyDown={(e) => {
@@ -276,7 +283,12 @@ const DesktopMenu = memo(({ menuItems }) => {
               </button>
             )}
             {item.submenu?.length && (
-              <div id={`menu-${index}`} role="menu">
+              <div 
+                id={`menu-${index}`} 
+                role="menu"
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={handleMouseLeave}
+              >
                 {item.isMegaMenu ? renderMegaMenu(item, index) : renderRegularDropdown(item, index)}
               </div>
             )}

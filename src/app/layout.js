@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import FloatingHelp from '@/components/FloatingHelp';
 import RibbonWrapper from '@/components/RibbonWrapper';
 import { MenuProvider } from '@/components/navbar/MenuContext';
+import { SearchProvider } from '@/contexts/SearchContext';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -19,20 +20,23 @@ const roboto = Roboto({
   preload: true,
 });
 
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+  preload: true,
+});
+
 function LayoutWrapper({ children }) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
 
   if (isAdminRoute) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        {children}
-      </div>
-    );
+    return <>{children}</>;
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className={`${inter.variable} ${roboto.variable} font-sans min-h-screen flex flex-col`}>
       {/* Ribbon - fixed at the very top */}
       <div className="fixed top-0 left-0 right-0 z-[100] h-2">
         <RibbonWrapper />
@@ -44,7 +48,7 @@ function LayoutWrapper({ children }) {
       </div>
       
       {/* Main content - pushed down by fixed header */}
-      <main className="flex-grow pt-24">
+      <main className="flex-grow pt-22">
         {children}
       </main>
       
@@ -56,72 +60,22 @@ function LayoutWrapper({ children }) {
 
 export default function RootLayout({ children }) {
   return (
-    <html 
-      lang="en" 
-      className={`${roboto.variable} font-sans`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className="scroll-smooth">
       <head>
-        <meta charSet="utf-8" />
-        <title>Square Computers</title>
-        <meta name="description" content="Your trusted technology partner since 2006" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-        <meta name="theme-color" content="#ffffff" />
-        
-        {/* Preload critical resources */}
-        <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
-        <link
-          rel="preload"
-          href="/_next/static/media/roboto-latin-300-normal.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/_next/static/media/roboto-latin-400-normal.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/_next/static/media/roboto-latin-500-normal.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/_next/static/media/roboto-latin-700-normal.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        
-        {/* Preload critical CSS */}
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              /* Critical CSS */
-              body { 
-                font-family: ${roboto.style.fontFamily}, sans-serif; 
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                text-rendering: optimizeLegibility;
-              }
-            `,
-          }}
-        />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Square Computers - Your trusted IT solutions provider" />
+        <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="font-sans antialiased text-gray-800 bg-white touch-manipulation">
-        <MenuProvider>
-          <Suspense fallback={<div className="min-h-screen"></div>}>
-            <LayoutWrapper>
-              {children}
-            </LayoutWrapper>
-          </Suspense>
-        </MenuProvider>
+      <body className="bg-white text-gray-900 antialiased">
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+          <SearchProvider>
+            <MenuProvider>
+              <LayoutWrapper>
+                {children}
+              </LayoutWrapper>
+            </MenuProvider>
+          </SearchProvider>
+        </Suspense>
       </body>
     </html>
   );

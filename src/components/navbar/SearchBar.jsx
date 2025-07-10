@@ -1,17 +1,27 @@
-import { useRef, useEffect, useState, useCallback, memo } from 'react';
+import { useRef, useEffect, memo, useCallback, useState } from 'react';
 import { Search as SearchIcon, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useSearch } from '@/contexts/SearchContext';
 
-function SearchBar({ isSearchExpanded, setIsSearchExpanded, searchQuery, setSearchQuery }) {
+function SearchBar() {
   const router = useRouter();
   const searchInputRef = useRef(null);
   const searchContainerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchResults,
+    isLoading,
+    isSearchExpanded,
+    isOverlayOpen,
+    handleSearchChange,
+    openOverlay,
+    closeOverlay
+  } = useSearch();
 
   // Handle window resize for mobile detection
   useEffect(() => {
@@ -37,58 +47,7 @@ function SearchBar({ isSearchExpanded, setIsSearchExpanded, searchQuery, setSear
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOverlayOpen]);
-
-  const openOverlay = useCallback(() => {
-    setIsOverlayOpen(true);
-    setIsSearchExpanded(true);
-    document.body.style.overflow = 'hidden';
-  }, [setIsSearchExpanded]);
-
-  const closeOverlay = useCallback(() => {
-    setIsOverlayOpen(false);
-    setIsSearchExpanded(false);
-    setSearchQuery('');
-    setSearchResults([]);
-    document.body.style.overflow = '';
-  }, [setIsSearchExpanded, setSearchQuery]);
-
-  // Debounce utility
-  const debounce = useCallback((func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func(...args), delay);
-    };
-  }, []);
-
-  // Search products
-  const searchProducts = useCallback(async (query) => {
-    if (!query.trim()) {
-      setSearchResults([]);
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-      const data = await response.json();
-      setSearchResults(response.ok ? data : []);
-    } catch (error) {
-      console.error('Search error:', error);
-      setSearchResults([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  const debouncedSearch = useCallback(debounce(searchProducts, 500), [searchProducts]);
-
-  // Handle search input
-  const handleSearchChange = useCallback((e) => {
-    const query = e.target.value;
-    setSearchQuery(query);
-    debouncedSearch(query);
-  }, [setSearchQuery, debouncedSearch]);
+  }, [isOverlayOpen, closeOverlay]);
 
   // Handle form submission
   const handleSearch = useCallback((e) => {

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar/Navbar';
 import AdminSidebar from './components/AdminSidebar';
+import RibbonWrapper from '@/components/RibbonWrapper';
 
 export default function AdminLayout({ children }) {
   const router = useRouter();
@@ -35,8 +36,13 @@ export default function AdminLayout({ children }) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="flex pt-16">
+      {/* Ribbon - fixed at the very top */}
+      <div className="fixed top-0 left-0 right-0 z-[100] h-2">
+        <RibbonWrapper />
+      </div>
+      
+      <Navbar className="mt-2" />
+      <div className="flex pt-20">
         {/* Desktop Sidebar */}
         <div className="hidden md:block w-64 bg-white border-r border-gray-200 h-[calc(100vh-4rem)] fixed overflow-y-auto">
           <AdminSidebar />

@@ -1,20 +1,17 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import { Html, Head, Main, NextScript } from 'next/document';
 
-class MyDocument extends Document {
-  render() {
-    return (
-      <Html lang="en">
-        <Head>
-          <meta charSet="utf-8" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <body>
-          <Main />
-          <NextScript />
-        </body>
-      </Html>
-    );
-  }
+export default function Document() {
+  return (
+    <Html lang="en">
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <meta name="theme-color" content="#ffffff" />
+        <meta name="description" content="Square Computers - Your trusted technology partner" />
+      </Head>
+      <body className="font-sans antialiased">
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }
-
-export default MyDocument;

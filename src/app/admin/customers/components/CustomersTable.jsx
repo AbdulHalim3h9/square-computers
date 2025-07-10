@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FiEdit2, FiTrash2, FiEye } from 'react-icons/fi';
+import { Edit2 as FiEdit2, Trash2 as FiTrash2, Eye as FiEye} from 'lucide-react';
 
 export default function CustomersTable({ customers }) {
   const [searchTerm, setSearchTerm] = useState('');

@@ -1,6 +1,6 @@
 'use client';
 
-import { FiMenu, FiSearch, FiBell, FiUser, FiSettings, FiLogOut } from 'react-icons/fi';
+import { Menu as FiMenu, Search as FiSearch, Bell as FiBell, User as FiUser, Settings as FiSettings, LogOut as FiLogOut} from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

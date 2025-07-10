@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FiUser, FiLogOut } from 'react-icons/fi';
+import { User as FiUser, LogOut as FiLogOut} from 'lucide-react';
 
 export default function AdminActions() {
   const [isAdmin, setIsAdmin] = useState(false);

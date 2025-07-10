@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { FiCheckCircle, FiX, FiAlertCircle, FiInfo, FiAlertTriangle } from 'react-icons/fi';
+import { CheckCircle as FiCheckCircle, X as FiX, AlertCircle as FiAlertCircle, Info as FiInfo, AlertTriangle as FiAlertTriangle} from 'lucide-react';
 
 const VARIANTS = {
   success: {

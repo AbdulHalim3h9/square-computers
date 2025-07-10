@@ -1,6 +1,6 @@
 'use client';
 
-import { FiDollarSign, FiShoppingCart, FiUsers, FiTrendingUp, FiPackage, FiCreditCard, FiAlertCircle } from 'react-icons/fi';
+import { DollarSign as FiDollarSign, ShoppingCart as FiShoppingCart, Users as FiUsers, TrendingUp as FiTrendingUp, Package as FiPackage, CreditCard as FiCreditCard, AlertCircle as FiAlertCircle} from 'lucide-react';
 
 const stats = [
   { 

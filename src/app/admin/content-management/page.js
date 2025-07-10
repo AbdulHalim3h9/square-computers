@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FiFileText, FiInfo, FiBookOpen, FiUsers, FiMessageSquare } from 'react-icons/fi';
+import { FileText as FiFileText, Info as FiInfo, BookOpen as FiBookOpen, Users as FiUsers, MessageSquare as FiMessageSquare} from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 // Dynamically import forms with no SSR

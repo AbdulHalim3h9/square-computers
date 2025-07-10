@@ -1,0 +1,15 @@
+{
+  "css.validate": false,
+  "tailwindCSS.emmetCompletions": true,
+  "tailwindCSS.includeLanguages": {
+    "javascript": "javascriptreact",
+    "html": "HTML"
+  },
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "css.lint.unknownAtRules": "ignore"
+}

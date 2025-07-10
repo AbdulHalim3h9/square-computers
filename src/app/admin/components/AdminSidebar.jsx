@@ -6,19 +6,19 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 import { useMenuContext } from '@/components/navbar/MenuContext';
 import { 
-  FiChevronDown, 
-  FiChevronRight, 
-  FiGrid, 
-  FiFileText, 
-  FiUsers, 
-  FiMail, 
-  FiPackage, 
-  FiUser, 
-  FiDollarSign, 
-  FiSettings, 
-  FiLogOut,
-  FiBell
-} from 'react-icons/fi';
+  ChevronDown as FiChevronDown, 
+  ChevronRight as FiChevronRight, 
+  LayoutDashboard as FiGrid, 
+  FileText as FiFileText, 
+  Users as FiUsers, 
+  Mail as FiMail, 
+  Package as FiPackage, 
+  User as FiUser, 
+  DollarSign as FiDollarSign, 
+  Settings as FiSettings, 
+  LogOut as FiLogOut,
+  Bell as FiBell
+} from 'lucide-react';
 
 const icons = {
   FiChevronDown,
@@ -45,7 +45,8 @@ const MenuItem = memo(({ item, isActive, toggleItem, isExpanded, isSidebarCollap
           <button
             onClick={() => toggleItem(item.href)}
             className={clsx(
-              'w-full flex items-center justify-between rounded-lg p-3 text-sm font-medium transition-colors',
+              'w-full flex items-center justify-between rounded-lg text-sm font-medium transition-colors',
+              isMobileContext ? 'p-2.5' : 'p-3',
               isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
             )}
             aria-expanded={isExpanded}
@@ -67,7 +68,8 @@ const MenuItem = memo(({ item, isActive, toggleItem, isExpanded, isSidebarCollap
                   key={subItem.href}
                   href={subItem.href}
                   className={clsx(
-                    'block px-4 py-2 text-sm rounded-lg transition-all duration-300 focus:outline-none',
+                    'block text-sm rounded-lg transition-all duration-300 focus:outline-none',
+                    isMobileContext ? 'px-3 py-2' : 'px-4 py-2',
                     isActive(subItem.href)
                       ? 'bg-blue-50 text-blue-600 font-medium border-l-2 border-blue-500 -ml-1 pl-3'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-blue-600'
@@ -99,7 +101,7 @@ const MenuItem = memo(({ item, isActive, toggleItem, isExpanded, isSidebarCollap
 MenuItem.displayName = 'MenuItem';
 
 const AdminSidebar = memo(({ onClose }) => {
-  const { isSidebarCollapsed, toggleSidebar, expandedItems, setExpandedItems, closeAllMenus, isSidebarOpen, isMobile } = useMenuContext();
+  const { isSidebarCollapsed, toggleSidebar, expandedItems, setExpandedItems, closeAllMenus, isSidebarOpen } = useMenuContext();
   const pathname = usePathname();
 
   const menuItems = useMemo(() => [
@@ -144,7 +146,7 @@ const AdminSidebar = memo(({ onClose }) => {
             A
           </div>
         ) : (
-          <h2 className="text-lg font-semibold text-gray-800 whitespace-nowrap">Admin Panel</h2>
+          <h2 className="text-lg font-semibold text-gray-800 bg-blue whitespace-nowrap">Admin Panel</h2>
         )}
         <button
           onClick={toggleSidebar}
@@ -175,24 +177,24 @@ const AdminSidebar = memo(({ onClose }) => {
             );
           })}
         </div>
-        <div className="mt-auto pt-4 border-t border-gray-100 px-2 mb-12">
-          <button
-            onClick={() => {
-              // Clear authentication data
-              localStorage.removeItem('isAuthenticated');
-              localStorage.removeItem('user');
-              // Redirect to login page
-              window.location.href = '/login';
-            }}
-            className={clsx(
-              'w-full flex items-center py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors',
-              isSidebarCollapsed ? 'justify-center' : 'px-4',
-              'focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
-            )}
-          >
-            <FiLogOut className="w-5 h-5" />
-            {!isSidebarCollapsed && <span className="ml-3">Logout</span>}
-          </button>
+      <div className="mt-auto pt-4 border-t border-gray-100 px-2 mb-12">
+        <button
+          onClick={() => {
+            // Clear authentication data
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('user');
+            // Redirect to login page
+            window.location.href = '/login';
+          }}
+          className={clsx(
+            'w-full flex items-center py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors',
+            isSidebarCollapsed ? 'justify-center' : 'px-4',
+            'focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+          )}
+        >
+          <FiLogOut className="w-5 h-5" />
+          {!isSidebarCollapsed && <span className="ml-3">Logout</span>}
+        </button>
         </div>
       </nav>
     </div>

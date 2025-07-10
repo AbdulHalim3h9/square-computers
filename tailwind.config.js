@@ -6,7 +6,39 @@ module.exports = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Roboto', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        display: ['Roboto', 'sans-serif'],
+        body: ['Roboto', 'sans-serif'],
+        bengali: ['Roboto', 'Noto Sans Bengali', 'Hind Siliguri', 'sans-serif'],
+      },
+      fontWeight: {
+        thin: '100',
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+        extrabold: '800',
+        black: '900',
+      },
+      lineHeight: {
+        tighter: '1.1',
+        tight: '1.25',
+        normal: '1.5',
+        relaxed: '1.625',
+        loose: '2',
+      },
+    },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
 }

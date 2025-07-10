@@ -1,15 +1,7 @@
 'use client';
 
 import { Fragment } from 'react';
-import { 
-  FiShoppingBag, 
-  FiUser, 
-  FiDollarSign, 
-  FiPackage,
-  FiCheckCircle,
-  FiAlertCircle,
-  FiClock
-} from 'react-icons/fi';
+import { ShoppingBag as FiShoppingBag, User as FiUser, DollarSign as FiDollarSign, Package as FiPackage, CheckCircle as FiCheckCircle, AlertCircle as FiAlertCircle, Clock as FiClock} from 'lucide-react';
 
 const activity = [
   {

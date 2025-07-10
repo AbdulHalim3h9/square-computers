@@ -1,4 +1,3 @@
-// MenuContext.js
 'use client';
 
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
@@ -18,11 +17,28 @@ export const MenuProvider = ({ children }) => {
     return false;
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for mobile sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth < 768;
+    }
+    return false;
+  });
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('sidebarCollapsed', isSidebarCollapsed);
+      const handleResize = () => {
+        setIsMobile(window.innerWidth < 768);
+      };
+      window.addEventListener('resize', handleResize);
+      handleResize(); // Initial check
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebarCollapsed', isSidebarCollapsed.toString());
       localStorage.setItem('sidebarExpandedItems', JSON.stringify(expandedItems));
     }
   }, [isSidebarCollapsed, expandedItems]);
@@ -40,11 +56,10 @@ export const MenuProvider = ({ children }) => {
     if (typeof shouldOpen === 'boolean') {
       setIsSidebarOpen(shouldOpen);
     } else {
-      setIsSidebarOpen(prev => !prev);
+      setIsSidebarOpen((prev) => !prev);
     }
-    // Close mobile menu when sidebar opens
     if (!isSidebarOpen) {
-      setIsMobileMenuOpen(false);
+      setIsMobileMenuOpen(false); // Close mobile menu when sidebar opens
     }
   }, [isSidebarOpen]);
 
@@ -72,6 +87,7 @@ export const MenuProvider = ({ children }) => {
         isSidebarOpen,
         toggleSidebarMobile,
         closeAllMenus,
+        isMobile,
       }}
     >
       {children}
@@ -79,4 +95,10 @@ export const MenuProvider = ({ children }) => {
   );
 };
 
-export const useMenuContext = () => useContext(MenuContext);
+export const useMenuContext = () => {
+  const context = useContext(MenuContext);
+  if (!context) {
+    throw new Error('useMenuContext must be used within a MenuProvider');
+  }
+  return context;
+};

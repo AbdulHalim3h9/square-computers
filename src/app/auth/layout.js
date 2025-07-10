@@ -250,10 +250,40 @@ const handleSwitchToRegister = () => {
     </div>
   );
 
+  // Handle click outside to close
+  const handleClickOutside = (event) => {
+    if (popupRef.current && !popupRef.current.contains(event.target)) {
+      router.push('/');
+    }
+  };
+
+  // Add event listener for outside clicks
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        router.push('/');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [router]);
+
   // Mobile popup content
   const MobilePopup = () => (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
-      <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-md" ref={popupRef}>
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]"
+      onClick={(e) => e.target === e.currentTarget && router.push('/')}
+    >
+      <div 
+        className="relative bg-white rounded-3xl shadow-2xl overflow-hidden w-full max-w-md" 
+        ref={popupRef}
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           onClick={() => router.push('/')}
           className="absolute right-4 top-4 z-20 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors duration-200 text-gray-600 hover:text-gray-800"
@@ -343,8 +373,15 @@ const handleSwitchToRegister = () => {
 
   // Desktop layout - popup with blurred background
   const DesktopLayout = () => (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
-      <div className="relative w-full max-w-4xl" ref={popupRef}>
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]"
+      onClick={(e) => e.target === e.currentTarget && router.push('/')}
+    >
+      <div 
+        className="relative w-full max-w-4xl" 
+        ref={popupRef}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden">
           {/* Left Side - Branding */}
           <div className="hidden md:flex md:w-1/2">

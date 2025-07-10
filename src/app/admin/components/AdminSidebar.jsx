@@ -3,11 +3,8 @@
 import { memo, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import clsx from 'clsx';
 import { useMenuContext } from '@/components/navbar/MenuContext';
-
-// Import icons directly for now to fix dynamic import issues
 import { 
   FiChevronDown, 
   FiChevronRight, 
@@ -19,7 +16,8 @@ import {
   FiUser, 
   FiDollarSign, 
   FiSettings, 
-  FiLogOut 
+  FiLogOut,
+  FiBell
 } from 'react-icons/fi';
 
 const icons = {
@@ -33,7 +31,8 @@ const icons = {
   FiUser,
   FiDollarSign,
   FiSettings,
-  FiLogOut
+  FiLogOut,
+  FiBell
 };
 
 const MenuItem = memo(({ item, isActive, toggleItem, isExpanded, isSidebarCollapsed }) => {
@@ -110,16 +109,7 @@ const AdminSidebar = memo(({ onClose }) => {
     { title: 'Contact Information', icon: 'FiMail', href: '/admin/contact', submenu: [] },
     { title: 'Products', icon: 'FiPackage', href: '/admin/products', submenu: [] },
     { title: 'Customers', icon: 'FiUser', href: '/admin/customers', submenu: [] },
-    {
-      title: 'Orders & Payments',
-      icon: 'FiDollarSign',
-      submenu: [
-        { name: 'Orders', href: '/admin/orders' },
-        { name: 'Payments', href: '/admin/payments' },
-        { name: 'Invoices', href: '/admin/invoices' },
-      ],
-    },
-    { title: 'Settings', icon: 'FiSettings', href: '/admin/settings', submenu: [] },
+    { title: 'Publish Notice', icon: 'FiBell', href: '/admin/notice', submenu: [] },
   ], []);
 
   const toggleItem = useCallback((href) => {
@@ -138,7 +128,7 @@ const AdminSidebar = memo(({ onClose }) => {
       className={clsx(
         'bg-white border-r border-gray-200 flex-shrink-0 flex flex-col h-screen',
         'transition-all duration-300 will-change-transform pt-24 fixed left-0 top-0',
-        'z-40', // Just below the navbar (which is z-50)
+        'z-40',
         isSidebarCollapsed ? 'w-20' : 'w-64'
       )}
     >
@@ -172,7 +162,6 @@ const AdminSidebar = memo(({ onClose }) => {
       >
         <div className="space-y-1 flex-1">
           {menuItems.map((item) => {
-            // Use title as key fallback for items without href (like the Orders & Payments parent)
             const itemKey = item.href || `menu-${item.title.toLowerCase().replace(/\s+/g, '-')}`;
             return (
               <MenuItem
@@ -186,18 +175,19 @@ const AdminSidebar = memo(({ onClose }) => {
             );
           })}
         </div>
-        <div className="mt-auto pt-4 border-t border-gray-100">
+        <div className="mt-auto pt-4 border-t border-gray-100 px-2 mb-12">
           <button
             onClick={() => {
-              if (typeof window !== 'undefined') {
-                localStorage.removeItem('isAuthenticated');
-                localStorage.removeItem('user');
-                window.location.href = '/auth/login';
-              }
+              // Clear authentication data
+              localStorage.removeItem('isAuthenticated');
+              localStorage.removeItem('user');
+              // Redirect to login page
+              window.location.href = '/login';
             }}
             className={clsx(
-              'w-full flex items-center py-2 text-sm font-medium text-red-600 rounded-md hover:bg-red-50',
-              isSidebarCollapsed ? 'justify-center' : 'px-3'
+              'w-full flex items-center py-3 text-sm font-medium text-red-600 rounded-lg hover:bg-red-50 transition-colors',
+              isSidebarCollapsed ? 'justify-center' : 'px-4',
+              'focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
             )}
           >
             <FiLogOut className="w-5 h-5" />

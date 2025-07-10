@@ -15,7 +15,6 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [filteredMenuItems, setFilteredMenuItems] = useState(menuItems);
   const navRef = useRef(null);
@@ -67,11 +66,6 @@ export default function Navbar() {
     setIsOpen(prev => !prev);
   }, []);
 
-  const toggleDropdown = useCallback((index, e) => {
-    e?.stopPropagation();
-    setOpenDropdown(prev => prev === index ? null : index);
-  }, []);
-
   return (
     <nav ref={navRef} className={navbarClasses}>
       <div className="w-full relative">
@@ -109,12 +103,7 @@ export default function Navbar() {
             </div>
           </div>
           <div className="hidden md:block">
-            <DesktopMenu
-              menuItems={filteredMenuItems}
-              openDropdown={openDropdown}
-              setOpenDropdown={setOpenDropdown}
-              isSearchExpanded={isSearchExpanded}
-            />
+            <DesktopMenu menuItems={filteredMenuItems} />
           </div>
         </div>
       </div>

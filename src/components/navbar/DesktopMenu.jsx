@@ -87,7 +87,7 @@ const DesktopMenu = memo(({ menuItems }) => {
     return (
       <div
         className={clsx(
-          'absolute left-0 mt-2 bg-white rounded-md shadow-lg z-50 transition-all duration-300',
+          'absolute left-0 mt-6 bg-white rounded-md shadow-lg z-50 transition-all duration-300',
           isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
         )}
         style={{ width: getMaxWidth(item.submenu) }}
@@ -120,7 +120,7 @@ const DesktopMenu = memo(({ menuItems }) => {
     return (
       <div
         className={clsx(
-          'absolute left-0 mt-2 bg-white rounded-md shadow-lg z-50 p-4 transition-all duration-300',
+          'absolute left-0 mt-6 bg-white rounded-md shadow-lg z-50 p-4 transition-all duration-300',
           isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'
         )}
         style={{ minWidth: '600px', maxWidth: '800px' }}
@@ -189,7 +189,7 @@ const DesktopMenu = memo(({ menuItems }) => {
             <Link
               href={item.href}
               className={clsx(
-                'px-4 py-2 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
+                'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
                 openDropdown === index
                   ? 'text-blue-600 bg-blue-50'
                   : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100'
@@ -225,7 +225,7 @@ const DesktopMenu = memo(({ menuItems }) => {
           ) : (
             <button
               className={clsx(
-                'px-4 py-2 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
+                'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap',
                 openDropdown === index
                   ? 'text-blue-600 bg-blue-50'
                   : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100'

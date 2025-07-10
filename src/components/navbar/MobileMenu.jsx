@@ -35,9 +35,19 @@ export default function MobileMenu({ isOpen, setIsOpen, menuItems }) {
               {(!hasSubmenu && item.href) ? (
                 <Link
                   href={item.href}
-                  className="block px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-2"
+                  className={clsx(
+                    'block px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 transform hover:translate-x-2',
+                    item.title === 'Admin Panel'
+                      ? item.specialClass || 'bg-blue-600 text-white hover:from-blue-700 hover:to-blue-900'
+                      : 'text-gray-700 hover:text-blue-600 hover:bg-gradient-to-r hover:from-blue-50 hover:to-transparent'
+                  )}
                   onClick={closeAllMenus}
                 >
+                  {item.title === 'Admin Panel' && item.icon && (
+                    <span className="inline-block mr-2">
+                      {item.icon}
+                    </span>
+                  )}
                   {item.name || item.title || item.category || 'Unnamed Item'}
                 </Link>
               ) : (

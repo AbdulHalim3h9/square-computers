@@ -179,6 +179,7 @@ export const menuItems = [
     title: 'Admin Panel',
     href: '/admin/dashboard',
     requiresAuth: true,
+    specialClass: 'bg-gradient-to-r from-blue-600 to-blue-800 text-white hover:from-blue-700 hover:to-blue-900',
     icon: (
       <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path 

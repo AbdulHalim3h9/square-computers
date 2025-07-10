@@ -12,10 +12,16 @@
   html, body {
     margin: 0;
     padding: 0;
-    height: 100%;
     width: 100%;
+    min-height: 100%;
     box-sizing: border-box;
     scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
+    touch-action: manipulation;
   }
   
   /* Set default font family */

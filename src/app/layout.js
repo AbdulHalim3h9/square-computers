@@ -65,7 +65,7 @@ export default function RootLayout({ children }) {
         <meta charSet="utf-8" />
         <title>Square Computers</title>
         <meta name="description" content="Your trusted technology partner since 2006" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <meta name="theme-color" content="#ffffff" />
         
         {/* Preload critical resources */}
@@ -114,7 +114,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className="font-sans antialiased text-gray-800 bg-white">
+      <body className="font-sans antialiased text-gray-800 bg-white touch-manipulation">
         <MenuProvider>
           <Suspense fallback={<div className="min-h-screen"></div>}>
             <LayoutWrapper>

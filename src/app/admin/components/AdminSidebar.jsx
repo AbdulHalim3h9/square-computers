@@ -146,7 +146,7 @@ const AdminSidebar = memo(({ onClose }) => {
             A
           </div>
         ) : (
-          <h2 className="text-lg font-semibold text-gray-800 bg-blue whitespace-nowrap">Admin Panel</h2>
+          <h2 className="text-lg font-semibold text-gray-500 whitespace-nowrap">Admin Panel</h2>
         )}
         <button
           onClick={toggleSidebar}

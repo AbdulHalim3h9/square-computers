@@ -5,8 +5,8 @@ const ServiceCard = ({ icon, title, description, gradient }) => (
     <div className={`w-16 h-16 rounded-full mb-4 flex items-center justify-center bg-gradient-to-r ${gradient} text-white`}>
       {icon}
     </div>
-    <h3 className="text-lg font-semibold text-gray-800 mb-2">{title}</h3>
-    <p className="text-gray-600 text-sm leading-relaxed">
+    <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-1 sm:mb-2">{title}</h3>
+    <p className="hidden sm:block text-gray-600 text-sm leading-relaxed">
       {description}
     </p>
     <div className="mt-3">

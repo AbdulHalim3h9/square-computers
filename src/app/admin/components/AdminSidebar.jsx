@@ -34,8 +34,7 @@ const icons = {
   FiLogOut,
 };
 
-const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
-  const { setIsSidebarOpen } = useMenuContext();
+const MenuItem = memo(({ item, isSidebarCollapsed }) => {
   const { expandedItems, setExpandedItems } = useMenuContext();
   const pathname = usePathname();
   const isActive = useCallback(
@@ -91,8 +90,7 @@ const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
                   key={subItem.href}
                   href={subItem.href}
                   className={clsx(
-                    'block text-sm rounded-md transition-all duration-200 focus:outline-none',
-                    'px-3 py-2',
+                    'block text-sm rounded-md transition-all duration-200 px-3 py-2',
                     isActive(subItem.href)
                       ? 'bg-gradient-to-r from-cyan-600 to-cyan-800 text-white font-medium'
                       : 'text-gray-600 hover:bg-gray-100 hover:text-cyan-700'
@@ -107,11 +105,9 @@ const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
       ) : (
         <Link
           href={item.href || '#'}
-          onClick={() => isMobile && setIsSidebarOpen(false)}
           className={clsx(
             'flex items-center rounded-lg text-sm font-medium transition-all duration-200 group',
             'px-3 py-2.5',
-            'focus:outline-none',
             isActive(item.href)
               ? 'bg-gradient-to-r from-cyan-600 to-cyan-800 text-white shadow-sm'
               : 'text-gray-700 hover:bg-gray-100 hover:text-cyan-700',
@@ -144,7 +140,7 @@ const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
 MenuItem.displayName = 'MenuItem';
 
 const AdminSidebar = memo(() => {
-  const { isSidebarCollapsed, toggleSidebar, isSidebarOpen, isMobile, setIsSidebarOpen } = useMenuContext();
+  const { isSidebarCollapsed, toggleSidebar } = useMenuContext();
   const pathname = usePathname();
 
   const menuItems = [
@@ -164,7 +160,6 @@ const AdminSidebar = memo(() => {
         'bg-white border-r border-gray-200 flex-shrink-0 flex flex-col h-screen',
         'transition-all duration-300 will-change-transform pt-24 fixed left-0 top-0',
         'z-40 shadow-sm',
-        isMobile && !isSidebarOpen ? 'hidden' : '',
         isSidebarCollapsed ? 'w-16' : 'w-64'
       )}
     >
@@ -178,11 +173,11 @@ const AdminSidebar = memo(() => {
       >
         <div className="flex items-center flex-1">
           <Button
-            onClick={() => setIsSidebarOpen(false)}
+            onClick={toggleSidebar}
             variant="ghost"
             size="icon"
             className={clsx(
-              'p-1.5 my-2 text-gray-500 hover:bg-gray-300 hover:text-cyan-700 rounded-md transition-colors duration-200 mr-2'
+              'p-1.5 my-2 ml-1.5 text-gray-500 bg-gray-300 hover:bg-gray-400 hover:text-cyan-400 rounded-md transition-colors duration-200 mr-2'
             )}
             aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
@@ -215,7 +210,6 @@ const AdminSidebar = memo(() => {
               key={item.href}
               item={item}
               isSidebarCollapsed={isSidebarCollapsed}
-              isMobile={isMobile}
             />
           ))}
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { createContext, useState, useContext, useCallback } from 'react';
+import debounce from 'lodash/debounce';
 
 const SearchContext = createContext();
 
@@ -10,15 +11,6 @@ export const SearchProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
-
-  // Debounce utility
-  const debounce = (func, delay) => {
-    let timeoutId;
-    return (...args) => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => func(...args), delay);
-    };
-  };
 
   // Search products
   const searchProducts = useCallback(async (query) => {
@@ -39,7 +31,13 @@ export const SearchProvider = ({ children }) => {
     }
   }, []);
 
-  const debouncedSearch = useCallback(debounce(searchProducts, 500), [searchProducts]);
+  // Memoize the debounced search function
+  const debouncedSearch = useCallback(
+    debounce((query) => {
+      searchProducts(query);
+    }, 500),
+    [searchProducts]
+  );
 
   // Handle search input
   const handleSearchChange = useCallback((e) => {

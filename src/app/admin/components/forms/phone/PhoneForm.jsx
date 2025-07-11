@@ -69,7 +69,7 @@ export default function PhoneForm() {
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className={`w-full px-3 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              className={`w-full px-3 py-2 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none`}
               placeholder="e.g., +880 2 1234567"
             />
             {errors.phone && (
@@ -87,7 +87,7 @@ export default function PhoneForm() {
               type="tel"
               value={whatsapp}
               onChange={(e) => setWhatsApp(e.target.value)}
-              className={`w-full px-3 py-2 border ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              className={`w-full px-3 py-2 border ${errors.whatsapp ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none`}
               placeholder="e.g., +880 1XXXXXXXXX"
             />
             {errors.whatsapp && (
@@ -102,14 +102,14 @@ export default function PhoneForm() {
           type="button"
           onClick={handleReset}
           disabled={isLoading}
-          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none disabled:opacity-50"
         >
           Reset
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md shadow-sm hover:bg-blue-700 focus:outline-none disabled:opacity-50"
         >
           {isLoading ? 'Saving...' : 'Save Numbers'}
         </button>

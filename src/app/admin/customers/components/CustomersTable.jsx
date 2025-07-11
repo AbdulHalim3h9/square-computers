@@ -24,7 +24,7 @@ export default function CustomersTable({ customers }) {
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
             type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:w-auto"
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none sm:w-auto"
           >
             Add customer
           </button>
@@ -36,7 +36,7 @@ export default function CustomersTable({ customers }) {
           <input
             type="text"
             placeholder="Search customers..."
-            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
+            className="block w-full rounded-md border-gray-300 shadow-sm sm:text-sm p-2 border"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

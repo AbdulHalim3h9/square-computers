@@ -33,6 +33,8 @@ export const MenuProvider = ({ children }) => {
     return false;
   });
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -61,8 +63,8 @@ export const MenuProvider = ({ children }) => {
   const closeAllMenus = useCallback(() => {
     setOpenDropdown(null);
     setActiveCategory(0);
-    setExpandedItems({});
-    setIsSidebarOpen(false);
+    // Don't close the sidebar when clicking menu items
+    // Only close dropdowns and reset active category
   }, []);
 
   return (
@@ -72,6 +74,8 @@ export const MenuProvider = ({ children }) => {
         expandedItems,
         setExpandedItems,
         isSidebarCollapsed,
+        isSidebarOpen,
+        setIsSidebarOpen,
         toggleSidebar,
         
         // Dropdown state

@@ -49,7 +49,7 @@ export default function AdminHeader({ onToggleSidebar }) {
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 sm:text-sm"
               placeholder="Search"
             />
           </div>
@@ -57,14 +57,14 @@ export default function AdminHeader({ onToggleSidebar }) {
 
         <div className="flex items-center space-x-4">
           <button 
-            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             aria-label="Notifications"
           >
             <FiBell className="h-5 w-5" />
           </button>
 
           <button 
-            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             aria-label="Settings"
           >
             <FiSettings className="h-5 w-5" />
@@ -75,7 +75,7 @@ export default function AdminHeader({ onToggleSidebar }) {
             <div>
               <button
                 type="button"
-                className="flex items-center space-x-2 max-w-xs rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="flex items-center space-x-2 max-w-xs rounded-full focus:outline-none"
                 id="user-menu"
                 onClick={() => setShowDropdown(!showDropdown)}
               >

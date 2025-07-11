@@ -31,7 +31,7 @@ export default function ProductsPage() {
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Products Management</h1>
         <button
           onClick={handleAddClick}
-          className="flex items-center justify-center sm:justify-start px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 w-full sm:w-auto"
+          className="flex items-center justify-center sm:justify-start px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none w-full sm:w-auto"
         >
           <Plus className="w-4 h-4 mr-1 sm:mr-2" />
           <span>Add {activeTab === 'products' ? 'Product' : 'Category'}</span>

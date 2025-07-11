@@ -35,6 +35,7 @@ const icons = {
 };
 
 const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
+  const { setIsSidebarOpen } = useMenuContext();
   const { expandedItems, setExpandedItems } = useMenuContext();
   const pathname = usePathname();
   const isActive = useCallback(
@@ -90,7 +91,7 @@ const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
                   key={subItem.href}
                   href={subItem.href}
                   className={clsx(
-                    'block text-sm rounded-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2',
+                    'block text-sm rounded-md transition-all duration-200 focus:outline-none',
                     'px-3 py-2',
                     isActive(subItem.href)
                       ? 'bg-gradient-to-r from-cyan-600 to-cyan-800 text-white font-medium'
@@ -106,10 +107,11 @@ const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
       ) : (
         <Link
           href={item.href || '#'}
+          onClick={() => isMobile && setIsSidebarOpen(false)}
           className={clsx(
             'flex items-center rounded-lg text-sm font-medium transition-all duration-200 group',
             'px-3 py-2.5',
-            'focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2',
+            'focus:outline-none',
             isActive(item.href)
               ? 'bg-gradient-to-r from-cyan-600 to-cyan-800 text-white shadow-sm'
               : 'text-gray-700 hover:bg-gray-100 hover:text-cyan-700',
@@ -142,7 +144,7 @@ const MenuItem = memo(({ item, isSidebarCollapsed, isMobile = false }) => {
 MenuItem.displayName = 'MenuItem';
 
 const AdminSidebar = memo(() => {
-  const { isSidebarCollapsed, toggleSidebar, isSidebarOpen, isMobile, toggleSidebarMobile } = useMenuContext();
+  const { isSidebarCollapsed, toggleSidebar, isSidebarOpen, isMobile, setIsSidebarOpen } = useMenuContext();
   const pathname = usePathname();
 
   const menuItems = [
@@ -176,7 +178,7 @@ const AdminSidebar = memo(() => {
       >
         <div className="flex items-center flex-1">
           <Button
-            onClick={isMobile ? () => toggleSidebarMobile(false) : toggleSidebar}
+            onClick={() => setIsSidebarOpen(false)}
             variant="ghost"
             size="icon"
             className={clsx(
@@ -236,7 +238,6 @@ const AdminSidebar = memo(() => {
               'w-full flex items-center text-sm font-medium transition-all duration-200',
               'px-3 py-2.5 rounded-lg',
               'text-red-600 hover:bg-red-50 hover:text-red-700',
-              'focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2',
               isSidebarCollapsed ? 'justify-center' : ''
             )}
           >

@@ -11,7 +11,7 @@ import Button from '@/components/ui/Button';
 import clsx from 'clsx';
 
 function AdminLayoutContent({ children }) {
-  const { isSidebarCollapsed, toggleSidebar, isMobile, isSidebarOpen, toggleSidebarMobile } = useMenuContext();
+  const { isSidebarCollapsed, toggleSidebar } = useMenuContext();
   const router = useRouter();
   const [isMounted, setIsMounted] = useState(false);
 
@@ -59,9 +59,9 @@ function AdminLayoutContent({ children }) {
         {/* Sidebar */}
         <div
           className={clsx(
-            'bg-white border-r border-gray-200 h-[calc(100vh-5rem)] fixed overflow-y-auto transition-all duration-300 mt-2',
-            isMobile && !isSidebarOpen ? 'hidden' : '',
-            isSidebarCollapsed ? 'w-16' : 'w-64'
+            'bg-white border-r border-gray-200 h-[calc(100vh-5rem)] fixed overflow-y-auto transition-all duration-300 ease-in-out mt-2 z-30',
+            'w-16',
+            !isSidebarCollapsed && 'w-64'
           )}
         >
           <AdminSidebar />
@@ -70,9 +70,9 @@ function AdminLayoutContent({ children }) {
         {/* Main Content */}
         <main
           className={clsx(
-            'flex-1 transition-all duration-300 p-4 md:p-6',
-            isSidebarCollapsed ? 'ml-16' : 'ml-64',
-            isMobile && isSidebarOpen ? 'ml-64' : isMobile ? 'ml-0' : ''
+            'flex-1 transition-all duration-300 w-full min-h-[calc(100vh-5rem)]',
+            'p-2 sm:p-4 md:p-6',
+            isSidebarCollapsed ? 'ml-16' : 'ml-64'
           )}
         >
           {children}

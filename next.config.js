@@ -25,8 +25,6 @@ const nextConfig = {
   // Enable React Strict Mode for better development experience
   reactStrictMode: true,
   
-  // Enable SWC minification
-  swcMinify: true,
   
   // Enable static exports for optimal performance
   output: 'standalone',

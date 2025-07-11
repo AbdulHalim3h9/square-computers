@@ -18,80 +18,96 @@ export default function ContentManagementPage({ searchParams }) {
   const params = React.use(searchParams);
   const activeTab = params?.tab ?? 'services';
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Content Management</h1>
-        <p className="mt-1 text-sm text-gray-500">
+    <div className="p-4 sm:p-6 max-w-6xl mx-auto">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">Content Management</h1>
+        <p className="text-sm sm:text-base text-gray-600">
           Manage all your website content from one place
         </p>
       </div>
 
-      <Tabs defaultValue={activeTab} className="space-y-4">
-        <div className="border-b border-gray-200">
-          <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 gap-2 p-0 bg-transparent rounded-none">
-            <TabsTrigger 
-              value="services" 
-              className="flex items-center gap-2 py-3 data-[state=active]:border-b-2 data-[state=active]:border-cyan-500 data-[state=active]:shadow-none"
-            >
-              <FiFileText className="w-4 h-4" />
-              <span className="text-xs md:text-sm">Services</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="about" 
-              className="flex items-center gap-2 py-3 data-[state=active]:border-b-2 data-[state=active]:border-cyan-500 data-[state=active]:shadow-none"
-            >
-              <FiInfo className="w-4 h-4" />
-              <span className="text-xs md:text-sm">About Us</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="blogs" 
-              className="flex items-center gap-2 py-3 data-[state=active]:border-b-2 data-[state=active]:border-cyan-500 data-[state=active]:shadow-none"
-            >
-              <FiBookOpen className="w-4 h-4" />
-              <span className="text-xs md:text-sm">Blogs</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="team" 
-              className="flex items-center gap-2 py-3 data-[state=active]:border-b-2 data-[state=active]:border-cyan-500 data-[state=active]:shadow-none"
-            >
-              <FiUsers className="w-4 h-4" />
-              <span className="text-xs md:text-sm">Team</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="chairman" 
-              className="flex items-center gap-2 py-3 data-[state=active]:border-b-2 data-[state=active]:border-cyan-500 data-[state=active]:shadow-none"
-            >
-              <FiMessageSquare className="w-4 h-4" />
-              <span className="text-xs md:text-sm">Chairman&apos;s Speech</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="mds" 
-              className="flex items-center gap-2 py-3 data-[state=active]:border-b-2 data-[state=active]:border-cyan-500 data-[state=active]:shadow-none"
-            >
-              <FiMessageSquare className="w-4 h-4" />
-              <span className="text-xs md:text-sm">MDS Speech</span>
-            </TabsTrigger>
+      <Tabs defaultValue={activeTab} className="space-y-4 sm:space-y-6">
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="w-max sm:w-full">
+            <div className="flex space-x-1">
+              <TabsTrigger 
+                value="services" 
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
+              >
+                <FiFileText className="h-4 w-4" />
+                <span className="hidden sm:inline">Services</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="about" 
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
+              >
+                <FiInfo className="h-4 w-4" />
+                <span className="hidden sm:inline">About Us</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="blogs" 
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
+              >
+                <FiBookOpen className="h-4 w-4" />
+                <span className="hidden sm:inline">Blogs</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="team" 
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
+              >
+                <FiUsers className="h-4 w-4" />
+                <span className="hidden sm:inline">Team</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="chairman" 
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
+              >
+                <FiMessageSquare className="h-4 w-4" />
+                <span className="hidden sm:inline">Chairman's Speech</span>
+              </TabsTrigger>
+              <TabsTrigger 
+                value="mds" 
+                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
+              >
+                <FiMessageSquare className="h-4 w-4" />
+                <span className="hidden sm:inline">MDS Speech</span>
+              </TabsTrigger>
+            </div>
           </TabsList>
         </div>
 
-        <TabsContent value="services" className="mt-6">
-          <ServicesForm />
-        </TabsContent>
-        <TabsContent value="about" className="mt-6">
-          <AboutForm />
-        </TabsContent>
-        <TabsContent value="blogs" className="mt-6">
-          <BlogsForm />
-        </TabsContent>
-        <TabsContent value="team" className="mt-6">
-          <TeamForm />
-        </TabsContent>
-        <TabsContent value="chairman" className="mt-6">
-          <ChairmanSpeechForm />
-        </TabsContent>
-        <TabsContent value="mds" className="mt-6">
-          <MDSSpeechForm />
-        </TabsContent>
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <TabsContent value="services" className="m-0">
+            <div className="p-4 sm:p-6">
+              <ServicesForm />
+            </div>
+          </TabsContent>
+          <TabsContent value="about" className="m-0">
+            <div className="p-4 sm:p-6">
+              <AboutForm />
+            </div>
+          </TabsContent>
+          <TabsContent value="blogs" className="m-0">
+            <div className="p-4 sm:p-6">
+              <BlogsForm />
+            </div>
+          </TabsContent>
+          <TabsContent value="team" className="m-0">
+            <div className="p-4 sm:p-6">
+              <TeamForm />
+            </div>
+          </TabsContent>
+          <TabsContent value="chairman" className="m-0">
+            <div className="p-4 sm:p-6">
+              <ChairmanSpeechForm />
+            </div>
+          </TabsContent>
+          <TabsContent value="mds" className="m-0">
+            <div className="p-4 sm:p-6">
+              <MDSSpeechForm />
+            </div>
+          </TabsContent>
+        </div>
       </Tabs>
     </div>
   );

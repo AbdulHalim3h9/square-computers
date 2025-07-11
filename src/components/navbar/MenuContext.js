@@ -23,9 +23,8 @@ export const MenuProvider = ({ children }) => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
-        const isMobile = window.innerWidth < 768;
         const savedState = localStorage.getItem('sidebarCollapsed');
-        return savedState !== null ? savedState === 'true' : isMobile;
+        return savedState === 'true';
       } catch (error) {
         console.error('Error reading sidebarCollapsed from localStorage:', error);
         return false;
@@ -33,28 +32,6 @@ export const MenuProvider = ({ children }) => {
     }
     return false;
   });
-
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth < 768;
-    }
-    return false;
-  });
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      if (mobile) {
-        setIsSidebarCollapsed(true); // Collapse sidebar on mobile by default
-      }
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize(); // Initial check
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -68,11 +45,17 @@ export const MenuProvider = ({ children }) => {
   }, [isSidebarCollapsed, expandedItems]);
 
   const toggleSidebar = useCallback(() => {
-    setIsSidebarCollapsed((prev) => !prev);
-  }, []);
-
-  const toggleSidebarMobile = useCallback((shouldOpen) => {
-    setIsSidebarOpen((prev) => (typeof shouldOpen === 'boolean' ? shouldOpen : !prev));
+    setIsSidebarCollapsed(prev => {
+      const newState = !prev;
+      if (typeof window !== 'undefined') {
+        try {
+          localStorage.setItem('sidebarCollapsed', newState.toString());
+        } catch (error) {
+          console.error('Error saving sidebar state:', error);
+        }
+      }
+      return newState;
+    });
   }, []);
 
   const closeAllMenus = useCallback(() => {
@@ -90,9 +73,6 @@ export const MenuProvider = ({ children }) => {
         setExpandedItems,
         isSidebarCollapsed,
         toggleSidebar,
-        isSidebarOpen,
-        toggleSidebarMobile,
-        isMobile,
         
         // Dropdown state
         openDropdown,

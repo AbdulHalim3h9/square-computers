@@ -169,29 +169,34 @@ const AdminSidebar = memo(() => {
       {/* Header */}
       <div
         className={clsx(
-          'h-16 flex items-center justify-between border-b border-gray-200 bg-white'
+          'h-16 flex items-center justify-between border-b border-gray-200 bg-white',
+          isSidebarCollapsed ? 'px-2' : 'px-3'
         )}
         style={{ position: 'sticky', top: 0, zIndex: 10 }}
       >
-        {!isSidebarCollapsed && (
-          <h2 className="text-lg font-semibold text-gray-800 whitespace-nowrap px-3">Admin Panel</h2>
-        )}
-        <div className="flex-1 flex justify-end">
+        <div className="flex items-center flex-1">
           <Button
             onClick={isMobile ? () => toggleSidebarMobile(false) : toggleSidebar}
             variant="ghost"
             size="icon"
-            className="p-1.5 mr-3.5 my-2 text-gray-500 bg-gray-200 hover:bg-gray-300 hover:text-cyan-700 rounded-md transition-colors duration-200"
+            className={clsx(
+              'p-1.5 my-2 text-gray-500 hover:bg-gray-300 hover:text-cyan-700 rounded-md transition-colors duration-200 mr-2'
+            )}
             aria-label={isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             <FiChevronRight
               className={clsx(
                 'w-6 h-6 transition-all duration-300 ease-out',
-                isSidebarCollapsed && 'rotate-180',
+                isSidebarCollapsed ? 'rotate-180' : '',
                 'hover:scale-125 hover:text-cyan-700'
               )}
             />
           </Button>
+          {!isSidebarCollapsed && (
+            <h2 className="text-lg font-semibold text-gray-600 whitespace-nowrap">
+              Admin Panel
+            </h2>
+          )}
         </div>
       </div>
 

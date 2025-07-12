@@ -70,7 +70,7 @@ export default function Navbar() {
   return (
     <nav ref={navRef} className={navbarClasses}>
       <div className="w-full relative">
-        <div className="flex items-center h-16 sm:h-20 px-4 md:px-6 lg:px-8">
+        <div className="flex items-center h-14 sm:h-16 px-4 md:px-6 lg:px-8">
           <Logo />
           <div className="flex-1 flex items-center justify-end">
             <SearchBar />

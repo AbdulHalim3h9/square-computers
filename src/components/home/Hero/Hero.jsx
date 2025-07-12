@@ -1,9 +1,62 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import heroImages from '@/constants/heroImages';
 
 const Hero = () => {
+  const heroRef = useRef(null);
+  const [scrollY, setScrollY] = useState(0);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if mobile device
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+
+  // Handle scroll for parallax effect
+  useEffect(() => {
+    const handleScroll = () => {
+      lastScrollY.current = window.scrollY;
+      
+      if (!ticking.current) {
+        window.requestAnimationFrame(() => {
+          setScrollY(lastScrollY.current);
+          ticking.current = false;
+        });
+        ticking.current = true;
+      }
+      
+      // Hide/show navbar on scroll
+      if (window.scrollY > 100 && window.scrollY > lastScrollY.current) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Calculate parallax effect
+  const parallaxStyle = {
+    transform: `translate3d(0, ${scrollY * 0.5}px, 0)`,
+    transition: 'transform 0.1s ease-out'
+  };
+
+  const contentStyle = {
+    transform: `translate3d(0, ${-scrollY * 0.2}px, 0)`,
+    transition: 'transform 0.1s ease-out'
+  };
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
@@ -28,7 +81,13 @@ const Hero = () => {
   const currentImage = heroImages[currentSlide];
 
   return (
-    <section id="home" className="relative h-[80vh] overflow-hidden">
+    <section 
+      ref={heroRef}
+      id="home" 
+      className={`relative h-[90vh] sm:h-[80vh] overflow-hidden transition-transform duration-300 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       {/* Navigation Arrows */}
       <button 
         onClick={prevSlide}
@@ -56,16 +115,17 @@ const Hero = () => {
           className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
           style={{
             backgroundImage: `url(${currentImage.url})`,
-            transform: 'scale(1.05)'
+            transform: isMobile ? 'scale(1.05)' : 'scale(1.1)',
+            ...parallaxStyle
           }}
           aria-label={currentImage.alt}
         >
-          <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70"></div>
         </div>
       </div>
       
       {/* Content */}
-      <div className="relative z-10 flex items-center h-full">
+      <div className="relative z-10 flex items-center h-full" style={isMobile ? {} : contentStyle}>
         <div className="container mx-auto px-4 text-white">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fadeIn">{currentImage.title}</h1>
           <p className="text-xl mb-8 max-w-2xl">{currentImage.subtitle}</p>
@@ -87,7 +147,9 @@ const Hero = () => {
       </div>
 
       {/* Slide Indicators */}
-      <div className="absolute bottom-8 left-0 right-0">
+      <div className={`absolute bottom-8 left-0 right-0 transition-opacity duration-300 ${
+        scrollY > 100 ? 'opacity-0' : 'opacity-100'
+      }`}>
         <div className="flex justify-center space-x-2">
           {heroImages.map((_, index) => (
             <button

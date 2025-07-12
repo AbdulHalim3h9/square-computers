@@ -1,7 +1,8 @@
 'use client';
 
+import React from 'react';
 import { Code, BarChart3, MessageSquare, Printer, Plane, FileText, Globe, Server, Shield, Headphones } from 'lucide-react';
-import ServiceCard from '@/components/ServiceCard';
+import ServiceCard from '@/components/home/ServiceCard/ServiceCard';
 
 export default function ServicesPage() {
   const services = [

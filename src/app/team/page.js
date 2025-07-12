@@ -93,29 +93,64 @@ const TeamPage = () => {
             return (
               <div 
                 key={index}
-                className={`flex items-end transition-all duration-500 ease-out ${
+                className={`flex items-end transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   index === middleIndex ? 'sm:row-span-1 h-full' : 'h-auto'
                 }`}
                 style={{
-                  minHeight: index === middleIndex ? '420px' : `${Math.max(320, cardHeight)}px`,
+                  minHeight: index === middleIndex ? '480px' : `${Math.max(320, cardHeight)}px`,
                   height: 'auto',
-                  transform: index === middleIndex ? 'scale(1.05)' : 'scale(1)',
+                  transform: 'scale(1)',
                   zIndex: 1,
                   position: 'relative',
-                  '--default-width': '100%',
-                  '--hover-width': '240px',
                   width: '100%',
-                  maxWidth: '220px',
+                  maxWidth: '260px',
                   margin: '0 auto',
+                  willChange: 'transform, z-index, opacity',
+                  transitionProperty: 'transform, z-index, opacity',
+                  transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                  transitionDuration: '700ms',
                 }}
                 onMouseEnter={(e) => {
                   if (window.innerWidth >= 768) {
-                    e.currentTarget.style.zIndex = '20';
+                    const cards = e.currentTarget.parentElement.children;
+                    const hoveredIndex = Array.from(cards).indexOf(e.currentTarget);
+                    
+                    for (let i = 0; i < cards.length; i++) {
+                      const card = cards[i];
+                      const distance = Math.abs(i - hoveredIndex);
+                      
+                      if (i === hoveredIndex) {
+                        // Hovered card
+                        card.style.transform = 'scale(1.2)';
+                        card.style.zIndex = '20';
+                        card.style.opacity = '1';
+                      } else if (distance === 1) {
+                        // Adjacent cards
+                        card.style.transform = 'scale(0.95)';
+                        card.style.opacity = '0.9';
+                        card.style.zIndex = '10';
+                      } else if (distance === 2) {
+                        // Cards two positions away
+                        card.style.transform = 'scale(0.9)';
+                        card.style.opacity = '0.8';
+                        card.style.zIndex = '5';
+                      } else {
+                        // All other cards
+                        card.style.transform = 'scale(0.85)';
+                        card.style.opacity = '0.7';
+                        card.style.zIndex = '1';
+                      }
+                    }
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (window.innerWidth >= 768) {
-                    e.currentTarget.style.zIndex = '1';
+                    const cards = e.currentTarget.parentElement.children;
+                    for (let card of cards) {
+                      card.style.transform = 'scale(1)';
+                      card.style.opacity = '1';
+                      card.style.zIndex = '1';
+                    }
                   }
                 }}
               >

@@ -5,28 +5,23 @@ import React from 'react';
 const TeamCard = ({ member, height }) => {
   return (
     <div
-      className="group relative overflow-hidden rounded-2xl transition-all duration-500 ease-out w-full"
+      className="group relative overflow-hidden rounded-2xl w-full h-full shadow-lg"
       style={{
-        height: `${Math.max(300, height)}px`,
+        height: '100%',
         flexShrink: 0,
         minWidth: '150px',
-        maxWidth: '220px',
         width: '100%',
-        '--hover-width': '240px',
-        '--default-width': '100%',
-        willChange: 'transform, width, height'
-      }}
-      onMouseEnter={(e) => {
-        if (window.innerWidth >= 768) { // Only apply hover effect on medium screens and up
-          e.currentTarget.style.width = 'var(--hover-width, 240px)';
-          e.currentTarget.style.zIndex = '10';
-        }
-      }}
-      onMouseLeave={(e) => {
-        if (window.innerWidth >= 768) {
-          e.currentTarget.style.width = 'var(--default-width, 100%)';
-          e.currentTarget.style.zIndex = '1';
-        }
+        willChange: 'transform, opacity, z-index',
+        transform: 'scale(1)',
+        transformOrigin: 'center bottom',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        WebkitTransformStyle: 'preserve-3d',
+        transformStyle: 'preserve-3d',
+        WebkitTransform: 'translate3d(0,0,0)',
+        transform: 'translate3d(0,0,0)',
+        transition: 'all 700ms cubic-bezier(0.16, 1, 0.3, 1)',
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
       }}
       onTouchStart={(e) => {
         if (window.innerWidth < 768) {

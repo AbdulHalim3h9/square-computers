@@ -127,8 +127,17 @@ const Hero = () => {
       {/* Content */}
       <div className="relative z-10 flex items-center h-full" style={isMobile ? {} : contentStyle}>
         <div className="container mx-auto px-4 text-white">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fadeIn">{currentImage.title}</h1>
-          <p className="text-xl mb-8 max-w-2xl">{currentImage.subtitle}</p>
+          <h1 
+            className="text-4xl md:text-6xl font-bold mb-4 animate-fadeIn"
+          >
+            {currentImage.title}
+          </h1>
+          <p 
+            lang="bn"
+            className="text-xl mb-8 max-w-2xl font-[var(--font-siyam-rupali)]"
+          >
+            {currentImage.subtitle}
+          </p>
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
             <a 
               href="#services" 

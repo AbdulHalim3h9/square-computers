@@ -54,7 +54,7 @@ export default function Ribbon() {
   }
 
   return (
-    <div className="w-full h-full overflow-hidden">
+    <div className="w-full h-1 overflow-hidden">
       <div 
         className="w-full h-full bg-gradient-to-r from-pink-500 via-yellow-500 to-pink-500"
         style={{

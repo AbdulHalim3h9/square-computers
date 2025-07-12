@@ -145,13 +145,11 @@ const AdminSidebar = memo(() => {
 
   const menuItems = [
     { title: 'Dashboard', icon: 'FiGrid', href: '/admin/dashboard', submenu: [] },
+    { title: 'Notices', icon: 'FiFileText', href: '/admin/notices', submenu: [] },
     { title: 'Content Management', icon: 'FiFileText', href: '/admin/content-management', submenu: [] },
     { title: 'Clients & Partners', icon: 'FiUsers', href: '/admin/clients-partners', submenu: [] },
     { title: 'Contact Information', icon: 'FiMail', href: '/admin/contact', submenu: [] },
     { title: 'Products', icon: 'FiPackage', href: '/admin/products', submenu: [] },
-    { title: 'Users', icon: 'FiUser', href: '/admin/users', submenu: [] },
-    { title: 'Orders', icon: 'FiDollarSign', href: '/admin/orders', submenu: [] },
-    { title: 'Settings', icon: 'FiSettings', href: '/admin/settings', submenu: [] },
   ];
 
   return (
@@ -215,7 +213,7 @@ const AdminSidebar = memo(() => {
         </div>
 
         {/* Logout Button */}
-        <div className="mt-auto pt-4 border-t border-gray-100 mb-12">
+        <div className="mt-6 pt-4 border-t border-gray-100">
           <Button
             onClick={() => {
               try {

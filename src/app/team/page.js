@@ -1,4 +1,7 @@
+'use client';
+
 import React from 'react';
+import TeamCard from '@/components/team/TeamCard';
 
 const TeamPage = () => {
   const teamMembers = [
@@ -60,19 +63,17 @@ const TeamPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-16 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-24 px-4">
       {/* Header Section */}
       <div className="max-w-6xl mx-auto text-center mb-16">
         <div className="relative">
           {/* Decorative elements */}
           <div className="absolute -top-8 -left-16 w-32 h-32 bg-cyan-400 rounded-xl opacity-10"></div>
-          <div className="absolute -top-4 -right-20 w-40 h-40 bg-blue-500 rounded-xl opacity-10"></div>
           
           <h1 className="text-5xl md:text-6xl font-light text-slate-800 mb-4">
             Meet
-            <span className="block text-6xl md:text-7xl font-bold text-slate-900 mt-2">Our</span>
-            <span className="block text-6xl md:text-7xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent -mt-2">
-              Team
+            <span className="block text-6xl md:text-7xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">
+              Our Team
             </span>
           </h1>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto mt-6 rounded-xl"></div>
@@ -80,54 +81,51 @@ const TeamPage = () => {
       </div>
 
       {/* Team Members Section */}
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-wrap justify-center gap-2 lg:gap-1">
-          {teamMembers.map((member, index) => (
-            <div
-              key={index}
-              className="group relative overflow-hidden rounded-2xl transition-all duration-500 ease-out hover:flex-grow"
-              style={{
-                width: '240px',
-                height: '480px',
-                flexShrink: 0
-              }}
-            >
-              {/* Background Image */}
+      <div className="max-w-7xl mx-auto py-12">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 lg:gap-10 px-4">
+          {teamMembers.map((member, index) => {
+            // Calculate height based on position (tallest in the middle)
+            const middleIndex = Math.floor(teamMembers.length / 2);
+            const distanceFromMiddle = Math.abs(index - middleIndex);
+            // Base height is 420px for middle, reduce by 40px for each step from middle
+            const cardHeight = 420 - (distanceFromMiddle * 40);
+            
+            return (
               <div 
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                key={index}
+                className={`flex items-end transition-all duration-500 ease-out ${
+                  index === middleIndex ? 'sm:row-span-1 h-full' : 'h-auto'
+                }`}
                 style={{
-                  backgroundImage: `url(${member.image})`,
+                  minHeight: index === middleIndex ? '420px' : `${Math.max(320, cardHeight)}px`,
+                  height: 'auto',
+                  transform: index === middleIndex ? 'scale(1.05)' : 'scale(1)',
+                  zIndex: 1,
+                  position: 'relative',
+                  '--default-width': '100%',
+                  '--hover-width': '240px',
+                  width: '100%',
+                  maxWidth: '220px',
+                  margin: '0 auto',
                 }}
-              ></div>
-              
-              {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-              
-              {/* Accent Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-cyan-500/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              
-              {/* Content */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-xl md:text-2xl font-bold mb-1 transform transition-transform duration-500 group-hover:translate-y-0 translate-y-2">
-                  {member.name}
-                </h3>
-                <p className="text-xs md:text-sm font-medium uppercase tracking-wider text-cyan-300 transform transition-all duration-500 group-hover:translate-y-0 translate-y-4 group-hover:opacity-100">
-                  {member.role}
-                </p>
-                
-                {/* Expanded content that appears on hover */}
-                <div className="mt-3 opacity-0 transform translate-y-6 transition-all duration-500 group-hover:opacity-100 group-hover:translate-y-0">
-                  <div className="w-10 h-0.5 bg-cyan-400 mb-3"></div>
-                  <p className="text-xs md:text-sm leading-relaxed text-slate-200">
-                    {member.description}
-                  </p>
-                </div>
+                onMouseEnter={(e) => {
+                  if (window.innerWidth >= 768) {
+                    e.currentTarget.style.zIndex = '20';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (window.innerWidth >= 768) {
+                    e.currentTarget.style.zIndex = '1';
+                  }
+                }}
+              >
+                <TeamCard 
+                  member={member} 
+                  height={cardHeight} 
+                />
               </div>
-              
-              {/* Hover Border Effect */}
-              <div className="absolute inset-0 border-2 border-cyan-400 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       

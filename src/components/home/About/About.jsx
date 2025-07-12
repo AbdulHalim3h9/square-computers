@@ -25,14 +25,14 @@ const About = () => (
       <div className="absolute top-1/3 right-1/3 w-6 h-6 bg-cyan-100 opacity-20 transform -rotate-12 rounded-sm"></div>
     </div>
     
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="sm:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-4xl font-extrabold text-slate-800 mb-6 tracking-tight">
           About Us
         </h2>
         <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto mb-8 rounded-full"></div>
         
-        <div className="bg-white p-8 rounded-lg">
+        <div className="bg-white bg-opacity-30 p-8 rounded-lg">
           <p className="text-xl text-gray-800 leading-relaxed">
             <LocalizedText style={{ 
               fontSize: '1.15rem',

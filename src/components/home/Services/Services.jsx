@@ -70,12 +70,12 @@ const Services = () => {
       <div className="absolute bottom-1/3 -left-12 w-72 h-72 bg-cyan-50 rounded-2xl opacity-80 transform rotate-45"></div>
       <div className="absolute -bottom-16 right-1/4 w-80 h-80 bg-blue-50 rounded-2xl opacity-80 transform -rotate-6"></div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="sm:container mx-auto px-4 relative z-10">
         <div className="text-center mb-16 relative">
           <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-56 h-56 bg-gradient-to-br from-cyan-100 to-blue-100 rounded-full opacity-30 -z-10"></div>
           <h2 className="text-4xl font-bold text-slate-800 mb-4 relative">Our Services</h2>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full"></div>
-          <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto relative">
+          <p className="mt-4 text-lg text-slate-600 max-w-3xl mx-auto relative">
             আমরা সব ধরনের আইটি সেবা প্রদান করি, আপনার ব্যবসাকে ডিজিটাল বিশ্বে এগিয়ে নিয়ে যেতে
           </p>
         </div>

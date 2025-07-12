@@ -84,7 +84,7 @@ const Hero = () => {
     <section 
       ref={heroRef}
       id="home" 
-      className={`relative h-[90vh] sm:h-[80vh] overflow-hidden transition-transform duration-300 ${
+      className={`relative h-[70vh] sm:h-[75vh] overflow-hidden transition-transform duration-300 ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >

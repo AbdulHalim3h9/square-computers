@@ -61,7 +61,7 @@ function LayoutWrapper({ children }) {
       </div>
       
       {/* Navbar - takes its own space */}
-      <div className="sticky top-0 z-50">
+      <div className="sticky top-0 z-50 mb-16">
         <Navbar />
       </div>
       

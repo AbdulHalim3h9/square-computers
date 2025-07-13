@@ -29,7 +29,7 @@ export default function Locations() {
   ];
 
   return (
-    <section className="bg-gray-50 py-16 relative overflow-hidden border-t border-gray-100">
+    <section className="bg-gray-50 pt-0 pb-16 relative overflow-hidden border-t border-gray-100">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
           <span className="text-gray-800">Our </span>

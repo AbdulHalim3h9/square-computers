@@ -14,6 +14,13 @@
     font-family: var(--font-siyam-rupali), 'Siyam Rupali', 'Siyamrupali', 'Siyam Rupali ANSI', sans-serif;
   }
   
+  /* Optimized smooth scrolling */
+  :root {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Adjust based on your header height */
+    -webkit-overflow-scrolling: touch;
+  }
+  
   /* Base styles for html and body */
   html, body {
     margin: 0;
@@ -21,13 +28,51 @@
     width: 100%;
     min-height: 100%;
     box-sizing: border-box;
-    scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-size-adjust: 100%;
     touch-action: manipulation;
+    overscroll-behavior-y: none;
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+  
+  /* Smooth scrolling for all scrollable elements */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  
+  /* Optimize scroll performance */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #f3f4f6;
+  }
+  
+  /* Webkit scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f3f4f6;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #6b7280;
   }
   
   /* Set default font family */

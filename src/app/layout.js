@@ -54,31 +54,31 @@ function LayoutWrapper({ children }) {
   }
 
   return (
-    <div className={`${inter.variable} ${roboto.variable} font-sans min-h-screen flex flex-col`}>
+    <div className={`${inter.variable} ${roboto.variable} font-sans`}>
       {/* Ribbon - takes its own space */}
       <div className="fixed top-0 left-0 right-0 z-[100] h-1">
         <RibbonWrapper />
       </div>
       
       {/* Navbar - takes its own space */}
-      <div className="sticky top-0 z-50 mb-16">
+      <div className="sticky top-0 z-50">
         <Navbar />
       </div>
       
-      {/* Main content - takes remaining space */}
-      <main className="flex-grow">
+      {/* Main content */}
+      <div>
         {children}
-      </main>
+      </div>
       
-      <Footer />
       <FloatingHelp />
+      <Footer />
     </div>
   );
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="bn">
+    <html lang="bn" className="h-full">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="description" content="Square Computers - Your trusted IT solutions provider" />

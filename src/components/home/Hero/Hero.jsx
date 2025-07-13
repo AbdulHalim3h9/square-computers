@@ -1,16 +1,14 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import heroImages from '@/constants/heroImages';
 
 const Hero = () => {
-  const heroRef = useRef(null);
-  const [scrollY, setScrollY] = useState(0);
-  const [isVisible, setIsVisible] = useState(true);
-  const lastScrollY = useRef(0);
-  const ticking = useRef(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-
+  const containerRef = useRef(null);
+  
   // Check if mobile device
   useEffect(() => {
     const checkIfMobile = () => {
@@ -21,44 +19,38 @@ const Hero = () => {
     window.addEventListener('resize', checkIfMobile);
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
+  
+  // Optimized scroll-based animations
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+    layoutEffect: false // Disable layout effect for better performance
+  });
+  
+  // Calculate transforms with optimized values
+  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "15%"], {
+    clamp: false // Allow slight overflow for smoother effect
+  });
+  
+  // Slight parallax for content (moves up slightly on scroll)
+  const yContent = useTransform(scrollYProgress, [0, 1], ["0%", "3%"], {
+    clamp: false
+  });
+  
+  // Subtle scale effect
+  const scale = useTransform(scrollYProgress, [0, 1], [1, isMobile ? 1.03 : 1.05], {
+    clamp: true
+  });
+  
+  // Optimize performance
+  const memoizedStyle = useMemo(() => ({
+    willChange: 'transform',
+    transformStyle: 'preserve-3d',
+    backfaceVisibility: 'hidden',
+    WebkitFontSmoothing: 'antialiased'
+  }), []);
 
-  // Handle scroll for parallax effect
-  useEffect(() => {
-    const handleScroll = () => {
-      lastScrollY.current = window.scrollY;
-      
-      if (!ticking.current) {
-        window.requestAnimationFrame(() => {
-          setScrollY(lastScrollY.current);
-          ticking.current = false;
-        });
-        ticking.current = true;
-      }
-      
-      // Hide/show navbar on scroll
-      if (window.scrollY > 100 && window.scrollY > lastScrollY.current) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Calculate parallax effect
-  const parallaxStyle = {
-    transform: `translate3d(0, ${scrollY * 0.5}px, 0)`,
-    transition: 'transform 0.1s ease-out'
-  };
-
-  const contentStyle = {
-    transform: `translate3d(0, ${-scrollY * 0.2}px, 0)`,
-    transition: 'transform 0.1s ease-out'
-  };
-  const [currentSlide, setCurrentSlide] = useState(0);
-
+  // Auto slide
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroImages.length);
@@ -70,23 +62,15 @@ const Hero = () => {
     setCurrentSlide((index + heroImages.length) % heroImages.length);
   };
 
-  const nextSlide = () => {
-    goToSlide(currentSlide + 1);
-  };
-
-  const prevSlide = () => {
-    goToSlide(currentSlide - 1);
-  };
-
+  const nextSlide = () => goToSlide(currentSlide + 1);
+  const prevSlide = () => goToSlide(currentSlide - 1);
   const currentImage = heroImages[currentSlide];
 
   return (
-    <section 
-      ref={heroRef}
+    <motion.section 
+      ref={containerRef}
       id="home" 
-      className={`relative h-[70vh] sm:h-[75vh] overflow-hidden transition-transform duration-300 ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
+      className="relative h-[70vh] sm:h-[75vh] overflow-hidden"
     >
       {/* Navigation Arrows */}
       <button 
@@ -109,36 +93,56 @@ const Hero = () => {
         </svg>
       </button>
 
-      {/* Background Slides */}
-      <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out" style={{ opacity: 1 }}>
-        <div 
-          className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
+      {/* Background Slides with optimized transforms */}
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div 
+          className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url(${currentImage.url})`,
-            transform: isMobile ? 'scale(1.05)' : 'scale(1.1)',
-            ...parallaxStyle
+            y: yBg,
+            scale: scale,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover',
+            ...memoizedStyle
           }}
           aria-label={currentImage.alt}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70"></div>
-        </div>
+        </motion.div>
       </div>
       
-      {/* Content */}
-      <div className="relative z-10 flex items-center h-full" style={isMobile ? {} : contentStyle}>
+      {/* Content with optimized transforms */}
+      <motion.div 
+        className="relative z-10 flex items-center h-full"
+        style={{
+          y: yContent,
+          ...memoizedStyle
+        }}
+      >
         <div className="container mx-auto px-4 text-white">
-          <h1 
-            className="text-4xl md:text-6xl font-bold mb-4 animate-fadeIn"
+          <motion.h1 
+            className="text-4xl md:text-6xl font-bold mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
             {currentImage.title}
-          </h1>
-          <p 
+          </motion.h1>
+          <motion.p 
             lang="bn"
             className="text-xl mb-8 max-w-2xl font-[var(--font-siyam-rupali)]"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
             {currentImage.subtitle}
-          </p>
-          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+          </motion.p>
+          <motion.div 
+            className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             <a 
               href="#services" 
               className="bg-cyan-600 hover:bg-cyan-700 text-white px-8 py-3 rounded-full font-medium transition duration-300 text-center"
@@ -151,14 +155,12 @@ const Hero = () => {
             >
               Contact Us
             </a>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Slide Indicators */}
-      <div className={`absolute bottom-8 left-0 right-0 transition-opacity duration-300 ${
-        scrollY > 100 ? 'opacity-0' : 'opacity-100'
-      }`}>
+      <div className="absolute bottom-8 left-0 right-0">
         <div className="flex justify-center space-x-2">
           {heroImages.map((_, index) => (
             <button
@@ -170,7 +172,7 @@ const Hero = () => {
           ))}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

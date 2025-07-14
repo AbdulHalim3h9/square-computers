@@ -23,7 +23,7 @@ const preloadImages = (urls) => {
 };
 
 const Placeholder = () => (
-  <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 animate-pulse" />
+  <div className="absolute inset-0 bg-black animate-pulse" />
 );
 
 const Hero = () => {
@@ -118,12 +118,12 @@ const Hero = () => {
     animate: {
       x: '0%',
       opacity: 1,
-      transition: { duration: 0.6, ease: 'easeInOut' }
+      transition: { duration: 0.5, ease: 'easeInOut' }
     },
     exit: (dir) => ({
       x: dir > 0 ? '-100%' : '100%',
       opacity: 0,
-      transition: { duration: 0.6, ease: 'easeInOut' }
+      transition: { duration: 0.5, ease: 'easeInOut' }
     })
   };
 
@@ -138,7 +138,7 @@ const Hero = () => {
       <motion.section 
         ref={containerRef}
         id="home" 
-        className="relative h-[70vh] sm:h-[75vh] overflow-hidden"
+        className="relative h-[70vh] sm:h-[75vh] overflow-hidden bg-black" // Added bg-black here
         style={memoizedStyle}
       >
         {/* Navigation Arrows */}
@@ -166,7 +166,8 @@ const Hero = () => {
 
         {/* Background Slides */}
         <div className="absolute inset-0">
-          <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+          <div className="absolute inset-0 bg-black" /> {/* Solid black background */}
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
             <motion.div 
               key={currentSlide}
               className="absolute inset-0"
@@ -189,7 +190,7 @@ const Hero = () => {
                   src={currentImage.url}
                   alt={currentImage.alt}
                   fill
-                  priority={true} // Prioritize all images
+                  priority={true}
                   loading="eager"
                   quality={imageQuality}
                   sizes="(max-width: 768px) 80vw, 100vw"

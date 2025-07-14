@@ -176,9 +176,14 @@ const DesktopMenu = memo(({ menuItems }) => {
 
   if (!menuItems?.length) return null;
 
+  // Separate the login item from other menu items
+  const loginItem = menuItems.find(item => item.iconOnly);
+  const otherMenuItems = menuItems.filter(item => !item.iconOnly);
+
   return (
     <div className="hidden md:flex items-center space-x-1" ref={menuRef} role="navigation">
-      {menuItems.map((item, index) => {
+      {/* Regular menu items */}
+      {otherMenuItems.map((item, index) => {
         const isAdminPanel = item.title === 'Admin Panel';
         return (
           <div key={index} className="relative h-full flex items-center">
@@ -191,7 +196,8 @@ const DesktopMenu = memo(({ menuItems }) => {
                 <Link
                   href={item.href}
                   className={clsx(
-                    'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap inline-flex items-center transform transition-all duration-300 ease-out',
+                    'text-sm font-medium rounded-md focus:outline-none whitespace-nowrap inline-flex items-center transform transition-all duration-300 ease-out',
+                    'px-4 py-4',
                     isAdminPanel
                       ? item.specialClass || 'bg-blue-600 text-white hover:bg-blue-700 hover:translate-x-1'
                       : openDropdown === index
@@ -207,13 +213,14 @@ const DesktopMenu = memo(({ menuItems }) => {
                       setOpenDropdown(openDropdown === index ? null : index);
                     }
                   }}
+                  onMouseEnter={() => item.submenu?.length && handleMouseEnter(index)}
+                  onMouseLeave={() => item.submenu?.length && handleMouseLeave()}
                   id={`menu-button-${index}`}
                   aria-haspopup={!!item.submenu?.length}
                   aria-expanded={openDropdown === index}
                   aria-controls={item.submenu?.length ? `menu-${index}` : undefined}
-                  role="button"
                 >
-                  {isAdminPanel && item.icon && (
+                  {item.icon && (
                     <span className="mr-1">
                       {item.icon}
                     </span>
@@ -237,13 +244,12 @@ const DesktopMenu = memo(({ menuItems }) => {
             ) : (
               <button
                 className={clsx(
-                  'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap transform transition-all duration-300 ease-out',
+                  'px-4 py-4 text-sm font-medium rounded-md focus:outline-none whitespace-nowrap flex items-center space-x-1',
                   isAdminPanel
                     ? item.specialClass || 'bg-blue-600 text-white hover:bg-blue-700 hover:translate-x-1'
                     : openDropdown === index
                       ? 'text-blue-600 bg-blue-50'
                       : 'text-gray-700 hover:bg-gray-100 focus:bg-gray-100 hover:translate-x-1',
-                  'flex items-center space-x-1',
                   isAdminPanel && 'px-4 py-2.5 font-semibold shadow-md hover:shadow-lg hover:translate-x-1',
                   'group-hover:translate-x-1'
                 )}
@@ -295,6 +301,19 @@ const DesktopMenu = memo(({ menuItems }) => {
           </div>
         );
       })}
+      
+      {/* Login button */}
+      {loginItem && (
+        <div className="relative h-full flex items-center ml-2">
+          <Link
+            href={loginItem.href}
+            className="p-2 text-gray-700 hover:bg-gray-100 rounded-full transition-colors duration-200"
+            title={loginItem.title}
+          >
+            {loginItem.icon}
+          </Link>
+        </div>
+      )}
     </div>
   );
 });

@@ -200,9 +200,12 @@ export default function OurClients() {
         <div className="mt-12 text-center">
           <a 
             href="/clients" 
-            className="inline-block px-8 py-3 bg-cyan-600 text-white font-medium text-sm leading-tight uppercase rounded-md shadow-md hover:bg-cyan-700 hover:shadow-lg focus:bg-cyan-700 focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-opacity-50 active:bg-cyan-800 active:shadow-lg transition duration-150 ease-in-out transform hover:-translate-y-0.5"
+            className="group inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-cyan-600 to-cyan-800 hover:from-cyan-700 hover:to-cyan-900 transition-all duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
           >
             View All Clients
+            <svg className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </a>
         </div>
       </div>

@@ -12,9 +12,12 @@ export default function BlogList({ blogs, title = 'Latest Blogs', showViewAll = 
           {showViewAll && (
             <Link 
               href="/blog" 
-              className="text-cyan-600 hover:text-cyan-700 font-medium transition-colors"
+              className="group inline-flex items-center px-4 py-2 text-sm font-medium rounded-full text-white bg-gradient-to-r from-cyan-600 to-cyan-800 hover:from-cyan-700 hover:to-cyan-900 transition-all duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
             >
-              View All →
+              View All
+              <svg className="ml-1 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
             </Link>
           )}
         </div>

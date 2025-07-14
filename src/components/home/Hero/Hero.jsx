@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import heroImages from '@/constants/heroImages';
 import Image from 'next/image';
+import Button from '@/components/ui/Button';
 
 // Preload images
 const preloadImages = (urls) => {
@@ -117,7 +118,7 @@ const Hero = () => {
         {/* Navigation Arrows */}
         <button 
           onClick={prevSlide}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors duration-200"
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2.5 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
           aria-label="Previous slide"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -127,7 +128,7 @@ const Hero = () => {
         
         <button 
           onClick={nextSlide}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors duration-200"
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-black/30 hover:bg-black/50 text-white p-2.5 rounded-full transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
           aria-label="Next slide"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -190,15 +191,21 @@ const Hero = () => {
             >
               <a 
                 href="#services" 
-                className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-2 rounded-full font-medium transition-colors duration-200 text-center"
+                className="group inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-cyan-600 to-cyan-800 hover:from-cyan-700 hover:to-cyan-900 transition-all duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
               >
                 Our Services
+                <svg className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
               </a>
               <a 
                 href="#contact" 
-                className="bg-transparent hover:bg-white hover:text-gray-900 text-white border border-white px-6 py-2 rounded-full font-medium transition-colors duration-200 text-center"
+                className="group inline-flex items-center px-6 py-3 border border-white text-base font-medium rounded-full text-white bg-transparent hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
               >
                 Contact Us
+                <svg className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
               </a>
             </motion.div>
           </div>

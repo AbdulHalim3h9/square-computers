@@ -11,6 +11,11 @@ import FloatingHelp from '@/components/FloatingHelp';
 import RibbonWrapper from '@/components/RibbonWrapper';
 import { MenuProvider } from '@/components/navbar/MenuContext';
 import { SearchProvider } from '@/contexts/SearchContext';
+import dynamic from 'next/dynamic';
+
+const NewsTicker = dynamic(() => import('@/components/NewsTicker'), {
+  ssr: false,
+});
 // Load Siyam Rupali font
 const siyamRupali = localFont({
   src: [
@@ -61,12 +66,17 @@ function LayoutWrapper({ children }) {
       </div>
       
       {/* Navbar - takes its own space */}
-      <div className="sticky top-0 z-50">
+      <div className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
         <Navbar />
       </div>
       
-      {/* Main content with top padding to account for fixed navbar */}
-      <div className="pt-14 sm:pt-16">
+      {/* News Ticker - positioned below navbar */}
+      <div className="fixed top-16 left-0 right-0 z-40">
+        <NewsTicker />
+      </div>
+      
+      {/* Main content with top padding to account for fixed navbar and news ticker */}
+      <div className="pt-22 sm:pt-24">
         {children}
       </div>
       

@@ -86,15 +86,27 @@ export default function FloatingHelp() {
         onMouseLeave={handleMouseLeave}
       >
         {/* Contact options */}
-        {isExpanded && (
-          <div className="flex flex-col items-end space-y-4 animate-in slide-in-from-bottom-5 duration-300">
+        <div 
+          className={`
+            flex flex-col items-end space-y-4
+            transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]
+            ${isExpanded ? 'opacity-100 translate-y-0 max-h-96' : 'opacity-0 translate-y-4 max-h-0 pointer-events-none'}
+          `}
+          style={{
+            transformOrigin: 'bottom right',
+            transformStyle: 'preserve-3d',
+          }}
+        >
             {items.map((item, index) => (
               <div 
                 key={item.id} 
-                className="relative group transform transition-all duration-300 hover:scale-105"
-                style={{ 
-                  animationDelay: `${index * 50}ms`,
-                  transitionDelay: `${index * 30}ms`
+                className={`
+                  relative group transform transition-all duration-300 ease-out
+                  ${isExpanded ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
+                `}
+                style={{
+                  transitionDelay: isExpanded ? `${index * 50}ms` : '0ms',
+                  transform: isExpanded ? 'translateY(0)' : 'translateY(20px)',
                 }}
               >
                 <a
@@ -135,8 +147,7 @@ export default function FloatingHelp() {
                 </div>
               </div>
             ))}
-          </div>
-        )}
+        </div>
         
         {/* Main help button */}
         <div className="relative group flex items-center">
@@ -165,7 +176,8 @@ export default function FloatingHelp() {
               ${isExpanded 
                 ? 'bg-red-500 hover:bg-red-600 rotate-45 hover:scale-110 hover:shadow-3xl' 
                 : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-110 hover:shadow-3xl animate-bounce hover:animate-none'
-              }`}
+              }
+              transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease-out`}
             aria-label={isExpanded ? "Close help menu" : "Open help menu"}
           >
             {isExpanded ? (

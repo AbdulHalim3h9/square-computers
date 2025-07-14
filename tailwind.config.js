@@ -15,6 +15,18 @@ module.exports = {
       '2xl': '1536px',
     },
     extend: {
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(calc(-50% - 1rem))' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 40s linear infinite',
+        'marquee-slow': 'marquee 60s linear infinite',
+        'marquee-fast': 'marquee 25s linear infinite',
+        'pause': 'paused',
+      },
       fontFamily: {
         sans: ['Roboto', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         display: ['Roboto', 'sans-serif'],

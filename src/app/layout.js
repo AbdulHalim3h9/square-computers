@@ -65,8 +65,8 @@ function LayoutWrapper({ children }) {
         <Navbar />
       </div>
       
-      {/* Main content */}
-      <div>
+      {/* Main content with top padding to account for fixed navbar */}
+      <div className="pt-14 sm:pt-16">
         {children}
       </div>
       

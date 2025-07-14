@@ -21,17 +21,32 @@ export default function Navbar() {
   const pathname = usePathname();
   const { isSearchExpanded } = useSearch();
 
+  // Initialize state to track if we've checked auth status
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
+
   // Filter menu items based on authentication
   useEffect(() => {
-    setFilteredMenuItems(
-      menuItems.filter(item => !item.requiresAuth || isAuthenticated)
-        .filter(item => !(isAuthenticated && item.title === 'Login'))
-    );
-  }, [isAuthenticated]);
+    // Only filter menu items after we've checked auth status
+    if (hasCheckedAuth) {
+      setFilteredMenuItems(
+        menuItems
+          .filter(item => !item.requiresAuth || isAuthenticated)
+          .filter(item => !(isAuthenticated && item.title === 'Login'))
+      );
+    } else {
+      // Initially show no menu items until we check auth status
+      setFilteredMenuItems([]);
+    }
+  }, [isAuthenticated, hasCheckedAuth]);
 
-  // Check authentication status
+  // Check authentication status - only run on client side after mount
   useEffect(() => {
-    setIsAuthenticated(localStorage.getItem('isAuthenticated') === 'true');
+    // Ensure we're on the client side
+    if (typeof window !== 'undefined') {
+      const authStatus = localStorage.getItem('isAuthenticated') === 'true';
+      setIsAuthenticated(authStatus);
+      setHasCheckedAuth(true);
+    }
   }, [pathname]);
 
   // Handle scroll for shadow effect
@@ -59,13 +74,26 @@ export default function Navbar() {
   }, [isOpen]);
 
   const navbarClasses = useMemo(
-    () => `fixed w-full z-50 bg-white shadow-lg transition-all duration-300 ease-out ${scrolled ? 'shadow-md' : 'shadow-sm'}`,
+    () => `fixed w-full z-50 bg-white transition-all duration-300 ease-out ${scrolled ? 'shadow-md' : 'shadow-sm'}`,
     [scrolled]
   );
   
   const toggleMenu = useCallback(() => {
     setIsOpen(prev => !prev);
   }, []);
+
+  // Don't render navigation items until we've checked auth status
+  if (!hasCheckedAuth) {
+    return (
+      <nav className={navbarClasses}>
+        <div className="w-full relative">
+          <div className="flex items-center h-14 sm:h-16 px-4 md:px-6 lg:px-8">
+            <Logo />
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav ref={navRef} className={navbarClasses}>

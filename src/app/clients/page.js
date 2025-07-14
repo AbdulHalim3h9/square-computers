@@ -15,7 +15,7 @@ export default function ClientsPage() {
 
   if (!isMounted) {
     return (
-      <div className="min-h-screen bg-gray-50 py-16">
+      <div className="min-h-screen bg-gray-50 py-0 sm:py-16">
         <div className="container mx-auto px-4">
           <div className="animate-pulse">
             <div className="h-10 bg-gray-200 rounded w-1/4 mx-auto mb-8"></div>

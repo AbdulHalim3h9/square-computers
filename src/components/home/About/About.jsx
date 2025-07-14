@@ -27,8 +27,9 @@ const About = () => (
     
     <div className="sm:container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-4xl font-extrabold text-slate-800 mb-6 tracking-tight">
-          About Us
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+          <span className="text-slate-800">About </span>
+          <span className="text-cyan-600">Us</span>
         </h2>
         <div className="w-20 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto mb-8 rounded-full"></div>
         

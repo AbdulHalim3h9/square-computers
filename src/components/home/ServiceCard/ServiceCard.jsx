@@ -12,7 +12,7 @@ const ServiceCard = ({ icon, title, description, gradient }) => {
 
   return (
     <motion.div 
-      className="group relative overflow-hidden bg-white rounded-xl p-3 sm:p-4 md:p-6 h-full flex flex-col items-center text-center"
+      className="group relative overflow-hidden bg-white rounded-xl p-3 sm:p-4 md:p-6 h-full flex flex-col items-center text-center shadow-md hover:shadow-xl transition-all duration-300 ease-in-out border border-gray-100"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -21,7 +21,7 @@ const ServiceCard = ({ icon, title, description, gradient }) => {
       onHoverEnd={() => setIsHovered(false)}
       whileHover={{ 
         y: -8,
-        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        boxShadow: '0 25px 50px -12px rgba(6, 182, 212, 0.25), 0 10px 15px -3px rgba(0, 0, 0, 0.1)',
         transition: { 
           type: 'spring',
           stiffness: 300,

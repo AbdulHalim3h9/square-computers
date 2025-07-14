@@ -31,7 +31,7 @@ export default function Logo() {
         />
       </div>
       {!isSearchOpen || (typeof window !== 'undefined' && window.innerWidth >= 768) ? (
-        <h1 className="navbar-brand text-base sm:text-lg md:hidden lg:block lg:text-2xl font-semibold mx-2">
+        <h1 className="navbar-brand text-base sm:text-lg md:hidden lg:block lg:text-2xl font-semibold mx-2 select-none">
           <span className="square-text group-hover:translate-x-0.5 transition-transform duration-300 ease-out inline-block">Square</span>{' '}
           <span className="computers-text group-hover:translate-x-0.5 transition-transform duration-300 ease-out inline-block" style={{ transitionDelay: '50ms' }}>Computers</span>
         </h1>

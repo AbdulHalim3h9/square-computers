@@ -228,27 +228,66 @@ const Hero = () => {
                 {currentImage.subtitle}
               </motion.p>
               <motion.div 
-                className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3"
+                className="w-full sm:w-auto text-left"
                 variants={contentVariants}
               >
-                <a 
-                  href="#services" 
-                  className="group inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-gradient-to-r from-cyan-600 to-cyan-800 hover:from-cyan-700 hover:to-cyan-900 transition-all duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
-                >
-                  Our Services
-                  <svg className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </a>
-                <a 
+                <motion.a 
                   href="#contact" 
-                  className="group inline-flex items-center px-6 py-3 border border-white text-base font-medium rounded-full text-white bg-transparent hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:translate-x-1 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500"
+                  className="group relative overflow-hidden inline-flex items-center px-6 py-3 text-sm font-bold rounded-full text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-lg shadow-cyan-500/30 hover:shadow-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-400"
+                  whileHover={{ 
+                    scale: 1.05,
+                    x: 4,
+                    transition: { 
+                      type: 'spring',
+                      stiffness: 400,
+                      damping: 15
+                    } 
+                  }}
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      '0 0 15px rgba(6, 182, 212, 0.3)',
+                      '0 0 25px rgba(6, 182, 212, 0.6)',
+                      '0 0 15px rgba(6, 182, 212, 0.3)'
+                    ],
+                    transition: {
+                      duration: 2.5,
+                      repeat: Infinity,
+                      repeatType: 'mirror',
+                      ease: 'easeInOut'
+                    }
+                  }}
                 >
-                  Contact Us
-                  <svg className="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
-                </a>
+                  <motion.span
+                    className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10"
+                    initial={{ x: '-100%' }}
+                    whileHover={{ 
+                      x: '100%',
+                      transition: { duration: 0.6 }
+                    }}
+                  />
+                  <span className="relative flex items-center font-[var(--font-siyam-rupali)]">
+                    এখনি যোগাযোগ করুন
+                    <motion.svg 
+                      className="mr-1 w-4 h-4" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24" 
+                      xmlns="http://www.w3.org/2000/svg"
+                      animate={{
+                        x: [0, 3, 0],
+                        transition: {
+                          duration: 1.5,
+                          repeat: Infinity,
+                          repeatType: 'loop',
+                          ease: 'easeInOut'
+                        }
+                      }}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </motion.svg>
+                  </span>
+                </motion.a>
               </motion.div>
             </div>
           </div>

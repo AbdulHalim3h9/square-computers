@@ -19,7 +19,7 @@ export default function BrandsPage() {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-16">
+      <section className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-0 sm:py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Trusted Brands</h1>
           <p className="text-xl max-w-3xl mx-auto">
@@ -81,7 +81,7 @@ export default function BrandsPage() {
       </section>
       
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-cyan-50 to-blue-50 py-16">
+      <section className="bg-gradient-to-r from-cyan-50 to-blue-50 py-0 sm:py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-gray-800 mb-4">Become a Partner</h2>
           <p className="text-gray-600 max-w-2xl mx-auto mb-8">

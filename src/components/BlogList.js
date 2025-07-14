@@ -8,7 +8,7 @@ export default function BlogList({ blogs, title = 'Latest Blogs', showViewAll = 
     <section className="py-12 bg-gray-50">
       <div className="sm:container mx-auto px-6 sm:px-4">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">{title}</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h2>
           {showViewAll && (
             <Link 
               href="/blog" 

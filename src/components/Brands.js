@@ -72,23 +72,21 @@ const Brands = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16 relative">
           <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
-          <h2 className="text-4xl font-bold text-slate-800 mb-4">
-            Our Trusted Partners
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
+            <span className="text-slate-800">Our Trusted </span>
+            <span className="text-cyan-600">Partners</span>
           </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-4"></div>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            We partner with industry leaders to bring you the best technology solutions
-          </p>
         </div>
         
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+        <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-4 md:gap-6">
           {brands.map((brand, index) => (
             <a
               key={index}
               href={brand.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="group bg-white rounded-lg p-4 flex items-center justify-center hover:shadow-md transition-all duration-300"
+              className="group bg-white rounded-lg p-2 sm:p-3 md:p-4 flex items-center justify-center hover:shadow-md transition-all duration-300 h-full"
             >
               <div className="relative w-full h-16">
                 <Image
@@ -96,7 +94,7 @@ const Brands = () => {
                   alt={`${brand.name} Logo`}
                   fill
                   unoptimized={true}
-                  className="object-contain object-center transition-transform duration-300 group-hover:scale-110"
+                  className="object-contain object-center transition-transform duration-300 group-hover:scale-110 p-1 sm:p-0"
                   sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 20vw"
                 />
               </div>

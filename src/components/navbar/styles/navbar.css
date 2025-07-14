@@ -4,6 +4,9 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 }
 
 .square-text {

@@ -115,10 +115,10 @@ export default function OurClients() {
   const bottomRowItems = [...bottomRow, ...bottomRow];
 
   return (
-    <section className="py-16 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+    <section className="pb-10 sm:py-16 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Our Valued <span className="text-cyan-600">Clients</span>
           </h2>
           <div className="w-20 h-1 bg-cyan-500 mx-auto mb-6"></div>

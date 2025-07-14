@@ -68,9 +68,11 @@ const Hero = () => {
     layoutEffect: false
   });
 
-  // Simplified transforms
-  const yContent = useTransform(scrollYProgress, [0, 1], ["0%", "5%"]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, isMobile ? 1.02 : 1.03]);
+  // Enhanced parallax transforms
+  const yContent = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+  const yImage = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, isMobile ? 1.1 : 1.15]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.9, 0.7]);
 
   // Optimized styles
   const memoizedStyle = useMemo(() => ({
@@ -147,17 +149,26 @@ const Hero = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Image
-                src={currentImage.url}
-                alt={currentImage.alt}
-                fill
-                priority={currentSlide === 0}
-                loading={currentSlide === 0 ? 'eager' : 'lazy'}
-                quality={imageQuality}
-                sizes="(max-width: 768px) 80vw, 100vw"
-                className="object-cover"
-                style={{ ...memoizedStyle, transform: `scale(${scale.get()})}` }}
-              />
+              <motion.div 
+                style={{
+                  ...memoizedStyle,
+                  y: yImage,
+                  scale: scale.get(),
+                  opacity: opacity
+                }}
+                className="h-full w-full"
+              >
+                <Image
+                  src={currentImage.url}
+                  alt={currentImage.alt}
+                  fill
+                  priority={currentSlide === 0}
+                  loading={currentSlide === 0 ? 'eager' : 'lazy'}
+                  quality={imageQuality}
+                  sizes="(max-width: 768px) 80vw, 100vw"
+                  className="object-cover"
+                />
+              </motion.div>
               <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/40 to-black/60" />
             </motion.div>
           </AnimatePresence>
@@ -172,15 +183,18 @@ const Hero = () => {
           animate="visible"
         >
           <div className="container mx-auto px-4 text-white">
+            <div className="inline-block">
             <motion.h1 
-              className="text-3xl md:text-5xl font-bold mb-3"
+              className="text-5xl md:text-6xl lg:text-7xl font-thin tracking-wide mb-3"
               variants={contentVariants}
+              style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.7)' }}
             >
               {currentImage.title}
             </motion.h1>
             <motion.p 
               lang="bn"
               className="text-lg mb-6 max-w-xl font-[var(--font-siyam-rupali)]"
+              style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.7)' }}
               variants={contentVariants}
             >
               {currentImage.subtitle}
@@ -208,6 +222,7 @@ const Hero = () => {
                 </svg>
               </a>
             </motion.div>
+            </div>
           </div>
         </motion.div>
 

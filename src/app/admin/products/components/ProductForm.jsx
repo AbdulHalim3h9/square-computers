@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import Image from 'next/image';
 import { X, Upload, Trash2 } from 'lucide-react';
 
 const ProductForm = ({ onClose, onSubmit, initialData, isEditing = false }) => {
@@ -214,11 +215,15 @@ const ProductForm = ({ onClose, onSubmit, initialData, isEditing = false }) => {
               <div className="mt-2 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
                 {formData.images.map((image, index) => (
                   <div key={index} className="relative group">
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`Preview ${index + 1}`}
-                      className="h-24 w-full object-cover rounded-md"
-                    />
+                    <div className="relative h-24 w-full">
+                      <Image
+                        src={URL.createObjectURL(image)}
+                        alt={`Preview ${index + 1}`}
+                        fill
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className="object-cover rounded-md"
+                      />
+                    </div>
                     <button
                       type="button"
                       onClick={(e) => {

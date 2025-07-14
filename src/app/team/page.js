@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import React, { useEffect, useState, memo } from 'react';
+import Image from 'next/image';
 
 // Team member data
 const teamMembers = [
@@ -112,11 +113,13 @@ const TeamMemberCard = memo(({ member, isChairman }) => {
       role="figure"
       aria-label={`Profile of ${member.name}, ${member.role}`}
     >
-    <img
-      className="w-full h-full object-cover"
+    <Image
       src={member.image}
       alt={`${member.name}'s portrait`}
-      loading="lazy"
+      fill
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      className="object-cover"
+      priority={isChairman} // Load chairman's image with higher priority
     />
     {/* Gradient Overlay */}
     <motion.div 

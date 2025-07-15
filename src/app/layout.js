@@ -71,7 +71,7 @@ function LayoutWrapper({ children }) {
       </div>
       
       {/* News Ticker - positioned below navbar */}
-      <div className="fixed top-16 left-0 right-0 z-40">
+      <div className="fixed top-14 sm:top-16 left-0 right-0 z-40">
         <NewsTicker />
       </div>
       

@@ -114,7 +114,10 @@ export default function MobileMenu({ isOpen, setIsOpen, menuItems }) {
         'md:hidden fixed inset-x-0 top-14 sm:top-16 bg-white shadow-lg z-40 transition-all duration-300 ease-in-out flex flex-col',
         isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
       )}
-      style={{ maxHeight: 'calc(100vh - 3.5rem)' }}
+      style={{
+        maxHeight: 'calc(100vh - 3.5rem)',
+        marginTop: '-1px' // Adjust for any potential spacing
+      }}
     >
       <div className="flex-1 overflow-y-auto">
         <div className="border-t border-gray-100">

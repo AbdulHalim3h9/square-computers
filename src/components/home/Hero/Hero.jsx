@@ -190,10 +190,10 @@ const Hero = () => {
                   src={currentImage.url}
                   alt={currentImage.alt}
                   fill
+                  sizes={currentImage.sizes}
+                  quality={currentImage.quality}
                   priority={true}
                   loading="eager"
-                  quality={imageQuality}
-                  sizes="(max-width: 768px) 80vw, 100vw"
                   className="object-cover"
                 />
               </motion.div>

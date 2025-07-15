@@ -38,6 +38,12 @@ const ScrollAnimation = dynamic(() => import('@/components/ScrollAnimation'), {
   ssr: false
 });
 
+// Critical image paths
+const preloadImages = [
+  '/images/hero/printing-design.jpg',
+  '/images/hero/visa-services.jpg'
+];
+
 // Optimized animations with better performance
 const fadeInUp = {
   hidden: { 
@@ -78,24 +84,31 @@ const staggerContainer = {
 // Preload function for non-critical resources
 const usePreloadResources = () => {
   useEffect(() => {
-    // Preload above-the-fold images
-    const preloadImages = [
-      // Add critical image paths here if needed
-    ];
-
-    preloadImages.forEach((src) => {
+    // Preload critical images
+    preloadImages.forEach(src => {
       const img = new Image();
       img.src = src;
+      img.loading = 'eager';
+    });
+
+    // Preload critical fonts
+    const fontLinks = document.querySelectorAll('link[rel="preload"][as="font"]');
+    fontLinks.forEach(link => {
+      link.onload = () => {
+        link.rel = 'stylesheet';
+      };
     });
   }, []);
 };
 
 export default function Home() {
   const [isMounted, setIsMounted] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   
   // Mark when component is mounted (client-side)
   useEffect(() => {
     setIsMounted(true);
+    setIsHydrated(true);
   }, []);
 
   usePreloadResources();
@@ -125,8 +138,18 @@ export default function Home() {
           animate="visible"
           variants={staggerContainer}
           className="relative"
+          style={{
+            willChange: 'transform, opacity',
+            contain: 'layout paint style'
+          }}
         >
-          <motion.div variants={fadeInUp}>
+          <motion.div 
+            variants={fadeInUp}
+            style={{
+              willChange: 'transform, opacity',
+              contain: 'layout paint style'
+            }}
+          >
             <Hero />
           </motion.div>
         </motion.section>

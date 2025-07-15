@@ -9,7 +9,7 @@
     {
       name: 'Md. Ruhul Amin Sarkar',
       role: 'Chairman',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: '/images/members/ruhul.jpeg',
       phone: '+880 1711-234567',
       address: '123 Tech Street, Dhaka 1207',
       whatsapp: '+8801711234567',
@@ -19,7 +19,7 @@
     {
       name: 'Md. Shahin Alam',
       role: 'Managing Director',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: '/images/members/shahin.jpeg',
       phone: '+880 1712-345678',
       address: '123 Tech Street, Dhaka 1207',
       whatsapp: '+8801712345678',
@@ -29,7 +29,7 @@
     {
       name: 'Md. Reswan Islam',
       role: 'Director',
-      image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: '/images/members/reswan.jpg',
       phone: '+880 1713-456789',
       address: '123 Tech Street, Dhaka 1207',
       whatsapp: '+8801713456789',
@@ -39,7 +39,7 @@
     {
       name: 'Abdul Halim Khan',
       role: 'Web Designer',
-      image: '/images/AbdulHalim.jpg',
+      image: '/images/members/AbdulHalim.jpg',
       phone: '+880 1762-990866',
       address: 'Badda, Dhaka 1212',
       whatsapp: '+8801762990866',
@@ -49,7 +49,7 @@
     {
       name: 'Md. Hamim Sarkar',
       role: 'Creative Director',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+      image: '/images/members/hamim.jpeg',
       phone: '+880 1715-678901',
       address: '123 Tech Street, Dhaka 1207',
       whatsapp: '+8801715678901',

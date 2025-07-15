@@ -1,134 +1,101 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const metadata = {
-  title: "MD's Speech - Square Computers",
-  description: "Message from our Managing Director about Square Computers' strategic direction, achievements, and future goals in the technology sector."
+  title: "ব্যবস্থাপনা পরিচালকের বক্তব্য - স্কয়ার কম্পিউটার্স",
+  description: "স্কয়ার কম্পিউটার্সের ব্যবস্থাপনা পরিচালকের পক্ষ থেকে একটি বক্তব্য - প্রযুক্তি খাতে আমাদের ভিশন, অর্জন এবং ভবিষ্যৎ পরিকল্পনা সম্পর্কে।"
 };
 
 export default function MDSpeech() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Managing Director&apos;s Message</h1>
-            <nav className="text-sm text-cyan-100" aria-label="Breadcrumb">
-              <ol className="inline-flex items-center space-x-1 md:space-x-3 justify-center">
-                <li className="inline-flex items-center">
-                  <Link href="/" className="inline-flex items-center hover:text-white">
-                    Home
-                  </Link>
-                </li>
-                <li className="inline-flex items-center">
-                  <svg className="w-3 h-3 mx-2 text-cyan-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
-                  </svg>
-                  <Link href="/about" className="inline-flex items-center hover:text-white">
-                    About
-                  </Link>
-                </li>
-                <li aria-current="page">
-                  <div className="flex items-center">
-                    <svg className="w-3 h-3 mx-2 text-cyan-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
-                    </svg>
-                    <span className="text-white font-medium">MD&apos;s Message</span>
-                  </div>
-                </li>
-              </ol>
-            </nav>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white relative overflow-hidden">
+      {/* Top decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-br from-cyan-100 to-transparent opacity-50"></div>
+      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full opacity-30 transform translate-x-32 -translate-y-32"></div>
+      
+      {/* Content */}
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        {/* Title Section */}
+        <div className="text-center mb-12 relative">
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="text-slate-800">ব্যবস্থাপনা পরিচালকের </span>
+            <span className="text-cyan-600">বক্তব্য</span>
+          </h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-6"></div>
+          <nav className="text-sm text-gray-600">
+            <Link href="/" className="hover:text-cyan-600">
+              হোম
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-500">ব্যবস্থাপনা পরিচালকের বক্তব্য</span>
+          </nav>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="p-8 md:p-12">
-            <div className="flex flex-col md:flex-row items-center mb-8">
-              <div className="md:mr-8 mb-6 md:mb-0">
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-cyan-100 to-cyan-200 flex items-center justify-center text-5xl">
-                  👔
-                </div>
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-1">Sarah Johnson</h2>
-                <p className="text-cyan-600 font-medium mb-2">Managing Director, Square Computers</p>
-                <div className="flex space-x-4">
-                  <a href="#" className="text-gray-500 hover:text-cyan-600">
-                    <span className="sr-only">LinkedIn</span>
-                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
+        <div className="max-w-4xl mx-auto">
+          
+          <div className="flex flex-col md:flex-row items-start">
+            <div className="w-48 h-64 md:w-56 md:h-80 rounded-2xl overflow-hidden mb-6 md:mb-0 md:mr-8">
+              <Image
+                src="/images/members/shahin.jpeg"
+                alt="শাহিন আলম"
+                width={300}
+                height={400}
+                className="w-full h-full object-cover"
+                priority
+              />
             </div>
-
-            <div className="prose max-w-none text-gray-600">
-              <p className="text-lg mb-6">
-                Dear Valued Partners and Clients,
-              </p>
+            
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-bold text-gray-800 mb-1">মোঃ শাহিন আলম</h2>
+              <p className="text-cyan-600 font-medium mb-4">ব্যবস্থাপনা পরিচালক, স্কয়ার কম্পিউটার্স</p>
               
-              <p className="mb-4">
-                As the Managing Director of Square Computers, it gives me immense pleasure to share our journey, achievements, and vision for the future. Our commitment to excellence and innovation has been the cornerstone of our success in the ever-evolving technology landscape.
-              </p>
-              
-              <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Our Journey So Far</h3>
-              
-              <p className="text-lg text-gray-700 mb-6">
-                On behalf of the management and staff of Square Computers, I&apos;m delighted to welcome you to our website. Since our establishment, we&apos;ve been committed to delivering cutting-edge technology solutions that drive business growth and innovation.
-              </p>
-              <p className="mb-4">
-                Our growth has been fueled by our dedicated team, whose expertise and commitment to quality have set us apart in this competitive industry.
-              </p>
-              
-              <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Innovation at Our Core</h3>
-              
-              <p className="text-lg text-gray-700">
-                Thank you for your trust in Square Computers. We&apos;re excited about the future and look forward to continuing to serve you with the same passion and dedication that has defined our journey so far.
-              </p>
-              <p className="mb-4">
-                At Square Computers, we believe in pushing the boundaries of what&apos;s possible. Our investment in research and development has enabled us to introduce innovative products and services that address the unique challenges faced by our clients. We are committed to staying ahead of technological trends and continuously improving our offerings.
-              </p>
-              
-              <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Our Commitment to You</h3>
-              
-              <p className="mb-4">
-                Our clients are at the heart of everything we do. We are dedicated to building long-term relationships based on trust, transparency, and mutual success. Your feedback and support have been instrumental in shaping our journey, and we remain committed to exceeding your expectations.
-              </p>
-              
-              <p className="mt-8 mb-4 font-medium">
-                Thank you for your continued trust and partnership.
-              </p>
-              
-              <p className="font-medium">
-                Best regards,
-              </p>
-              
-              <p className="font-medium">
-                Sarah Johnson<br />
-                Managing Director<br />
-                Square Computers
-              </p>
+              <div className="prose text-gray-600 text-justify space-y-4">
+                <p className="text-gray-700 leading-relaxed">
+                  প্রিয় গ্রাহক ও সহযোগীবৃন্দ,<br/>
+                  আসসালামু আলাইকুম ওয়া রাহমাতুল্লাহি ওয়া বারাকাতুহু।
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed">
+                  প্রযুক্তির এই যুগে স্কয়ার কম্পিউটার্সের পক্ষ থেকে আপনাদের সেবায় নিয়োজিত থাকতে পেরে আমি অত্যন্ত গর্বিত। আমরা সবসময় চেষ্টা করি আধুনিক প্রযুক্তি সেবা নিশ্চিত করতে এবং গ্রাহকদের চাহিদা অনুযায়ী সেবা প্রদান করতে।
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed">
+                  আমাদের লক্ষ্য শুধু ব্যবসায়িক সফলতা নয়, বরং দেশের ডিজিটালাইজেশন প্রক্রিয়ায় গুরুত্বপূর্ণ ভূমিকা রাখা। আমরা বিশ্বাস করি যে, সঠিক প্রযুক্তি ব্যবহার করে আমরা আমাদের সমাজকে আরও এগিয়ে নিয়ে যেতে পারি।
+                </p>
+                
+                <p className="text-gray-700 leading-relaxed">
+                  আপনার মূল্যবান পরামর্শ এবং সহযোগিতা আমাদেরকে আরও এগিয়ে যেতে সহায়তা করবে।
+                </p>
+                
+                <p className="font-medium text-right">
+                  ধন্যবাদান্তে,<br/>
+                  মোঃ শাহিন আলম<br/>
+                  ব্যবস্থাপনা পরিচালক<br/>
+                  স্কয়ার কম্পিউটার্স
+                </p>
+              </div>
             </div>
           </div>
         </div>
-
+        
         {/* Back to About Link */}
-        <div className="mt-8 text-center">
+        <div className="mt-12 text-center">
           <Link 
             href="/about" 
-            className="inline-flex items-center text-cyan-600 hover:text-cyan-800 font-medium"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-colors duration-200"
           >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to About Us
+            ফিরে যান
           </Link>
         </div>
       </div>
+      
+      {/* Bottom decorative elements */}
+      <div className="absolute -bottom-16 left-1/4 w-64 h-64 bg-blue-100 rounded-2xl opacity-70 transform rotate-12 -z-10"></div>
+      <div className="absolute -bottom-8 right-1/3 w-48 h-48 bg-cyan-100 rounded-2xl opacity-70 transform -rotate-12 -z-10"></div>
     </div>
   );
 }

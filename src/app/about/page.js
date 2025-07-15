@@ -9,15 +9,15 @@ export const metadata = {
 export default function AboutPage() {
   const aboutLinks = [
     {
-      title: "Chairman's Speech",
+      title: "চেয়ারম্যানের বাণী",
       href: "/about/chairman-speech",
-      description: "Hear from our Chairman about our journey and vision for the future.",
+      description: "আমাদের চেয়ারম্যানের কাছ থেকে জানুন আমাদের যাত্রা এবং ভবিষ্যৎ পরিকল্পনা সম্পর্কে।",
       icon: "🎤"
     },
     {
-      title: "MD's Speech",
+      title: "ব্যবস্থাপনা পরিচালকের বাণী",
       href: "/about/md-speech",
-      description: "Message from our Managing Director about our company's direction.",
+      description: "আমাদের ব্যবস্থাপনা পরিচালকের কাছ থেকে কোম্পানির দিকনির্দেশনা সম্পর্কে জানুন।",
       icon: "💼"
     },
     {

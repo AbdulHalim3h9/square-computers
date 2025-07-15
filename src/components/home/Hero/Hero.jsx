@@ -190,9 +190,9 @@ const Hero = () => {
                   src={currentImage.url}
                   alt={currentImage.alt}
                   fill
-                  sizes={currentImage.sizes}
-                  quality={currentImage.quality}
-                  priority={true}
+                  sizes="(max-width: 768px) 80vw, 100vw"
+                  quality={80}
+                  priority={currentSlide === 0}
                   loading="eager"
                   className="object-cover"
                 />

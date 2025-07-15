@@ -158,7 +158,7 @@ export default function FloatingHelp() {
             shadow-lg
             ${isExpanded ? 'opacity-0 -translate-x-2' : 'opacity-100 translate-x-0'}
           `}>
-            <span>Need Help?</span>
+            <span className={`${isTouchDevice ? 'animate-bounce inline-block' : ''}`}>Need Help?</span>
             <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 
               border-4 border-transparent border-l-gray-900"></div>
           </div>
@@ -175,7 +175,8 @@ export default function FloatingHelp() {
               before:transition-opacity before:duration-300
               ${isExpanded 
                 ? 'bg-red-500 hover:bg-red-600 rotate-45 hover:scale-110 hover:shadow-3xl' 
-                : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-110 hover:shadow-3xl animate-bounce hover:animate-none'
+                : 'bg-indigo-600 hover:bg-indigo-700 hover:scale-110 hover:shadow-3xl ' + 
+                  (!isTouchDevice ? 'animate-bounce hover:animate-none' : '')
               }
               transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease-out`}
             aria-label={isExpanded ? "Close help menu" : "Open help menu"}

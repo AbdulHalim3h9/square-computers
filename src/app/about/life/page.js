@@ -2,41 +2,49 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata = {
-  title: "Life at Square Computers - Our Culture & Team",
-  description: "Discover what it's like to work at Square Computers. Explore our vibrant company culture, team activities, and the values that make us a great place to work."
+  title: "স্কয়ার কম্পিউটার্সে কর্মজীবন - আমাদের সংস্কৃতি ও পরিবেশ",
+  description: "স্কয়ার কম্পিউটার্সে কাজের পরিবেশ, সুযোগ-সুবিধা ও ক্যারিয়ার নিয়ে বিস্তারিত জানুন। আমাদের সাথে যুক্ত হয়ে গড়ে তুলুন উজ্জ্বল ভবিষ্যত।"
 };
 
 export default function LifeAtSquareComputers() {
-  const cultureHighlights = [
+  const benefits = [
     {
-      title: 'Collaborative Environment',
-      description: 'We believe in the power of teamwork and open communication to drive innovation and success.',
-      icon: '🤝'
+      title: "পেশাগত উন্নয়ন",
+      description: "প্রশিক্ষণ, সার্টিফিকেশন ও ক্যারিয়ার উন্নয়নের মাধ্যমে আমরা আমাদের টিমকে এগিয়ে নিয়ে যাই।",
+      icon: "📈"
     },
     {
-      title: 'Continuous Learning',
-      description: 'We invest in our team&apos;s growth through training programs, workshops, and professional development opportunities.',
-      icon: '📚'
+      title: "আধুনিক পরিবেশ",
+      description: "সর্বাধুনিক প্রযুক্তি নিয়ে কাজের সুযোগ এবং সৃজনশীল সমাধান তৈরির পরিবেশ।",
+      icon: "💡"
     },
     {
-      title: 'Work-Life Balance',
-      description: 'We understand the importance of balancing professional and personal life for overall well-being and productivity.',
-      icon: '⚖️'
+      title: "কর্ম ও ব্যক্তিগত জীবনের ভারসাম্য",
+      description: "ফ্লেক্সিবল ওয়ার্কিং আওয়ার এবং রিমোট ওয়ার্কের সুবিধা সহ কর্মজীবনের ভারসাম্য বজায় রাখা।",
+      icon: "⚖️"
     },
     {
-      title: 'Innovation Focus',
-      description: 'We encourage creative thinking and provide the resources to turn innovative ideas into reality.',
-      icon: '💡'
+      title: "আকর্ষণীয় সুবিধা",
+      description: "স্বাস্থ্য বীমা, পারফরম্যান্স বোনাস ও বেতন বৃদ্ধিসহ নানা ধরনের সুবিধা।",
+      icon: "🏆"
+    }
+  ];
+
+  const teamActivities = [
+    {
+      title: "টিম বিল্ডিং",
+      description: "নিয়মিত দলগত কার্যক্রম ও আউটিংয়ের মাধ্যমে দলগত সম্পর্ক ও সহযোগিতা বৃদ্ধি।",
+      image: "/images/team-building.jpg"
     },
     {
-      title: 'Diversity & Inclusion',
-      description: 'We celebrate diversity and foster an inclusive environment where everyone feels valued and respected.',
-      icon: '🌍'
+      title: "প্রশিক্ষণ ও উন্নয়ন",
+      description: "কর্মশালা, সম্মেলন ও প্রশিক্ষণের মাধ্যমে পেশাগত দক্ষতা বৃদ্ধির সুযোগ।",
+      image: "/images/learning.jpg"
     },
     {
-      title: 'Fun & Engagement',
-      description: 'Regular team-building activities and social events keep our team connected and motivated.',
-      icon: '🎉'
+      title: "সমাজসেবা",
+      description: "বিভিন্ন স্বেচ্ছাসেবী কার্যক্রমের মাধ্যমে সমাজের প্রতি দায়িত্ব পালন।",
+      image: "/images/community.jpg"
     }
   ];
 
@@ -48,106 +56,95 @@ export default function LifeAtSquareComputers() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative bg-gradient-to-r from-cyan-600 to-cyan-800 text-white py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black/20"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Life at Square Computers</h1>
-            <p className="text-xl text-cyan-100">
-              Where innovation meets collaboration, and every team member is valued
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-cyan-100 rounded-2xl opacity-80 transform -rotate-12 -translate-x-24 -translate-y-24"></div>
+      <div className="absolute top-1/4 -right-16 w-96 h-96 bg-blue-100 rounded-2xl opacity-80 transform rotate-12"></div>
+      <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-cyan-50 rounded-2xl opacity-60 transform rotate-45"></div>
+      
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        {/* Title Section */}
+        <div className="text-center mb-12 relative">
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="text-slate-800">স্কয়ার কম্পিউটার্সে </span>
+            <span className="text-cyan-600">কর্মজীবন</span>
+          </h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-6"></div>
+          <nav className="text-sm text-gray-600">
+            <Link href="/" className="hover:text-cyan-600">
+              হোম
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-500">কর্মজীবন</span>
+          </nav>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
-        {/* Culture Section */}
-        <section className="mb-16">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Our Culture</h2>
-            <div className="w-20 h-1 bg-cyan-500 mx-auto mb-6"></div>
-            <p className="text-gray-600 max-w-3xl mx-auto">
-              At Square Computers, we&apos;ve built a culture that fosters creativity, encourages professional growth, and celebrates success together. Our team is our greatest asset, and we&apos;re committed to creating an environment where everyone can thrive.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cultureHighlights.map((item, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
-                <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
+        {/* Benefits Section */}
+        <div className="mb-16">
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            {benefits.map((benefit, index) => (
+              <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden h-full border border-gray-100 hover:shadow-xl transition-all">
+                <div className="p-8">
+                  <div className="text-4xl mb-4">{benefit.icon}</div>
+                  <h3 className="text-xl font-bold text-gray-800 mb-3">{benefit.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{benefit.description}</p>
+                </div>
               </div>
             ))}
           </div>
-        </section>
+        </div>
+
+        {/* Team Activities */}
+        <div className="mb-16">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-3">আমাদের কর্মপরিবেশ</h2>
+            <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-2"></div>
+            <p className="text-gray-600">কীভাবে আমরা একসাথে কাজ করি এবং আনন্দ করি</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {teamActivities.map((activity, index) => (
+              <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all">
+                <div className="h-48 bg-gray-100 overflow-hidden">
+                  <img 
+                    src={activity.image} 
+                    alt={activity.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-800 mb-3">{activity.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{activity.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
 
         {/* Team Gallery */}
         <section className="mb-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">Our Team in Action</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-2">আমাদের টিম</h2>
             <div className="w-20 h-1 bg-cyan-500 mx-auto mb-6"></div>
             <p className="text-gray-600 max-w-3xl mx-auto">
-              Get a glimpse of our vibrant workplace and the amazing people who make Square Computers a great place to work.
+              আমাদের টিমের কিছু ছবি
             </p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {teamPhotos.map((photo, index) => (
               <div key={index} className="aspect-square rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
-                <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400">
-                  <span className="text-sm">Team Photo {index + 1}</span>
-                </div>
-                {/* Uncomment and replace with actual Image component when you have the images
-                <Image
-                  src={photo.src}
+                <Image 
+                  src={photo.src} 
                   alt={photo.alt}
                   width={300}
                   height={300}
                   className="w-full h-full object-cover"
                 />
-                */}
               </div>
             ))}
-          </div>
-        </section>
-
-        {/* Testimonial */}
-        <section className="bg-gradient-to-r from-cyan-600 to-cyan-700 text-white rounded-2xl p-8 md:p-12 mb-16">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="text-5xl mb-6">{"\""}</div>
-            <p className="text-xl md:text-2xl leading-relaxed mb-8">
-              Working at Square Computers has been an incredible journey. The supportive environment, challenging projects, and amazing colleagues make every day rewarding. It&apos;s more than just a workplace; it&apos;s a family that grows together.
-            </p>
-            <div className="font-medium">
-              <p>Michael Chen</p>
-              <p className="text-cyan-200">Senior Software Engineer, 4 years at Square Computers</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Join Our Team CTA */}
-        <section className="bg-white rounded-xl shadow-md p-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Join Our Growing Team</h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Are you passionate about technology and looking for an exciting career opportunity? Explore our open positions and become part of the Square Computers family.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link 
-              href="/careers" 
-              className="px-6 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
-            >
-              View Open Positions
-            </Link>
-            <Link 
-              href="/contact" 
-              className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Contact HR
-            </Link>
           </div>
         </section>
 

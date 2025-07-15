@@ -1,143 +1,132 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: "Why Choose Us - Square Computers",
-  description: "Discover why leading businesses trust Square Computers for their technology needs. Experience the difference of working with a partner committed to your success."
+  title: "আমাদের সম্পর্কে - স্কয়ার কম্পিউটার্স",
+  description: "কেন স্কয়ার কম্পিউটার্সকে বেছে নেবেন? আমাদের অভিজ্ঞতা, দক্ষতা ও আন্তরিক সেবা সম্পর্কে জানুন।"
 };
 
 export default function WhyUs() {
   const features = [
     {
       icon: '🏆',
-      title: 'Industry Leadership',
-      description: 'With over 15 years of experience, we are a trusted name in the technology industry, known for our expertise and reliability.'
+      title: 'অভিজ্ঞতা',
+      description: '১৫ বছরেরও বেশি অভিজ্ঞতা নিয়ে আমরা প্রযুক্তি খাতে একটি নির্ভরযোগ্য নাম।'
     },
     {
       icon: '🔧',
-      title: 'Comprehensive Solutions',
-      description: 'From hardware to software, networking to security, we offer end-to-end technology solutions tailored to your specific requirements.'
+      title: 'সব ধরনের সমাধান',
+      description: 'হার্ডওয়্যার থেকে সফটওয়্যার, নেটওয়ার্কিং থেকে সিকিউরিটি - সব ধরনের প্রযুক্তি সেবা।'
     },
     {
       icon: '👨‍💻',
-      title: 'Expert Team',
-      description: 'Our team of certified professionals brings extensive knowledge and experience to every project, ensuring top-notch service and support.'
+      title: 'দক্ষ টিম',
+      description: 'সার্টিফাইড পেশাদারদের নিয়ে গঠিত আমাদের টিম সবসময় প্রস্তুত আপনার সেবায়।'
     },
     {
       icon: '⚡',
-      title: 'Cutting-Edge Technology',
-      description: 'We stay ahead of the curve by continuously updating our offerings with the latest technological advancements.'
+      title: 'আধুনিক প্রযুক্তি',
+      description: 'সর্বশেষ প্রযুক্তি নিয়ে আমরা সবসময় এগিয়ে।'
     },
     {
       icon: '🤝',
-      title: 'Customer-Centric Approach',
-      description: 'Your success is our priority. We work closely with you to understand your needs and deliver solutions that drive real business value.'
+      title: 'গ্রাহক সেবা',
+      description: 'আপনার সাফল্যই আমাদের সাফল্য। আপনার চাহিদা বুঝে সেবা দেই।'
     },
     {
-      icon: '🛡️',
-      title: 'Reliable Support',
-      description: 'Our dedicated support team is available 24/7 to ensure your systems run smoothly and efficiently.'
+      icon: '🌐',
+      title: 'স্থানীয় সেবা, বৈশ্বিক মান',
+      description: 'আন্তর্জাতিক মানের সেবা স্থানীয় বাজার বুঝে।'
     }
   ];
 
-  const stats = [
-    { value: '15+', label: 'Years of Experience' },
-    { value: '5000+', label: 'Satisfied Clients' },
-    { value: '100+', label: 'Certified Professionals' },
-    { value: '24/7', label: 'Customer Support' }
-  ];
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Why Choose Square Computers?</h1>
-            <p className="text-xl text-cyan-100">
-              Partner with a technology solutions provider that truly understands your business needs
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-cyan-100 rounded-2xl opacity-80 transform -rotate-12 -translate-x-24 -translate-y-24"></div>
+      <div className="absolute top-1/4 -right-16 w-96 h-96 bg-blue-100 rounded-2xl opacity-80 transform rotate-12"></div>
+      <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-cyan-50 rounded-2xl opacity-60 transform rotate-45"></div>
+      
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        {/* Title Section */}
+        <div className="text-center mb-12 relative">
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="text-slate-800">কেন বেছে নিবেন </span>
+            <span className="text-cyan-600">আমাদের?</span>
+          </h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-6"></div>
+          <nav className="text-sm text-gray-600">
+            <Link href="/" className="hover:text-cyan-600">
+              হোম
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-500">আমাদের সম্পর্কে</span>
+          </nav>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {features.map((feature, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden h-full hover:shadow-xl transition-all border border-gray-100">
               <div className="p-6">
                 <div className="text-4xl mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed">{feature.description}</p>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Stats Section */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden mb-16">
-          <div className="grid md:grid-cols-4 divide-x divide-gray-100">
-            {stats.map((stat, index) => (
-              <div key={index} className="p-6 text-center">
-                <div className="text-4xl font-bold text-cyan-600 mb-2">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Testimonials Section */}
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden mb-12 border border-gray-100">
+          <div className="p-8">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold text-gray-800 mb-3">আমাদের গ্রাহকদের মতামত</h2>
+              <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-2"></div>
+              <p className="text-gray-600">আমাদের সেবা সম্পর্কে গ্রাহকদের মূল্যবান মতামত</p>
+            </div>
 
-        {/* Testimonial */}
-        <div className="bg-gradient-to-r from-cyan-50 to-white rounded-xl shadow-md overflow-hidden mb-16">
-          <div className="p-8 md:p-12">
-            <div className="max-w-3xl mx-auto text-center">
-              <div className="text-5xl mb-4">&quot;</div>
-              <p className="text-xl text-gray-700 italic mb-6">
-                Square Computers has been an invaluable partner in our digital transformation journey. Their expertise and commitment to excellence have helped us streamline our operations and achieve remarkable results.
-              </p>
-              <div className="font-medium text-gray-800">
-                <p>Alex Johnson</p>
-                <p className="text-sm text-cyan-600">CTO, TechNova Solutions</p>
-              </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                {
+                  quote: "স্কয়ার কম্পিউটার্সের সেবা সত্যিই অসাধারণ। তারা আমাদের ব্যবসার জন্য নিখুঁত আইটি সমাধান দিয়েছে।",
+                  author: "আহমেদ হোসেন",
+                  position: "সিইও, টেকনোভা সলিউশন্স"
+                },
+                {
+                  quote: "তাদের সাপোর্ট টিমের দক্ষতা ও আন্তরিকতা প্রশংসনীয়। যে কোন সমস্যায় তারা দ্রুত সমাধান দেয়।",
+                  author: "নুসরাত জাহান",
+                  position: "আইটি ম্যানেজার, গ্লোবাল এন্টারপ্রাইজ"
+                }
+              ].map((testimonial, index) => (
+                <div key={index} className="bg-gray-50/80 p-6 rounded-lg hover:bg-white transition-colors">
+                  <p className="text-gray-600 mb-4 leading-relaxed">"{testimonial.quote}"</p>
+                  <div className="font-semibold text-gray-800">{testimonial.author}</div>
+                  <div className="text-sm text-gray-500">{testimonial.position}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
 
         {/* CTA Section */}
-        <div className="text-center bg-white rounded-xl shadow-md p-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Ready to experience the difference?</h2>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Join thousands of satisfied clients who trust Square Computers for their technology needs. Contact us today to discuss how we can help your business grow.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Link 
-              href="/contact" 
-              className="px-6 py-3 bg-cyan-600 text-white font-medium rounded-lg hover:bg-cyan-700 transition-colors"
-            >
-              Contact Us
-            </Link>
-            <Link 
-              href="/services" 
-              className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Our Services
-            </Link>
-          </div>
-        </div>
-
-        {/* Back to About Link */}
-        <div className="mt-12 text-center">
+        <div className="text-center relative z-10">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">আমাদের সেবা নিতে চান?</h2>
           <Link 
-            href="/about" 
-            className="inline-flex items-center text-cyan-600 hover:text-cyan-800 font-medium"
+            href="/contact" 
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-colors duration-200"
           >
-            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            যোগাযোগ করুন
+            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
-            Back to About Us
           </Link>
         </div>
       </div>
+      
+      {/* Bottom decorative elements */}
+      <div className="absolute -bottom-16 left-1/4 w-64 h-64 bg-blue-100 rounded-2xl opacity-70 transform rotate-12 -z-10"></div>
+      <div className="absolute -bottom-8 right-1/3 w-48 h-48 bg-cyan-100 rounded-2xl opacity-70 transform -rotate-12 -z-10"></div>
     </div>
   );
 }

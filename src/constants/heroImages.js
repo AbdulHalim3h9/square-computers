@@ -28,39 +28,46 @@ const heroImages = [
     service: 'Software & Bulk SMS'
   },
   {
-    url: '/images/hero/social-media.jpg',
-    alt: 'Social Media Marketing',
-    title: 'Social Media',
-    subtitle: 'আমাদের মার্কেটিং দক্ষতা দিয়ে আপনার অনলাইন উপস্থিতি বৃদ্ধি করুন',
-    service: 'Social Media Marketing',
-    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-    quality: 80
-  },
-  {
-    url: '/images/hero/printing-design.jpg',
+    url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
     alt: 'Printing and Graphic Design',
     title: 'Printing & Design',
     subtitle: 'পেশাদার প্রিন্টিং এবং গ্রাফিক ডিজাইন সেবা',
-    service: 'Printing & Graphic Design',
-    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-    quality: 80
+    service: 'Printing & Graphic Design'
   },
   {
-    url: '/images/hero/visa-services.jpg',
+    url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
     alt: 'Visa Services',
     title: 'Visa Services',
     subtitle: 'সম্পূর্ণ ভিসা আবেদন সহায়তা',
-    service: 'Visa Services',
-    sizes: '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-    quality: 80
+    service: 'Visa Services'
   },
   {
-    url: '/images/hero/travel-ticket.jpg',
-    url: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+    url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+    alt: 'Social Media Marketing',
+    title: 'Social Media',
+    subtitle: 'আমাদের মার্কেটিং দক্ষতা দিয়ে আপনার অনলাইন উপস্থিতি বৃদ্ধি করুন',
+    service: 'Social Media Marketing'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
     alt: 'Travel and Ticket Services',
     title: 'Travel & Tickets',
-    subtitle: 'Air and bus ticket booking services',
-    service: 'Air & Bus Ticket'
+    subtitle: 'সবচেয়ে ভাল ট্রাভেল এবং টিকেট সেবা',
+    service: 'Travel & Tickets'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+    alt: 'Software & Bulk SMS',
+    title: 'Software & Bulk SMS',
+    subtitle: 'পেশাদার সফটওয়্যার এবং বাল্ক এসএমএস সেবা',
+    service: 'Software & Bulk SMS'
+  },
+  {
+    url: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80',
+    alt: 'Website Development',
+    title: 'Website Development',
+    subtitle: 'পেশাদার ওয়েবসাইট ডেভেলপমেন্ট সেবা',
+    service: 'Website Development'
   }
 ];
 

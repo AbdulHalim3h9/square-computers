@@ -2,126 +2,97 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export const metadata = {
-  title: "Chairman's Speech - Square Computers",
-  description: "Hear from our Chairman about Square Computers' journey, vision, and commitment to excellence in the technology industry."
+  title: "চেয়ারম্যানের বাণী - স্কয়ার কম্পিউটার্স",
+  description: "স্কয়ার কম্পিউটার্সের চেয়ারম্যানের কাছ থেকে জানুন আমাদের যাত্রা, লক্ষ্য এবং প্রযুক্তি খাতে আমাদের অঙ্গীকার সম্পর্কে।"
 };
 
 export default function ChairmanSpeech() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 text-white py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Chairman&apos;s Speech</h1>
-            <nav className="text-sm text-cyan-100" aria-label="Breadcrumb">
-              <ol className="inline-flex items-center space-x-1 md:space-x-3 justify-center">
-                <li className="inline-flex items-center">
-                  <Link href="/" className="inline-flex items-center hover:text-white">
-                    Home
-                  </Link>
-                </li>
-                <li aria-current="page">
-                  <div className="flex items-center">
-                    <svg className="w-3 h-3 mx-2 text-cyan-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 9 4-4-4-4"/>
-                    </svg>
-                    <span className="text-white font-medium">Chairman&apos;s Speech</span>
-                  </div>
-                </li>
-              </ol>
-            </nav>
-          </div>
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 relative overflow-hidden">
+      {/* Decorative elements - Matching the trusted partners section */}
+      <div className="absolute top-0 left-0 w-72 h-72 bg-cyan-100 rounded-2xl opacity-80 transform -rotate-12 -translate-x-24 -translate-y-24"></div>
+      <div className="absolute top-1/4 -right-16 w-96 h-96 bg-blue-100 rounded-2xl opacity-80 transform rotate-12"></div>
+      <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-cyan-50 rounded-2xl opacity-60 transform rotate-45"></div>
+      
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        <div className="text-center mb-12 relative">
+          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="text-slate-800">চেয়ারম্যানের </span>
+            <span className="text-cyan-600">বাণী</span>
+          </h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-cyan-400 to-blue-500 mx-auto rounded-full mb-6"></div>
+          <nav className="text-sm text-gray-600">
+            <Link href="/" className="hover:text-cyan-600">
+              হোম
+            </Link>
+            <span className="mx-2">/</span>
+            <span className="text-gray-500">চেয়ারম্যানের বাণী</span>
+          </nav>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          <div className="p-8 md:p-12">
-            <div className="flex flex-col md:flex-row items-center mb-8">
-              <div className="md:mr-8 mb-6 md:mb-0">
-                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-cyan-100 to-cyan-200 flex items-center justify-center text-5xl">
-                  👨‍💼
-                </div>
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-1">John Doe</h2>
-                <p className="text-cyan-600 font-medium mb-2">Chairman, Square Computers</p>
-                <div className="flex space-x-4">
-                  <a href="#" className="text-gray-500 hover:text-cyan-600">
-                    <span className="sr-only">LinkedIn</span>
-                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path fillRule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clipRule="evenodd" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
+        <div className="max-w-4xl mx-auto">
+          <div className="flex flex-col md:flex-row items-start">
+            <div className="w-48 h-64 md:w-56 md:h-80 rounded-2xl overflow-hidden mb-6 md:mb-0 md:mr-8">
+              <Image
+                src="/images/members/ruhul.jpeg"
+                alt="মোঃ রুহুল আমিন"
+                width={300}
+                height={400}
+                className="w-full h-full object-cover"
+                priority
+              />
             </div>
-
-            <div className="prose max-w-none text-gray-600">
-              <p className="text-lg mb-6">
-                Dear Valued Stakeholders,
-              </p>
+            
+            <div className="text-center md:text-left">
+              <h2 className="text-2xl font-bold text-gray-800 mb-1">মোঃ রুহুল আমিন</h2>
+              <p className="text-cyan-600 font-medium mb-4">চেয়ারম্যান, স্কয়ার কম্পিউটার্স</p>
               
-              <p className="text-lg text-gray-700 mb-6">
-        Our vision has always been to be at the forefront of technological advancement. We&apos;ve built our reputation on trust, quality, and exceptional service, and we&apos;re proud to have served thousands of satisfied customers over the years.
-      </p>
-              
-              <p className="text-lg text-gray-700 mb-6">
-        On behalf of the entire team at Square Computers, I&apos;d like to welcome you to our website. Since our founding, we&apos;ve been committed to delivering innovative technology solutions that empower businesses and individuals alike.
-      </p>
-              
-              <p className="mb-4">
-                It is with great pleasure and pride that I welcome you to Square Computers. Since our inception, we have grown from a small startup to a trusted name in the industry, thanks to the unwavering support of our customers, partners, and dedicated team members.
-              </p>
-              
-              <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Our Commitment to Excellence</h3>
-              
-              <p className="text-lg text-gray-700">
-        Thank you for considering Square Computers as your technology partner. We look forward to serving you and helping you achieve your goals in this digital age.
-      </p>
-              
-              <p className="mb-4">
-                At Square Computers, we believe that technology should be an enabler, not a barrier. That&apos;s why we are committed to providing solutions that are not only innovative but also intuitive and reliable. Our team of experts works tirelessly to stay ahead of industry trends and deliver products and services that meet the evolving needs of our clients.
-              </p>
-              
-              <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Looking Ahead</h3>
-              
-              <p className="mb-4">
-                As we look to the future, we remain steadfast in our commitment to excellence, innovation, and customer satisfaction. We are excited about the opportunities that lie ahead and are confident that with our dedicated team and valued partners, we will continue to set new benchmarks in the technology sector.
-              </p>
-              
-              <p className="mt-8 mb-4 font-medium">
-                Thank you for your continued trust and support.
-              </p>
-              
-              <p className="font-medium">
-                Warm regards,
-              </p>
-              
-              <p className="font-medium">
-                John Doe<br />
-                Chairman<br />
-                Square Computers
-              </p>
+              <div className="prose text-gray-600 text-justify space-y-4">
+                <p className="text-gray-700">
+                  প্রিয় ভাই ও বোনেরা,<br/>
+                  আসসালামু আলাইকুম ওয়া রাহমাতুল্লাহি ওয়া বারাকাতুহু।
+                </p>
+                
+                <p className="text-gray-700">
+                  প্রযুক্তির এই যুগে স্কয়ার কম্পিউটার্স নিয়ে আপনাদের মাঝে উপস্থিত হতে পেরে আমি অত্যন্ত আনন্দিত। আমরা দীর্ঘদিন ধরে বিশ্বস্ততা, গুণগত মান এবং সেবার মাধ্যমে গ্রাহকদের আস্থা অর্জন করে আসছি।
+                </p>
+                
+                <p className="text-gray-700">
+                  আমাদের লক্ষ্য শুধু ব্যবসায় সফল হওয়া নয়, বরং সমাজের প্রতিটি স্তরে মানসম্মত প্রযুক্তি সেবা পৌঁছে দেওয়া। আমরা বিশ্বাস করি যে, সঠিক প্রযুক্তি ব্যবহার করে আমরা আমাদের সমাজকে এগিয়ে নিয়ে যেতে পারি।
+                </p>
+                
+                <p className="text-gray-700">
+                  আপনার মূল্যবান পরামর্শ এবং সহযোগিতা আমাদেরকে আরও এগিয়ে যেতে সহায়তা করবে।
+                </p>
+                
+                <p className="font-medium text-right">
+                  ধন্যবাদান্তে,<br/>
+                  মোঃ রুহুল আমিন<br/>
+                  চেয়ারম্যান<br/>
+                  স্কয়ার কম্পিউটার্স
+                </p>
+              </div>
             </div>
           </div>
         </div>
-
-        {/* Back to About Link */}
+        
         <div className="mt-8 text-center">
           <Link 
             href="/about" 
-            className="inline-flex items-center text-cyan-600 hover:text-cyan-800 font-medium"
+            className="inline-flex items-center px-6 py-2 border border-transparent text-base font-medium rounded-full text-cyan-700 bg-cyan-100 hover:bg-cyan-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-colors duration-200"
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            Back to About Us
+            আমাদের সম্পর্কে
           </Link>
         </div>
       </div>
+      
+      {/* Bottom decorative elements */}
+      <div className="absolute -bottom-16 left-1/4 w-64 h-64 bg-blue-100 rounded-2xl opacity-70 transform rotate-12"></div>
+      <div className="absolute -bottom-8 right-1/3 w-48 h-48 bg-cyan-100 rounded-2xl opacity-70 transform -rotate-12"></div>
     </div>
   );
 }

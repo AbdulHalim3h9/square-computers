@@ -108,9 +108,11 @@ export default function LifeAtSquareComputers() {
             {teamActivities.map((activity, index) => (
               <div key={index} className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all">
                 <div className="h-48 bg-gray-100 overflow-hidden">
-                  <img 
+                  <Image 
                     src={activity.image} 
                     alt={activity.title}
+                    width={400}
+                    height={300}
                     className="w-full h-full object-cover"
                   />
                 </div>

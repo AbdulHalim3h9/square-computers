@@ -100,7 +100,7 @@ export default function WhyUs() {
                 }
               ].map((testimonial, index) => (
                 <div key={index} className="bg-gray-50/80 p-6 rounded-lg hover:bg-white transition-colors">
-                  <p className="text-gray-600 mb-4 leading-relaxed">"{testimonial.quote}"</p>
+                  <p className="text-gray-600 mb-4 leading-relaxed">&ldquo;{testimonial.quote}&rdquo;</p>
                   <div className="font-semibold text-gray-800">{testimonial.author}</div>
                   <div className="text-sm text-gray-500">{testimonial.position}</div>
                 </div>

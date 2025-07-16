@@ -3,6 +3,7 @@
   import { motion } from 'framer-motion';
   import React, { useEffect, useState, memo } from 'react';
   import Image from 'next/image';
+  import BackgroundPattern from '@/components/common/BackgroundPattern';
 
   // Team member data
   const teamMembers = [
@@ -77,14 +78,31 @@
   };
 
   // Reusable Team Member Card Component
-  const TeamMemberCard = memo(({ member, isChairman }) => {
+  const TeamMemberCard = memo(({ member, isChairman, isExpanded, onClick }) => {
     const [isHovered, setIsHovered] = useState(false);
+    // Only consider hover state if no card is expanded
+    const isActive = isExpanded || (isHovered && !document.querySelector('.expanded-card'));
+    
+    const handleClick = (e) => {
+      // Don't trigger card click if clicking on a link
+      if (e.target.tagName === 'A' || e.target.closest('a')) {
+        return;
+      }
+      e.stopPropagation();
+      onClick(member.name);
+    };
     
     return (
       <motion.div
         className={`group bg-white rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl flex flex-col aspect-[3/4] relative overflow-hidden ${
-        isChairman ? 'w-full max-w-xs' : 'w-full max-w-[240px] md:max-w-[280px]'
-      } mx-auto focus:outline-none focus:ring-2 focus:ring-blue-500 z-10`}
+          isChairman ? 'w-full max-w-xs' : 'w-full max-w-[240px] md:max-w-[280px]'
+        } mx-auto focus:outline-none focus:ring-2 focus:ring-blue-500 z-10 ${isExpanded ? 'expanded-card scale-105 md:scale-100' : ''}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={handleClick}
+        whileTap={{ scale: 0.98 }}
+        tabIndex={0}
+        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleClick(e)}
         variants={itemVariants}
         whileInView="show"
         whileHover={{ 
@@ -96,15 +114,6 @@
             stiffness: 260,
             damping: 15,
             mass: 0.5
-          }
-        }}
-        whileTap={{ 
-          scale: 1.1,
-          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-          transition: { 
-            type: "spring",
-            stiffness: 300,
-            damping: 15
           }
         }}
         onHoverStart={() => setIsHovered(true)}
@@ -139,8 +148,8 @@
         className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/90 via-black/60 to-transparent"
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         animate={{ 
-          opacity: isHovered ? 1 : 0,
-          y: isHovered ? 0 : 30,
+          opacity: isActive ? 1 : 0,
+          y: isActive ? 0 : 1530,
           scale: isHovered ? 1 : 0.95
         }}
         transition={{ 
@@ -230,8 +239,8 @@
         className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent"
         initial={{ opacity: 1, y: 0 }}
         animate={{ 
-          opacity: isHovered ? 0 : 1,
-          y: isHovered ? -10 : 0
+          opacity: isActive ? 0 : 1,
+          y: isActive ? -10 : 0
         }}
         transition={{ 
           duration: 0.3,
@@ -247,8 +256,8 @@
         className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 to-cyan-500"
         initial={{ scaleX: 0, height: 2 }}
         animate={{ 
-          scaleX: isHovered ? 1 : 0,
-          height: isHovered ? 4 : 2
+          scaleX: isActive ? 1 : 0,
+          height: isActive ? 4 : 2
         }}
         transition={{ 
           type: "spring",
@@ -269,26 +278,41 @@
     // Separate chairman and other team members
     const chairman = teamMembers[0];
     const otherMembers = teamMembers.slice(1);
+    
+    // State to track expanded card
+    const [expandedCard, setExpandedCard] = useState(null);
+    
+    // Handle click outside to close expanded card
+    useEffect(() => {
+      const handleClickOutside = (event) => {
+        const clickedOnCard = event.target.closest('.team-card');
+        if (!clickedOnCard && expandedCard) {
+          setExpandedCard(null);
+        }
+      };
+
+      // Add event listener when component mounts
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+      
+      // Clean up event listener when component unmounts
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+        document.removeEventListener('touchstart', handleClickOutside);
+      };
+    }, [expandedCard]);
+
+    // Toggle card expansion
+    const toggleCard = (name) => {
+      // If clicking the same card, collapse it, otherwise expand the new one
+      setExpandedCard(prev => prev === name ? null : name);
+    };
 
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-slate-50 py-16 relative overflow-hidden">
-        {/* Colorful background elements */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/70 via-cyan-50/70 to-slate-50/70">
-          {/* Top left square */}
-          <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-300 rounded-2xl opacity-40 -translate-x-40 -translate-y-40 transform rotate-12"></div>
-          
-          {/* Top right circle */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-cyan-200 to-blue-300 rounded-full opacity-40 translate-x-64 -translate-y-64"></div>
-          
-          {/* Bottom left circle */}
-          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-200 to-cyan-300 rounded-full opacity-30 -translate-x-64 translate-y-64"></div>
-          
-          {/* Center right square */}
-          <div className="absolute top-1/2 right-0 w-80 h-80 bg-gradient-to-tr from-cyan-200 to-blue-200 rounded-2xl opacity-40 translate-x-40 -translate-y-1/2 transform -rotate-12"></div>
-          
-          {/* Bottom right triangle */}
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-200 to-cyan-200 opacity-40 transform rotate-45 translate-y-1/2 translate-x-1/2"></div>
-        </div>
+        {/* Background Pattern */}
+        <BackgroundPattern />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/70 via-cyan-50/70 to-slate-50/70" />
         
         <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 xl:px-20 relative z-10">
           {/* Header and Chairman Section */}
@@ -315,18 +339,26 @@
                 animate={{ width: '8rem' }}
                 transition={{ duration: 0.8, delay: 0.4 }}
               />
-              <motion.p 
-                className="text-xl text-slate-700 leading-relaxed max-w-2xl font-medium"
+              <motion.div 
+                className="text-xl text-slate-700 leading-relaxed max-w-2xl"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                Committed to excellence and innovation in every project. Our dedicated team brings together diverse expertise to deliver outstanding results.
-              </motion.p>
+                
+                <div className="prose text-justify text-gray-700 space-y-4">
+                  <p className="text-xl md:text-2xl font-normal">আমাদের দক্ষ ও অভিজ্ঞ টিম সর্বদাই আধুনিক প্রযুক্তি ব্যবহার করে আপনার ব্যবসার জন্য সেরা সমাধান প্রদান করতে প্রতিশ্রুতিবদ্ধ।</p>
+                </div>
+              </motion.div>
             </motion.div>
             {/* Chairman Section */}
             <div className="w-full lg:w-1/2 flex justify-center">
-              <TeamMemberCard member={chairman} isChairman={true} />
+              <TeamMemberCard 
+                member={chairman} 
+                isChairman={true} 
+                isExpanded={expandedCard === chairman.name}
+                onClick={toggleCard}
+              />
             </div>
           </div>
 
@@ -349,7 +381,13 @@
             </div>
             <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 justify-items-center">
               {otherMembers.map((member, index) => (
-                <TeamMemberCard key={member.name} member={member} isChairman={false} />
+                <TeamMemberCard 
+                  key={member.name} 
+                  member={member} 
+                  isChairman={false} 
+                  isExpanded={expandedCard === member.name}
+                  onClick={toggleCard}
+                />
               ))}
             </div>
           </motion.section>

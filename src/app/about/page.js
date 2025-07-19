@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import BackgroundPattern from '@/components/common/BackgroundPattern';
 
 export const metadata = {
   title: 'About Us - Square Computers',
@@ -41,19 +42,23 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-r from-cyan-600 to-cyan-800 text-white py-20">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">About Square Computers</h1>
-          <p className="text-xl md:text-2xl text-cyan-100 max-w-3xl">
+    <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white relative overflow-hidden">
+      {/* Decorative elements */}
+      <BackgroundPattern includeCircular={true} circularPosition="top" />
+      
+      <div className="container mx-auto px-4 py-16 relative z-10">
+        {/* Title Section */}
+        <div className="text-center mb-12 relative">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <span className="text-slate-800">আমাদের </span>
+            <span className="text-cyan-600">সম্পর্কে</span>
+          </h1>
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-600">
             Leading the digital transformation with innovative technology solutions since our inception.
           </p>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-0 sm:py-16">
+        {/* Main Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {aboutLinks.map((link, index) => (
             <Link 

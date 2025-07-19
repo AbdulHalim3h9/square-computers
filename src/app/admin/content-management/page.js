@@ -2,16 +2,14 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileText as FiFileText, Info as FiInfo, BookOpen as FiBookOpen, Users as FiUsers, MessageSquare as FiMessageSquare} from 'lucide-react';
+import { FileText as FiFileText, BookOpen as FiBookOpen, Users as FiUsers } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 // Dynamically import forms with no SSR
 const ServicesForm = dynamic(() => import('./components/forms/services/ServicesForm'), { ssr: false });
-const AboutForm = dynamic(() => import('./components/forms/about/AboutForm'), { ssr: false });
 const BlogsForm = dynamic(() => import('./components/forms/blogs/BlogsForm'), { ssr: false });
 const TeamForm = dynamic(() => import('./components/forms/team/TeamForm'), { ssr: false });
-const ChairmanSpeechForm = dynamic(() => import('./components/forms/chairman-speech/ChairmanSpeechForm'), { ssr: false });
-const MDSSpeechForm = dynamic(() => import('./components/forms/mds-speech/MDSSpeechForm'), { ssr: false });
+
 
 export default function ContentManagementPage({ searchParams }) {
   // Use React.use() to properly handle searchParams in Next.js 13+
@@ -37,14 +35,7 @@ export default function ContentManagementPage({ searchParams }) {
                 <FiFileText className="h-4 w-4" />
                 <span className="hidden sm:inline">Services</span>
               </TabsTrigger>
-              <TabsTrigger 
-                value="about" 
-                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
-              >
-                <FiInfo className="h-4 w-4" />
-                <span className="hidden sm:inline">About Us</span>
-              </TabsTrigger>
-              <TabsTrigger 
+<TabsTrigger 
                 value="blogs" 
                 className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
               >
@@ -58,20 +49,7 @@ export default function ContentManagementPage({ searchParams }) {
                 <FiUsers className="h-4 w-4" />
                 <span className="hidden sm:inline">Team</span>
               </TabsTrigger>
-              <TabsTrigger 
-                value="chairman" 
-                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
-              >
-                <FiMessageSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">Chairman&apos;s Speech</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="mds" 
-                className="flex items-center gap-2 px-4 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap border-b-2 border-transparent data-[state=active]:border-blue-500 data-[state=active]:text-blue-600 bg-transparent rounded-none"
-              >
-                <FiMessageSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">MDS Speech</span>
-              </TabsTrigger>
+
             </div>
           </TabsList>
         </div>
@@ -82,12 +60,7 @@ export default function ContentManagementPage({ searchParams }) {
               <ServicesForm />
             </div>
           </TabsContent>
-          <TabsContent value="about" className="m-0">
-            <div className="p-4 sm:p-6">
-              <AboutForm />
-            </div>
-          </TabsContent>
-          <TabsContent value="blogs" className="m-0">
+<TabsContent value="blogs" className="m-0">
             <div className="p-4 sm:p-6">
               <BlogsForm />
             </div>
@@ -97,16 +70,7 @@ export default function ContentManagementPage({ searchParams }) {
               <TeamForm />
             </div>
           </TabsContent>
-          <TabsContent value="chairman" className="m-0">
-            <div className="p-4 sm:p-6">
-              <ChairmanSpeechForm />
-            </div>
-          </TabsContent>
-          <TabsContent value="mds" className="m-0">
-            <div className="p-4 sm:p-6">
-              <MDSSpeechForm />
-            </div>
-          </TabsContent>
+
         </div>
       </Tabs>
     </div>

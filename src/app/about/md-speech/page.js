@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import BackgroundPattern from '@/components/common/BackgroundPattern';
 
 export const metadata = {
   title: "ব্যবস্থাপনা পরিচালকের বক্তব্য - স্কয়ার কম্পিউটার্স",
@@ -10,14 +11,12 @@ export default function MDSpeech() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white relative overflow-hidden">
       {/* Top decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-br from-cyan-100 to-transparent opacity-50"></div>
-      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-100 rounded-full opacity-30 transform translate-x-32 -translate-y-32"></div>
+      <BackgroundPattern includeCircular={true} circularPosition="top" />
       
       {/* Content */}
       <div className="container mx-auto px-4 py-16 relative z-10">
         {/* Title Section */}
         <div className="text-center mb-12 relative">
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             <span className="text-slate-800">ব্যবস্থাপনা পরিচালকের </span>
             <span className="text-cyan-600">বক্তব্য</span>
@@ -94,8 +93,7 @@ export default function MDSpeech() {
       </div>
       
       {/* Bottom decorative elements */}
-      <div className="absolute -bottom-16 left-1/4 w-64 h-64 bg-blue-100 rounded-2xl opacity-70 transform rotate-12 -z-10"></div>
-      <div className="absolute -bottom-8 right-1/3 w-48 h-48 bg-cyan-100 rounded-2xl opacity-70 transform -rotate-12 -z-10"></div>
+
     </div>
   );
 }

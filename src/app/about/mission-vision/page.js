@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import BackgroundPattern from '@/components/common/BackgroundPattern';
 
 export const metadata = {
   title: "মিশন ও ভিশন - স্কয়ার কম্পিউটার্স",
@@ -9,14 +11,11 @@ export default function MissionVision() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-cyan-50 to-white relative overflow-hidden">
       {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-cyan-100 rounded-2xl opacity-80 transform -rotate-12 -translate-x-24 -translate-y-24"></div>
-      <div className="absolute top-1/4 -right-16 w-96 h-96 bg-blue-100 rounded-2xl opacity-80 transform rotate-12"></div>
-      <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-cyan-50 rounded-2xl opacity-60 transform rotate-45"></div>
+      <BackgroundPattern includeCircular={true} circularPosition="top" />
       
       <div className="container mx-auto px-4 py-16 relative z-10">
         {/* Title Section */}
         <div className="text-center mb-12 relative">
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             <span className="text-slate-800">মিশন ও </span>
             <span className="text-cyan-600">ভিশন</span>
@@ -154,8 +153,7 @@ export default function MissionVision() {
       </div>
       
       {/* Bottom decorative elements */}
-      <div className="absolute -bottom-16 left-1/4 w-64 h-64 bg-blue-100 rounded-2xl opacity-70 transform rotate-12 -z-10"></div>
-      <div className="absolute -bottom-8 right-1/3 w-48 h-48 bg-cyan-100 rounded-2xl opacity-70 transform -rotate-12 -z-10"></div>
+
     </div>
   );
 }

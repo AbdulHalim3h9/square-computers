@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import BackgroundPattern from '@/components/common/BackgroundPattern';
 
 export const metadata = {
   title: "চেয়ারম্যানের বাণী - স্কয়ার কম্পিউটার্স",
@@ -10,13 +11,10 @@ export default function ChairmanSpeech() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 relative overflow-hidden">
       {/* Decorative elements - Matching the trusted partners section */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-cyan-100 rounded-2xl opacity-80 transform -rotate-12 -translate-x-24 -translate-y-24"></div>
-      <div className="absolute top-1/4 -right-16 w-96 h-96 bg-blue-100 rounded-2xl opacity-80 transform rotate-12"></div>
-      <div className="absolute bottom-1/3 left-1/4 w-80 h-80 bg-cyan-50 rounded-2xl opacity-60 transform rotate-45"></div>
+      <BackgroundPattern includeCircular={true} circularPosition="top" />
       
       <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="text-center mb-12 relative">
-          <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 w-48 h-48 bg-cyan-100 rounded-full opacity-20 -z-10"></div>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             <span className="text-slate-800">চেয়ারম্যানের </span>
             <span className="text-cyan-600">বাণী</span>
@@ -91,8 +89,7 @@ export default function ChairmanSpeech() {
       </div>
       
       {/* Bottom decorative elements */}
-      <div className="absolute -bottom-16 left-1/4 w-64 h-64 bg-blue-100 rounded-2xl opacity-70 transform rotate-12"></div>
-      <div className="absolute -bottom-8 right-1/3 w-48 h-48 bg-cyan-100 rounded-2xl opacity-70 transform -rotate-12"></div>
+
     </div>
   );
 }

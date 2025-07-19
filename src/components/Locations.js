@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import BackgroundPattern from './common/BackgroundPattern';
 
 export default function Locations() {
   const [hoveredLocation, setHoveredLocation] = useState(null);
@@ -29,8 +30,10 @@ export default function Locations() {
   ];
 
   return (
-    <section className="bg-gray-50 py-12 lg:py-16 relative overflow-hidden border-t border-gray-100">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+    <section className="py-20 bg-gradient-to-b from-slate-50 to-slate-100 relative overflow-hidden">
+      <BackgroundPattern />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl sm:text-3xl font-bold">
             <span className="text-gray-800">Our </span>
@@ -43,10 +46,11 @@ export default function Locations() {
           {locations.map((location) => (
             <div
               key={location.id}
-              className={`bg-gradient-to-br from-cyan-500/10 to-cyan-600/5 p-6 sm:p-8 rounded-2xl border border-cyan-500/20 h-full transform transition-all duration-300 ease-in-out
-                ${hoveredLocation === null ? 'hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/10' : ''}
-                ${hoveredLocation === location.id ? 'scale-[1.02] shadow-lg shadow-cyan-500/20 z-10' : 'scale-[0.98] opacity-90'}
+              className={`bg-amber-50 p-6 sm:p-8 rounded-2xl border border-amber-100 shadow-sm h-full transform transition-all duration-300 ease-in-out
+                ${hoveredLocation === null ? 'hover:scale-[1.02] hover:shadow-lg hover:shadow-cyan-500/20' : ''}
+                ${hoveredLocation === location.id ? 'scale-[1.02] shadow-lg shadow-cyan-500/30 bg-white z-10' : 'scale-[1]'}
               `}
+              style={{ borderWidth: '1px' }}
               onMouseEnter={() => setHoveredLocation(location.id)}
               onMouseLeave={() => setHoveredLocation(null)}
             >

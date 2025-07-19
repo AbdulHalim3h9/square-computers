@@ -166,17 +166,29 @@ async function processImage(filePath) {
 // Recursively process all images in a directory
 async function optimizeImages(dir) {
   try {
-    const files = await readdir(dir, { withFileTypes: true });
+    // Skip optimized directories to prevent recursion
+    if (dir.includes('optimized') && dir !== path.join(__dirname, '../public/images')) {
+      return;
+    }
+    
+    const files = await readdir(dir);
     
     for (const file of files) {
-      const fullPath = path.join(dir, file.name);
-      
-      if (file.isDirectory()) {
-        await optimizeImages(fullPath);
-        continue;
+      const filePath = path.join(dir, file);
+      const fileStat = await stat(filePath);
+
+      if (fileStat.isDirectory()) {
+        // Skip node_modules, .git, and optimized directories
+        if (['node_modules', '.git', '.next', 'optimized'].includes(file)) {
+          continue;
+        }
+        await optimizeImages(filePath);
+      } else if (CONFIG.imageExtensions.includes(path.extname(file).toLowerCase())) {
+        // Skip already processed files
+        if (!filePath.includes('optimized') && !filePath.includes('placeholder')) {
+          await processImage(filePath);
+        }
       }
-      
-      await processImage(fullPath);
     }
   } catch (error) {
     console.error(`Error reading directory ${dir}:`, error);

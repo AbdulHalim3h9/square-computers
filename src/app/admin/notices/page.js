@@ -15,6 +15,7 @@ const NoticesPage = () => {
     title: '',
     content: '',
     isActive: true,
+    activeTill: '',
   });
 
   // Fetch notices
@@ -27,9 +28,27 @@ const NoticesPage = () => {
         // setNotices(data);
         
         // Mock data for now
+        const today = new Date();
+        const nextWeek = new Date();
+        nextWeek.setDate(today.getDate() + 7);
+        
         setNotices([
-          { id: 1, title: 'System Maintenance', content: 'Scheduled maintenance on July 15th', isActive: true, createdAt: '2025-07-10' },
-          { id: 2, title: 'New Feature Update', content: 'New dashboard features are now available', isActive: true, createdAt: '2025-07-05' },
+          { 
+            id: 1, 
+            title: 'System Maintenance', 
+            content: 'Scheduled maintenance on July 15th', 
+            isActive: true, 
+            createdAt: '2025-07-10',
+            activeTill: nextWeek.toISOString().split('T')[0]
+          },
+          { 
+            id: 2, 
+            title: 'New Feature Update', 
+            content: 'New dashboard features are now available', 
+            isActive: true, 
+            createdAt: '2025-07-05',
+            activeTill: '2025-07-31'
+          },
         ]);
       } catch (error) {
         console.error('Error fetching notices:', error);
@@ -75,7 +94,12 @@ const NoticesPage = () => {
       
       setNotices([newNotice, ...notices]);
       toast.success('Notice created successfully');
-      setFormData({ title: '', content: '', isActive: true });
+      setFormData({ 
+        title: '', 
+        content: '', 
+        isActive: true, 
+        activeTill: '' 
+      });
       setIsFormOpen(false);
     } catch (error) {
       console.error('Error creating notice:', error);
@@ -169,6 +193,21 @@ const NoticesPage = () => {
                 required
               />
             </div>
+            <div className="mb-4">
+              <label htmlFor="activeTill" className="block text-sm font-medium text-gray-700 mb-1">
+                Active Till <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                id="activeTill"
+                name="activeTill"
+                value={formData.activeTill}
+                onChange={handleInputChange}
+                min={new Date().toISOString().split('T')[0]}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                required
+              />
+            </div>
             <div className="flex items-center justify-between">
               <label className="flex items-center">
                 <input
@@ -217,7 +256,7 @@ const NoticesPage = () => {
                   Content
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
+                  Active Till
                 </th>
                 <th scope="col" className="relative px-6 py-3">
                   <span className="sr-only">Actions</span>
@@ -266,8 +305,11 @@ const NoticesPage = () => {
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-900 line-clamp-2">{notice.content}</div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(notice.createdAt).toLocaleDateString()}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <span className={`${new Date(notice.activeTill) < new Date() ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+                        {notice.activeTill ? new Date(notice.activeTill).toLocaleDateString() : 'N/A'}
+                        {new Date(notice.activeTill) < new Date() && ' (Expired)'}
+                      </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
@@ -283,6 +325,7 @@ const NoticesPage = () => {
                             title: notice.title,
                             content: notice.content,
                             isActive: notice.isActive,
+                            activeTill: notice.activeTill || '',
                           });
                           setIsFormOpen(true);
                         }}
